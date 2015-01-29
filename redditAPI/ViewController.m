@@ -80,6 +80,30 @@
     // Do any additional setup after loading the view, typically from a nib.
 }
 
+-(BOOL)deviceIsInLandscape
+{
+    return self.view.frame.size.width == ([[UIScreen mainScreen] bounds].size.width*([[UIScreen mainScreen] bounds].size.width<[[UIScreen mainScreen] bounds].size.height))+([[UIScreen mainScreen] bounds].size.height*([[UIScreen mainScreen] bounds].size.width>[[UIScreen mainScreen] bounds].size.height)) ? NO : YES;
+}
+
+-(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle
+{
+    if (leftOrRightAngle > 10)
+    {
+        NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
+    }
+    else if (leftOrRightAngle < -10)
+    {
+        NSLog(@"Tilted %f degrees counterclockwise", leftOrRightAngle);
+    }
+    if (forwardOrBackwardAngle > 10)
+    {
+        NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
+    }
+    else if (forwardOrBackwardAngle < -10)
+    {
+        NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
+    }
+}
 
 -(void)setupTiltToScrollTableView
 {
@@ -87,26 +111,100 @@
     [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error)
     {
             [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                CGFloat tiltAngle = [self angleInDegreesUsingX:motion.gravity.x AndY:motion.gravity.y];
-                CGFloat z = motion.gravity.z;
-            if (tiltAngle > 45)
-            {
-                NSLog(@"Tilted 45 degrees clockwise");
-            }
-            else if (tiltAngle < -45)
-            {
-                NSLog(@"Tilted 45 degrees counterclockwise");
-            }
+                
+                CGFloat tiltAngleLeftOrRight = [self LeftOrRightAngleInDegreesUsingXGravity:motion.gravity.x YGravity:motion.gravity.y andZGravity:motion.gravity.z];
+                CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x YGravity:motion.gravity.y andZGravity:motion.gravity.z];
+
+                [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight ForwardOrBackward:tiltAngleForwardorBackward];
     }];
 
     }];
 }
 
--(CGFloat)angleInDegreesUsingX:(CGFloat)xPosition AndY:(CGFloat)yPosition
+-(CGFloat)LeftOrRightAngleInDegreesUsingXGravity:(CGFloat)xGravity YGravity:(CGFloat)yGravity andZGravity:(CGFloat)zGravity
 {
-    CGFloat angle = atan2(yPosition, xPosition) + M_PI_2;
-    return angle * 180.0f / M_PI;
+    CGFloat angle = 0;
+
+    switch ([[UIDevice currentDevice] orientation])
+    {
+        case UIDeviceOrientationLandscapeLeft:
+        {
+            angle = atan2(xGravity, -yGravity);
+            break;
+        }
+        case UIDeviceOrientationLandscapeRight:
+        {
+            angle = atan2(-xGravity, yGravity);
+            break;
+        }
+        case UIDeviceOrientationPortrait:
+        {
+            angle = atan2(yGravity, xGravity);
+            break;
+        }
+        case UIDeviceOrientationPortraitUpsideDown:
+        {
+            angle = atan2(-yGravity, -xGravity);
+            break;
+        }
+        case UIDeviceOrientationFaceUp:
+        {
+            break;
+        }
+        case UIDeviceOrientationFaceDown:
+        {
+            break;
+        }
+        case UIDeviceOrientationUnknown:
+        {
+            break;
+        }
+    }
+    CGFloat angleToReturn = (angle + M_PI_2) * 180.0f / M_PI;
+    return angleToReturn;
 }
+
+-(CGFloat)ForwardOrBackwardAngleInDegreesUsingXGravity:(CGFloat)xGravity YGravity:(CGFloat)yGravity andZGravity:(CGFloat)zGravity
+{
+    CGFloat angle = 0;
+    switch ([[UIDevice currentDevice] orientation])
+    {
+        case UIDeviceOrientationLandscapeLeft:
+        {
+            angle = atan2(xGravity, zGravity);
+            break;
+        }
+        case UIDeviceOrientationLandscapeRight:
+        {
+            angle = atan2(-xGravity, zGravity);
+            break;
+        }
+        case UIDeviceOrientationPortrait:
+        {
+            angle = atan2(yGravity, zGravity);
+            break;
+        }
+        case UIDeviceOrientationPortraitUpsideDown:
+        {
+            angle = atan2(-yGravity, zGravity);
+        }
+        case UIDeviceOrientationFaceUp:
+        {
+            break;
+        }
+        case UIDeviceOrientationFaceDown:
+        {
+            break;
+        }
+        case UIDeviceOrientationUnknown:
+        {
+            break;
+        }
+    }
+    CGFloat angleToReturn = (angle + M_PI_2) * 180.0f / M_PI;
+    return angleToReturn;
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
