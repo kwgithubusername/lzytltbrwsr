@@ -9,14 +9,26 @@
 #import "ViewController.h"
 #import "RAPTableViewCell.h"
 #import "TableViewController.h"
+#import <CoreMotion/CoreMotion.h>
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSArray *results;
+@property (nonatomic) CMMotionManager *motionManager;
 
 @end
 
 @implementation ViewController
+
+-(CMMotionManager *)motionManager
+{
+    if (!_motionManager)
+    {
+        _motionManager = [[CMMotionManager alloc] init];
+        _motionManager.deviceMotionUpdateInterval = 5.0 / 60.0;
+    }
+    return _motionManager;
+}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -25,6 +37,8 @@
         
     }
 }
+
+
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -62,7 +76,36 @@
     
     [dataTask resume];
     
+    [self setupTiltToScrollTableView];
     // Do any additional setup after loading the view, typically from a nib.
+}
+
+
+-(void)setupTiltToScrollTableView
+{
+
+    [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error)
+    {
+            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+                CGFloat tiltAngle = [self angleInDegreesUsingX:motion.gravity.x AndY:motion.gravity.y];
+                CGFloat z = motion.gravity.z;
+            if (tiltAngle > 45)
+            {
+                NSLog(@"Tilted 45 degrees clockwise");
+            }
+            else if (tiltAngle < -45)
+            {
+                NSLog(@"Tilted 45 degrees counterclockwise");
+            }
+    }];
+
+    }];
+}
+
+-(CGFloat)angleInDegreesUsingX:(CGFloat)xPosition AndY:(CGFloat)yPosition
+{
+    CGFloat angle = atan2(yPosition, xPosition) + M_PI_2;
+    return angle * 180.0f / M_PI;
 }
 
 - (void)didReceiveMemoryWarning {
