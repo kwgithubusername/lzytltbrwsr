@@ -9,25 +9,23 @@
 #import "ViewController.h"
 #import "RAPTableViewCell.h"
 #import "TableViewController.h"
+#import "RAPapi.h"
 #import <CoreMotion/CoreMotion.h>
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSArray *results;
 @property (nonatomic) CMMotionManager *motionManager;
+@property (nonatomic) RAPapi *api;
 
 @end
 
 @implementation ViewController
 
--(CMMotionManager *)motionManager
+-(RAPapi *)api
 {
-    if (!_motionManager)
-    {
-        _motionManager = [[CMMotionManager alloc] init];
-        _motionManager.deviceMotionUpdateInterval = 5.0 / 60.0;
-    }
-    return _motionManager;
+    if (!_api) _api = [[RAPapi alloc] init];
+    return _api;
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -54,30 +52,58 @@
     return cell;
 }
 
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+    NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.results[indexPath.row]];
+    if (indexPath.row == [self.results count]-1)
+    {
+        NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [redditEntry[@"data"] objectForKey:@"id"]];
+        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"?limit=10?&after=t3_%@", linkIDString]];
+    }
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSURL *url = [NSURL URLWithString:@"http://www.reddit.com/.json"];
+    [self loadRedditJSONWithAppendingString:@""];
+    
+    [self setupTiltToScrollTableView];
+    // Do any additional setup after loading the view, typically from a nib.
+}
+
+- (void)loadRedditJSONWithAppendingString:(NSString *)appendString
+{
+    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com/.json%@", appendString]];
     NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
     
     NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-    {
-        NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-        NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-        NSLog(@"Results are %@", jsonResults);
-        
-        dispatch_async(dispatch_get_main_queue(), ^
-        {
-            self.results = [[NSArray alloc] initWithArray:jsonResults];
-            [self.tableView reloadData];
-        });
-    }];
+                                      {
+                                          NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+                                          NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
+                                          NSLog(@"Results are %@", jsonResults);
+                                          
+                                          dispatch_async(dispatch_get_main_queue(), ^
+                                                         {
+                                                             self.results = [[NSArray alloc] initWithArray:jsonResults];
+                                                             [self.tableView reloadData];
+                                                         });
+                                      }];
     
     [dataTask resume];
-    
-    [self setupTiltToScrollTableView];
-    // Do any additional setup after loading the view, typically from a nib.
+}
+
+#pragma mark Motion Manager
+
+-(CMMotionManager *)motionManager
+{
+    if (!_motionManager)
+    {
+        _motionManager = [[CMMotionManager alloc] init];
+        _motionManager.deviceMotionUpdateInterval = 5.0 / 60.0;
+    }
+    return _motionManager;
 }
 
 -(BOOL)deviceIsInLandscape
@@ -90,10 +116,12 @@
     if (leftOrRightAngle > 10)
     {
         NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
+        [self.tableView scrollToRowAtIndexPath:[self.tableView indexPathForRowAtPoint:CGPointMake(0,self.view.frame.size.height)] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     }
     else if (leftOrRightAngle < -10)
     {
         NSLog(@"Tilted %f degrees counterclockwise", leftOrRightAngle);
+        [self.tableView scrollToRowAtIndexPath:[self.tableView indexPathForRowAtPoint:CGPointMake(0,0)] atScrollPosition:UITableViewScrollPositionTop animated:YES];
     }
     if (forwardOrBackwardAngle > 10)
     {
