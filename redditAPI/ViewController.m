@@ -14,7 +14,7 @@
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic) NSArray *results;
+@property (nonatomic) NSMutableArray *resultsMutableArray;
 @property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) RAPapi *api;
 
@@ -40,12 +40,12 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.results count];
+    return [self.resultsMutableArray count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.results[indexPath.row]];
+    NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
     RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
     cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"author"];
@@ -55,11 +55,11 @@
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
 
-    NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.results[indexPath.row]];
-    if (indexPath.row == [self.results count]-1)
+    NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
+    if (indexPath.row == [self.resultsMutableArray count]-1)
     {
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [redditEntry[@"data"] objectForKey:@"id"]];
-        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"?limit=10?&after=t3_%@", linkIDString]];
+        [self loadAdditionalRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"?limit=10?&after=t3_%@", linkIDString]];
     }
 }
 
@@ -86,7 +86,29 @@
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
-                                                             self.results = [[NSArray alloc] initWithArray:jsonResults];
+                                                             self.resultsMutableArray = [[NSMutableArray alloc] initWithArray:jsonResults];
+                                                             [self.tableView reloadData];
+                                                         });
+                                      }];
+    
+    [dataTask resume];
+}
+
+- (void)loadAdditionalRedditJSONWithAppendingString:(NSString *)appendString
+{
+    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com/.json%@", appendString]];
+    NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
+    
+    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+                                      {
+                                          NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+                                          NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
+                                          NSLog(@"Results are %@", jsonResults);
+                                          
+                                          dispatch_async(dispatch_get_main_queue(), ^
+                                                         {
+                                                             [self.resultsMutableArray addObjectsFromArray:jsonResults];
                                                              [self.tableView reloadData];
                                                          });
                                       }];
