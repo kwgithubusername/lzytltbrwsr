@@ -10,6 +10,7 @@
 #import "RAPTableViewCell.h"
 #import "TableViewController.h"
 #import "RAPapi.h"
+#import "RAPSelectorView.h"
 #import <CoreMotion/CoreMotion.h>
 @interface ViewController ()
 
@@ -17,6 +18,12 @@
 @property (nonatomic) NSMutableArray *resultsMutableArray;
 @property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) RAPapi *api;
+@property (nonatomic) RAPSelectorView *RAPRectangleSelectorView;
+@property (nonatomic) CGRect cellFrame;
+@property (nonatomic) BOOL cellFrameSet;
+@property (nonatomic) CGRect referenceCGRectForScrolling;
+@property (nonatomic) BOOL IsReferenceCGRectForScrollingSet;
+@property (nonatomic) CGFloat lastContentOffset;
 
 @end
 
@@ -54,17 +61,25 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-
-    NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
-    if (indexPath.row == [self.resultsMutableArray count]-1)
+    if (!self.cellFrameSet)
     {
+        self.cellFrame = cell.frame;
+        self.cellFrameSet = YES;
+    }
+    if (indexPath.row == [self.resultsMutableArray count]-2)
+    {
+        NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row+1]];
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [redditEntry[@"data"] objectForKey:@"id"]];
-        [self loadAdditionalRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"?limit=10?&after=t3_%@", linkIDString]];
+        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"?limit=10?&after=t3_%@", linkIDString]];
     }
 }
 
+#pragma mark Setup and NSURLSession
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.resultsMutableArray = [[NSMutableArray alloc] init];
     
     [self loadRedditJSONWithAppendingString:@""];
     
@@ -82,29 +97,7 @@
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                                           NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          NSLog(@"Results are %@", jsonResults);
-                                          
-                                          dispatch_async(dispatch_get_main_queue(), ^
-                                                         {
-                                                             self.resultsMutableArray = [[NSMutableArray alloc] initWithArray:jsonResults];
-                                                             [self.tableView reloadData];
-                                                         });
-                                      }];
-    
-    [dataTask resume];
-}
-
-- (void)loadAdditionalRedditJSONWithAppendingString:(NSString *)appendString
-{
-    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com/.json%@", appendString]];
-    NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
-    
-    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-                                      {
-                                          NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                                          NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          NSLog(@"Results are %@", jsonResults);
+                                          //NSLog(@"Results are %@", jsonResults);
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
@@ -114,6 +107,88 @@
                                       }];
     
     [dataTask resume];
+}
+
+#pragma mark Scrolling
+
+-(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle
+{
+    if (leftOrRightAngle > 10)
+    {
+        //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
+        [self scrollTableViewDownWithCGFloatIntensity:leftOrRightAngle];
+    }
+    else if (leftOrRightAngle < -10)
+    {
+        //NSLog(@"Tilted %f degrees counterclockwise", leftOrRightAngle);
+        [self.tableView scrollToRowAtIndexPath:[self.tableView indexPathForRowAtPoint:CGPointMake(0,0)] atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    }
+    if (forwardOrBackwardAngle > 10)
+    {
+        //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
+    }
+    else if (forwardOrBackwardAngle < -10)
+    {
+        //NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
+    }
+}
+
+-(void)scrollTableViewDownWithCGFloatIntensity:(CGFloat)intensity
+{
+    if (!self.IsReferenceCGRectForScrollingSet)
+    {
+        self.referenceCGRectForScrolling = CGRectMake(0, self.tableView.bounds.size.height, 1, self.cellFrame.size.height);
+        self.IsReferenceCGRectForScrollingSet = YES;
+    }
+    
+    //NSLog(@"ContentInset.height is %@", self.tableView.contentInset);
+    //NSLog(@"ContentOffset.height is %@", self.tableView.contentOffset);
+    
+    [self.tableView flashScrollIndicators];
+    
+    [self.tableView scrollRectToVisible:self.referenceCGRectForScrolling animated:YES];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    if (self.lastContentOffset > scrollView.contentOffset.y)
+    {
+        [self maintainFixedPositionOfScrollRectInDirectionDown:NO];
+    }
+    else if (self.lastContentOffset < scrollView.contentOffset.y)
+    {
+        [self maintainFixedPositionOfScrollRectInDirectionDown:YES];
+    }
+    self.lastContentOffset = scrollView.contentOffset.y;
+
+}
+
+- (void)maintainFixedPositionOfScrollRectInDirectionDown:(BOOL)isDown
+{
+    CGRect fixedFrame = self.referenceCGRectForScrolling;
+    int i = -1;
+    if (isDown)
+    {
+        i = 1;
+    }
+    fixedFrame.origin.y = fixedFrame.origin.y + i;
+    self.referenceCGRectForScrolling = fixedFrame;
+    NSLog(@"FixedFrame.y is %f", self.referenceCGRectForScrolling.origin.y);
+}
+
+- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
+{
+    CGPoint translation = [scrollView.panGestureRecognizer translationInView:scrollView.superview];
+    
+    if(translation.y > 0)
+    {
+
+        // react to dragging right
+    } else
+        
+    {
+        // react to dragging left
+    }
 }
 
 #pragma mark Motion Manager
@@ -131,28 +206,6 @@
 -(BOOL)deviceIsInLandscape
 {
     return self.view.frame.size.width == ([[UIScreen mainScreen] bounds].size.width*([[UIScreen mainScreen] bounds].size.width<[[UIScreen mainScreen] bounds].size.height))+([[UIScreen mainScreen] bounds].size.height*([[UIScreen mainScreen] bounds].size.width>[[UIScreen mainScreen] bounds].size.height)) ? NO : YES;
-}
-
--(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle
-{
-    if (leftOrRightAngle > 10)
-    {
-        NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
-        [self.tableView scrollToRowAtIndexPath:[self.tableView indexPathForRowAtPoint:CGPointMake(0,self.view.frame.size.height)] atScrollPosition:UITableViewScrollPositionBottom animated:YES];
-    }
-    else if (leftOrRightAngle < -10)
-    {
-        NSLog(@"Tilted %f degrees counterclockwise", leftOrRightAngle);
-        [self.tableView scrollToRowAtIndexPath:[self.tableView indexPathForRowAtPoint:CGPointMake(0,0)] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    }
-    if (forwardOrBackwardAngle > 10)
-    {
-        NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
-    }
-    else if (forwardOrBackwardAngle < -10)
-    {
-        NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
-    }
 }
 
 -(void)setupTiltToScrollTableView

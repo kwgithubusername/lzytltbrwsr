@@ -30,7 +30,7 @@
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                                           NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          NSLog(@"Results are %@", jsonResults);
+                                          //NSLog(@"Results are %@", jsonResults);
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
