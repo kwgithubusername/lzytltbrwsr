@@ -11,23 +11,25 @@
 #import "TableViewController.h"
 #import "RAPapi.h"
 #import "RAPSelectorView.h"
+#import "RAPTiltToScroll.h"
 #import <CoreMotion/CoreMotion.h>
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *resultsMutableArray;
-@property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) RAPapi *api;
 @property (nonatomic) RAPSelectorView *RAPRectangleSelectorView;
-@property (nonatomic) CGRect cellFrame;
-@property (nonatomic) BOOL cellFrameSet;
-@property (nonatomic) CGRect referenceCGRectForScrolling;
-@property (nonatomic) BOOL IsReferenceCGRectForScrollingSet;
-@property (nonatomic) CGFloat lastContentOffset;
+@property (nonatomic) RAPTiltToScroll *tiltToScroll;
 
 @end
 
 @implementation ViewController
+
+-(RAPTiltToScroll *)tiltToScroll
+{
+    if (!_tiltToScroll) _tiltToScroll = [[RAPTiltToScroll alloc] init];
+    return _tiltToScroll;
+}
 
 -(RAPapi *)api
 {
@@ -61,11 +63,6 @@
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (!self.cellFrameSet)
-    {
-        self.cellFrame = cell.frame;
-        self.cellFrameSet = YES;
-    }
     if (indexPath.row == [self.resultsMutableArray count]-2)
     {
         NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row+1]];
@@ -83,7 +80,7 @@
     
     [self loadRedditJSONWithAppendingString:@""];
     
-    [self setupTiltToScrollTableView];
+    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
@@ -108,206 +105,6 @@
     
     [dataTask resume];
 }
-
-#pragma mark Scrolling
-
--(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle
-{
-    if (leftOrRightAngle > 10)
-    {
-        //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
-        [self scrollTableViewDownWithCGFloatIntensity:leftOrRightAngle];
-    }
-    else if (leftOrRightAngle < -10)
-    {
-        //NSLog(@"Tilted %f degrees counterclockwise", leftOrRightAngle);
-        [self.tableView scrollToRowAtIndexPath:[self.tableView indexPathForRowAtPoint:CGPointMake(0,0)] atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    }
-    if (forwardOrBackwardAngle > 10)
-    {
-        //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
-    }
-    else if (forwardOrBackwardAngle < -10)
-    {
-        //NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
-    }
-}
-
--(void)scrollTableViewDownWithCGFloatIntensity:(CGFloat)intensity
-{
-    if (!self.IsReferenceCGRectForScrollingSet)
-    {
-        self.referenceCGRectForScrolling = CGRectMake(0, self.tableView.bounds.size.height, 1, self.cellFrame.size.height);
-        self.IsReferenceCGRectForScrollingSet = YES;
-    }
-    
-    //NSLog(@"ContentInset.height is %@", self.tableView.contentInset);
-    //NSLog(@"ContentOffset.height is %@", self.tableView.contentOffset);
-    
-    [self.tableView flashScrollIndicators];
-    
-    [self.tableView scrollRectToVisible:self.referenceCGRectForScrolling animated:YES];
-}
-
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
-{
-    if (self.lastContentOffset > scrollView.contentOffset.y)
-    {
-        [self maintainFixedPositionOfScrollRectInDirectionDown:NO];
-    }
-    else if (self.lastContentOffset < scrollView.contentOffset.y)
-    {
-        [self maintainFixedPositionOfScrollRectInDirectionDown:YES];
-    }
-    self.lastContentOffset = scrollView.contentOffset.y;
-
-}
-
-- (void)maintainFixedPositionOfScrollRectInDirectionDown:(BOOL)isDown
-{
-    CGRect fixedFrame = self.referenceCGRectForScrolling;
-    int i = -1;
-    if (isDown)
-    {
-        i = 1;
-    }
-    fixedFrame.origin.y = fixedFrame.origin.y + i;
-    self.referenceCGRectForScrolling = fixedFrame;
-    NSLog(@"FixedFrame.y is %f", self.referenceCGRectForScrolling.origin.y);
-}
-
-- (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
-{
-    CGPoint translation = [scrollView.panGestureRecognizer translationInView:scrollView.superview];
-    
-    if(translation.y > 0)
-    {
-
-        // react to dragging right
-    } else
-        
-    {
-        // react to dragging left
-    }
-}
-
-#pragma mark Motion Manager
-
--(CMMotionManager *)motionManager
-{
-    if (!_motionManager)
-    {
-        _motionManager = [[CMMotionManager alloc] init];
-        _motionManager.deviceMotionUpdateInterval = 5.0 / 60.0;
-    }
-    return _motionManager;
-}
-
--(BOOL)deviceIsInLandscape
-{
-    return self.view.frame.size.width == ([[UIScreen mainScreen] bounds].size.width*([[UIScreen mainScreen] bounds].size.width<[[UIScreen mainScreen] bounds].size.height))+([[UIScreen mainScreen] bounds].size.height*([[UIScreen mainScreen] bounds].size.width>[[UIScreen mainScreen] bounds].size.height)) ? NO : YES;
-}
-
--(void)setupTiltToScrollTableView
-{
-
-    [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error)
-    {
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                
-                CGFloat tiltAngleLeftOrRight = [self LeftOrRightAngleInDegreesUsingXGravity:motion.gravity.x YGravity:motion.gravity.y andZGravity:motion.gravity.z];
-                CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x YGravity:motion.gravity.y andZGravity:motion.gravity.z];
-
-                [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight ForwardOrBackward:tiltAngleForwardorBackward];
-    }];
-
-    }];
-}
-
--(CGFloat)LeftOrRightAngleInDegreesUsingXGravity:(CGFloat)xGravity YGravity:(CGFloat)yGravity andZGravity:(CGFloat)zGravity
-{
-    CGFloat angle = 0;
-
-    switch ([[UIDevice currentDevice] orientation])
-    {
-        case UIDeviceOrientationLandscapeLeft:
-        {
-            angle = atan2(xGravity, -yGravity);
-            break;
-        }
-        case UIDeviceOrientationLandscapeRight:
-        {
-            angle = atan2(-xGravity, yGravity);
-            break;
-        }
-        case UIDeviceOrientationPortrait:
-        {
-            angle = atan2(yGravity, xGravity);
-            break;
-        }
-        case UIDeviceOrientationPortraitUpsideDown:
-        {
-            angle = atan2(-yGravity, -xGravity);
-            break;
-        }
-        case UIDeviceOrientationFaceUp:
-        {
-            break;
-        }
-        case UIDeviceOrientationFaceDown:
-        {
-            break;
-        }
-        case UIDeviceOrientationUnknown:
-        {
-            break;
-        }
-    }
-    CGFloat angleToReturn = (angle + M_PI_2) * 180.0f / M_PI;
-    return angleToReturn;
-}
-
--(CGFloat)ForwardOrBackwardAngleInDegreesUsingXGravity:(CGFloat)xGravity YGravity:(CGFloat)yGravity andZGravity:(CGFloat)zGravity
-{
-    CGFloat angle = 0;
-    switch ([[UIDevice currentDevice] orientation])
-    {
-        case UIDeviceOrientationLandscapeLeft:
-        {
-            angle = atan2(xGravity, zGravity);
-            break;
-        }
-        case UIDeviceOrientationLandscapeRight:
-        {
-            angle = atan2(-xGravity, zGravity);
-            break;
-        }
-        case UIDeviceOrientationPortrait:
-        {
-            angle = atan2(yGravity, zGravity);
-            break;
-        }
-        case UIDeviceOrientationPortraitUpsideDown:
-        {
-            angle = atan2(-yGravity, zGravity);
-        }
-        case UIDeviceOrientationFaceUp:
-        {
-            break;
-        }
-        case UIDeviceOrientationFaceDown:
-        {
-            break;
-        }
-        case UIDeviceOrientationUnknown:
-        {
-            break;
-        }
-    }
-    CGFloat angleToReturn = (angle + M_PI_2) * 180.0f / M_PI;
-    return angleToReturn;
-}
-
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

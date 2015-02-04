@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75D41A801E4A005CEB64 /* RAPapi.m */; };
 		9E9D75D81A804BA0005CEB64 /* RAPSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */; };
+		9E9D75DE1A819C55005CEB64 /* RAPTiltToScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */; };
 		9ECF83271A66096E00E7D9C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF83261A66096E00E7D9C7 /* main.m */; };
 		9ECF832A1A66096E00E7D9C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF83291A66096E00E7D9C7 /* AppDelegate.m */; };
 		9ECF832D1A66096E00E7D9C7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF832C1A66096E00E7D9C7 /* ViewController.m */; };
@@ -36,6 +37,8 @@
 		9E9D75D41A801E4A005CEB64 /* RAPapi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPapi.m; sourceTree = "<group>"; };
 		9E9D75D61A804BA0005CEB64 /* RAPSelectorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPSelectorView.h; sourceTree = "<group>"; };
 		9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPSelectorView.m; sourceTree = "<group>"; };
+		9E9D75DC1A819C55005CEB64 /* RAPTiltToScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPTiltToScroll.h; sourceTree = "<group>"; };
+		9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPTiltToScroll.m; sourceTree = "<group>"; };
 		9ECF83211A66096E00E7D9C7 /* redditAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = redditAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ECF83251A66096E00E7D9C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9ECF83261A66096E00E7D9C7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -100,6 +103,8 @@
 				9ECF83291A66096E00E7D9C7 /* AppDelegate.m */,
 				9ECF832B1A66096E00E7D9C7 /* ViewController.h */,
 				9ECF832C1A66096E00E7D9C7 /* ViewController.m */,
+				9E9D75DC1A819C55005CEB64 /* RAPTiltToScroll.h */,
+				9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */,
 				9E9D75D61A804BA0005CEB64 /* RAPSelectorView.h */,
 				9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */,
 				9E9D75D31A801E4A005CEB64 /* RAPapi.h */,
@@ -252,6 +257,7 @@
 				9ED5BE621A6C866200616382 /* TableViewController.m in Sources */,
 				9ED5BE651A6C868300616382 /* RAPDetailTableViewCell.m in Sources */,
 				9ECF834C1A660B8200E7D9C7 /* RAPTableViewCell.m in Sources */,
+				9E9D75DE1A819C55005CEB64 /* RAPTiltToScroll.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
