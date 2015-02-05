@@ -10,6 +10,8 @@
 		9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75D41A801E4A005CEB64 /* RAPapi.m */; };
 		9E9D75D81A804BA0005CEB64 /* RAPSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */; };
 		9E9D75DE1A819C55005CEB64 /* RAPTiltToScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */; };
+		9E9D75E51A81C447005CEB64 /* RAPFavoritesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75E41A81C447005CEB64 /* RAPFavoritesViewController.m */; };
+		9E9D75E81A828187005CEB64 /* RAPThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75E71A828187005CEB64 /* RAPThreadViewController.m */; };
 		9ECF83271A66096E00E7D9C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF83261A66096E00E7D9C7 /* main.m */; };
 		9ECF832A1A66096E00E7D9C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF83291A66096E00E7D9C7 /* AppDelegate.m */; };
 		9ECF832D1A66096E00E7D9C7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF832C1A66096E00E7D9C7 /* ViewController.m */; };
@@ -18,8 +20,8 @@
 		9ECF83351A66096E00E7D9C7 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9ECF83331A66096E00E7D9C7 /* LaunchScreen.xib */; };
 		9ECF83411A66096E00E7D9C7 /* redditAPITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF83401A66096E00E7D9C7 /* redditAPITests.m */; };
 		9ECF834C1A660B8200E7D9C7 /* RAPTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */; };
-		9ED5BE621A6C866200616382 /* TableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5BE611A6C866200616382 /* TableViewController.m */; };
-		9ED5BE651A6C868300616382 /* RAPDetailTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED5BE641A6C868300616382 /* RAPDetailTableViewCell.m */; };
+		9ED517011A8432F700929C35 /* RAPThreadTopicTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */; };
+		9ED517041A84330A00929C35 /* RAPThreadCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED517031A84330A00929C35 /* RAPThreadCommentTableViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +41,11 @@
 		9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPSelectorView.m; sourceTree = "<group>"; };
 		9E9D75DC1A819C55005CEB64 /* RAPTiltToScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPTiltToScroll.h; sourceTree = "<group>"; };
 		9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPTiltToScroll.m; sourceTree = "<group>"; };
+		9E9D75DF1A81B941005CEB64 /* RAPRedditLinks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RAPRedditLinks.h; sourceTree = "<group>"; };
+		9E9D75E31A81C447005CEB64 /* RAPFavoritesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPFavoritesViewController.h; sourceTree = "<group>"; };
+		9E9D75E41A81C447005CEB64 /* RAPFavoritesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPFavoritesViewController.m; sourceTree = "<group>"; };
+		9E9D75E61A828187005CEB64 /* RAPThreadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPThreadViewController.h; sourceTree = "<group>"; };
+		9E9D75E71A828187005CEB64 /* RAPThreadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPThreadViewController.m; sourceTree = "<group>"; };
 		9ECF83211A66096E00E7D9C7 /* redditAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = redditAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ECF83251A66096E00E7D9C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9ECF83261A66096E00E7D9C7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -54,10 +61,10 @@
 		9ECF83401A66096E00E7D9C7 /* redditAPITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = redditAPITests.m; sourceTree = "<group>"; };
 		9ECF834A1A660B8200E7D9C7 /* RAPTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPTableViewCell.h; sourceTree = "<group>"; };
 		9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPTableViewCell.m; sourceTree = "<group>"; };
-		9ED5BE601A6C866200616382 /* TableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewController.h; sourceTree = "<group>"; };
-		9ED5BE611A6C866200616382 /* TableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewController.m; sourceTree = "<group>"; };
-		9ED5BE631A6C868200616382 /* RAPDetailTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPDetailTableViewCell.h; sourceTree = "<group>"; };
-		9ED5BE641A6C868300616382 /* RAPDetailTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPDetailTableViewCell.m; sourceTree = "<group>"; };
+		9ED516FF1A8432F700929C35 /* RAPThreadTopicTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPThreadTopicTableViewCell.h; sourceTree = "<group>"; };
+		9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPThreadTopicTableViewCell.m; sourceTree = "<group>"; };
+		9ED517021A84330A00929C35 /* RAPThreadCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPThreadCommentTableViewCell.h; sourceTree = "<group>"; };
+		9ED517031A84330A00929C35 /* RAPThreadCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPThreadCommentTableViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,18 +110,23 @@
 				9ECF83291A66096E00E7D9C7 /* AppDelegate.m */,
 				9ECF832B1A66096E00E7D9C7 /* ViewController.h */,
 				9ECF832C1A66096E00E7D9C7 /* ViewController.m */,
+				9ECF834A1A660B8200E7D9C7 /* RAPTableViewCell.h */,
+				9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */,
+				9E9D75DF1A81B941005CEB64 /* RAPRedditLinks.h */,
+				9E9D75E31A81C447005CEB64 /* RAPFavoritesViewController.h */,
+				9E9D75E41A81C447005CEB64 /* RAPFavoritesViewController.m */,
 				9E9D75DC1A819C55005CEB64 /* RAPTiltToScroll.h */,
 				9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */,
 				9E9D75D61A804BA0005CEB64 /* RAPSelectorView.h */,
 				9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */,
 				9E9D75D31A801E4A005CEB64 /* RAPapi.h */,
 				9E9D75D41A801E4A005CEB64 /* RAPapi.m */,
-				9ED5BE601A6C866200616382 /* TableViewController.h */,
-				9ED5BE611A6C866200616382 /* TableViewController.m */,
-				9ED5BE631A6C868200616382 /* RAPDetailTableViewCell.h */,
-				9ED5BE641A6C868300616382 /* RAPDetailTableViewCell.m */,
-				9ECF834A1A660B8200E7D9C7 /* RAPTableViewCell.h */,
-				9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */,
+				9E9D75E61A828187005CEB64 /* RAPThreadViewController.h */,
+				9E9D75E71A828187005CEB64 /* RAPThreadViewController.m */,
+				9ED516FF1A8432F700929C35 /* RAPThreadTopicTableViewCell.h */,
+				9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */,
+				9ED517021A84330A00929C35 /* RAPThreadCommentTableViewCell.h */,
+				9ED517031A84330A00929C35 /* RAPThreadCommentTableViewCell.m */,
 				9ECF832E1A66096E00E7D9C7 /* Main.storyboard */,
 				9ECF83311A66096E00E7D9C7 /* Images.xcassets */,
 				9ECF83331A66096E00E7D9C7 /* LaunchScreen.xib */,
@@ -249,14 +261,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9E9D75E51A81C447005CEB64 /* RAPFavoritesViewController.m in Sources */,
 				9ECF832D1A66096E00E7D9C7 /* ViewController.m in Sources */,
 				9ECF832A1A66096E00E7D9C7 /* AppDelegate.m in Sources */,
+				9ED517011A8432F700929C35 /* RAPThreadTopicTableViewCell.m in Sources */,
+				9ED517041A84330A00929C35 /* RAPThreadCommentTableViewCell.m in Sources */,
 				9ECF83271A66096E00E7D9C7 /* main.m in Sources */,
 				9E9D75D81A804BA0005CEB64 /* RAPSelectorView.m in Sources */,
 				9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */,
-				9ED5BE621A6C866200616382 /* TableViewController.m in Sources */,
-				9ED5BE651A6C868300616382 /* RAPDetailTableViewCell.m in Sources */,
 				9ECF834C1A660B8200E7D9C7 /* RAPTableViewCell.m in Sources */,
+				9E9D75E81A828187005CEB64 /* RAPThreadViewController.m in Sources */,
 				9E9D75DE1A819C55005CEB64 /* RAPTiltToScroll.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -39,23 +39,23 @@
 {
     if (leftOrRightAngle > 10 || leftOrRightAngle < -10)
     {
-        NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
+        //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
         if (scrollView.contentOffset.y + leftOrRightAngle/5 >= -64)
         {
             CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
             scrollView.contentOffset = offsetCGPoint;
         }
 
-        NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
+        //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
 
     if (forwardOrBackwardAngle > 10)
     {
-        NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
+        //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
     }
     else if (forwardOrBackwardAngle < -10)
     {
-        NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
+        //NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
     }
 }
 

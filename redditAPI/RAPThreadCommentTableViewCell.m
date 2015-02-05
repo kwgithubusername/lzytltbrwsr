@@ -1,14 +1,14 @@
 //
-//  RAPDetailTableViewCell.m
+//  RAPThreadCommentTableViewCell.m
 //  redditAPI
 //
-//  Created by Woudini on 1/18/15.
+//  Created by Woudini on 2/5/15.
 //  Copyright (c) 2015 Hi Range. All rights reserved.
 //
 
-#import "RAPDetailTableViewCell.h"
+#import "RAPThreadCommentTableViewCell.h"
 
-@implementation RAPDetailTableViewCell
+@implementation RAPThreadCommentTableViewCell
 
 - (void)awakeFromNib {
     // Initialization code

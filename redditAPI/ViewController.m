@@ -8,12 +8,12 @@
 
 #import "ViewController.h"
 #import "RAPTableViewCell.h"
-#import "TableViewController.h"
 #import "RAPapi.h"
 #import "RAPSelectorView.h"
 #import "RAPTiltToScroll.h"
-#import <CoreMotion/CoreMotion.h>
-@interface ViewController ()
+#import "RAPRedditLinks.h"
+#import "RAPThreadViewController.h"
+@interface RAPViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *resultsMutableArray;
@@ -21,9 +21,10 @@
 @property (nonatomic) RAPSelectorView *RAPRectangleSelectorView;
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 
+
 @end
 
-@implementation ViewController
+@implementation RAPViewController
 
 -(RAPTiltToScroll *)tiltToScroll
 {
@@ -39,13 +40,21 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"goToDetail"])
+    if ([segue.identifier isEqualToString:@"threadSegue"])
     {
-        
+        RAPThreadViewController *tvc = segue.destinationViewController;
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
+        NSString *testString = @"r/SwingDancing/comments/2uc1f2/question_can_you_help_me_locate_this_song/.json";
+        NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@.json", [redditEntry[@"data"] objectForKey:@"permalink"]];
+        tvc.permalinkURLString = testString;
     }
 }
 
-
+-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -54,10 +63,10 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
+    NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
     RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
-    cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"author"];
+    cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
     return cell;
 }
 
@@ -65,9 +74,9 @@
 {
     if (indexPath.row == [self.resultsMutableArray count]-2)
     {
-        NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row+1]];
+        NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row+1]];
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [redditEntry[@"data"] objectForKey:@"id"]];
-        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"?limit=10?&after=t3_%@", linkIDString]];
+        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]];
     }
 }
 
@@ -75,18 +84,33 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    NSDictionary *d = @{@"poo":@3};
+    NSArray *a = @[@"s"];
     
+    NSLog(@"Dictionary is %@, Array is %@", d, a);
     self.resultsMutableArray = [[NSMutableArray alloc] init];
     
-    [self loadRedditJSONWithAppendingString:@""];
+    [self loadReddit];
     
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     // Do any additional setup after loading the view, typically from a nib.
 }
 
+- (void)loadReddit
+{
+    if (!self.subRedditURLString)
+    {
+        [self loadRedditJSONWithAppendingString:@".json"];
+    }
+    else
+    {
+        [self loadRedditJSONWithAppendingString:self.subRedditURLString];
+    }
+}
+
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
-    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com/.json%@", appendString]];
+    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com/%@", appendString]];
     NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
     
@@ -94,7 +118,7 @@
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                                           NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          //NSLog(@"Results are %@", jsonResults);
+                                          NSLog(@"Results are %@", jsonData);
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
