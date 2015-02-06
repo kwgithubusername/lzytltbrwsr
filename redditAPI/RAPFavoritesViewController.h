@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RAPFavoritesViewController : UIViewController
+@interface RAPFavoritesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @end

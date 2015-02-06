@@ -27,7 +27,6 @@
     {
         return 0;
     }
-
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -57,7 +56,8 @@
 
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
-    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com/%@", appendString]];
+    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", appendString]];
+    //NSLog(@"URL is %@", url);
     NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
     

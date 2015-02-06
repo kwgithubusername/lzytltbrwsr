@@ -101,7 +101,7 @@
 {
     if (!self.subRedditURLString)
     {
-        [self loadRedditJSONWithAppendingString:@".json"];
+        [self loadRedditJSONWithAppendingString:@"/.json"];
     }
     else
     {
@@ -111,7 +111,7 @@
 
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
-    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com/%@", appendString]];
+    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", appendString]];
     NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
     
