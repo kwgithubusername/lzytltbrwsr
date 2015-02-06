@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RAPThreadViewController : UIViewController
+@interface RAPThreadViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic) NSString *permalinkURLString;
 
