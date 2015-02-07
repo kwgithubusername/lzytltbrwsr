@@ -17,17 +17,58 @@
 @implementation RAPFavoritesViewController
 - (IBAction)addFavoriteButtonTapped:(UIBarButtonItem *)sender
 {
+    [self addSubreddit];
+}
+
+-(void)addSubreddit
+{
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Add subreddit" message:@"reddit.com/r/" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add", nil];
     alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    alertView.tag = 100;
     [alertView show];
 }
 
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    UITextField *subredditToAddTextField = [alertView textFieldAtIndex:0];
-    NSString *subredditToAddString = subredditToAddTextField.text;
-    [self verifySubredditWithString:subredditToAddString];
-    
+    switch (alertView.tag)
+    {
+        case 100:
+        {
+            if (buttonIndex == 1)
+            {
+                UITextField *subredditToAddTextField = [alertView textFieldAtIndex:0];
+                NSString *subredditToAddString = subredditToAddTextField.text;
+                if (subredditToAddString.length > 0)
+                {
+                    [self verifySubredditWithString:subredditToAddString];
+                }
+                else
+                {
+                    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Blank entry" message:@"Please enter a subreddit" delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
+                    alertView.tag = 101;
+                    [alertView show];
+                }
+            }
+            break;
+        }
+        case 101:
+        {
+            [self addSubreddit];
+            break;
+        }
+        case 404:
+        {
+            [self addSubreddit];
+            break;
+        }
+    }
+}
+
+-(void)alertUserThatSubredditCannotBeFound
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Invalid subreddit" message:@"Please enter a valid subreddit" delegate:self cancelButtonTitle:nil otherButtonTitles: @"OK", nil];
+    alertView.tag = 404;
+    [alertView show];
 }
 
 -(void)verifySubredditWithString:(NSString *)appendString
@@ -39,11 +80,16 @@
     NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                                          NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          NSLog(@"Results are %@", jsonData);
+                                          NSSet *jsonResults = [[NSSet alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
+                                          NSLog(@"Subreddit is %@", jsonData);
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
+                                                             if ([jsonResults count] == 0)
+                                                             {
+                                                                 NSLog(@"subreddit not found");
+                                                                 [self alertUserThatSubredditCannotBeFound];
+                                                             }
                                                              
                                                          });
                                       }];
