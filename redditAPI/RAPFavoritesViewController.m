@@ -15,6 +15,41 @@
 @end
 
 @implementation RAPFavoritesViewController
+- (IBAction)addFavoriteButtonTapped:(UIBarButtonItem *)sender
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Add subreddit" message:@"reddit.com/r/" delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Add", nil];
+    alertView.alertViewStyle = UIAlertViewStylePlainTextInput;
+    [alertView show];
+}
+
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    UITextField *subredditToAddTextField = [alertView textFieldAtIndex:0];
+    NSString *subredditToAddString = subredditToAddTextField.text;
+    [self verifySubredditWithString:subredditToAddString];
+    
+}
+
+-(void)verifySubredditWithString:(NSString *)appendString
+{
+    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com/r/%@/.json", appendString]];
+    NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
+    
+    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+                                      {
+                                          NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+                                          NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
+                                          NSLog(@"Results are %@", jsonData);
+                                          
+                                          dispatch_async(dispatch_get_main_queue(), ^
+                                                         {
+                                                             
+                                                         });
+                                      }];
+    
+    [dataTask resume];
+}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -26,11 +61,6 @@
     UITableViewCell *favoritesCell = [self.tableView dequeueReusableCellWithIdentifier:@"favoritesCell"];
     favoritesCell.textLabel.text = [self.favoritesArray objectAtIndex:indexPath.row];
     return favoritesCell;
-}
-
-- (IBAction)cancelButtonTapped:(UIBarButtonItem *)sender
-{
-    //[self dismissViewControllerAnimated:YES completion:nil];
 }
 
 -(NSArray *)defaultSubredditFavorites
