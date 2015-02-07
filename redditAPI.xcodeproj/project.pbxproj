@@ -22,6 +22,7 @@
 		9ECF834C1A660B8200E7D9C7 /* RAPTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */; };
 		9ED517011A8432F700929C35 /* RAPThreadTopicTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */; };
 		9ED517041A84330A00929C35 /* RAPThreadCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED517031A84330A00929C35 /* RAPThreadCommentTableViewCell.m */; };
+		9EE5AEE61A86B11700F25DB7 /* RAPRectangleSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -65,6 +66,8 @@
 		9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPThreadTopicTableViewCell.m; sourceTree = "<group>"; };
 		9ED517021A84330A00929C35 /* RAPThreadCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPThreadCommentTableViewCell.h; sourceTree = "<group>"; };
 		9ED517031A84330A00929C35 /* RAPThreadCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPThreadCommentTableViewCell.m; sourceTree = "<group>"; };
+		9EE5AEE41A86B11700F25DB7 /* RAPRectangleSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPRectangleSelector.h; sourceTree = "<group>"; };
+		9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPRectangleSelector.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,8 @@
 				9ECF832C1A66096E00E7D9C7 /* ViewController.m */,
 				9ECF834A1A660B8200E7D9C7 /* RAPTableViewCell.h */,
 				9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */,
+				9EE5AEE41A86B11700F25DB7 /* RAPRectangleSelector.h */,
+				9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */,
 				9E9D75DF1A81B941005CEB64 /* RAPRedditLinks.h */,
 				9E9D75E31A81C447005CEB64 /* RAPFavoritesViewController.h */,
 				9E9D75E41A81C447005CEB64 /* RAPFavoritesViewController.m */,
@@ -271,6 +276,7 @@
 				9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */,
 				9ECF834C1A660B8200E7D9C7 /* RAPTableViewCell.m in Sources */,
 				9E9D75E81A828187005CEB64 /* RAPThreadViewController.m in Sources */,
+				9EE5AEE61A86B11700F25DB7 /* RAPRectangleSelector.m in Sources */,
 				9E9D75DE1A819C55005CEB64 /* RAPTiltToScroll.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

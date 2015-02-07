@@ -12,6 +12,7 @@
 #import "RAPSelectorView.h"
 #import "RAPTiltToScroll.h"
 #import "RAPRedditLinks.h"
+#import "RAPRectangleSelector.h"
 #import "RAPThreadViewController.h"
 @interface RAPViewController ()
 
@@ -51,6 +52,8 @@
     }
 }
 
+#pragma mark TableView Methods
+
 -(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
@@ -82,6 +85,7 @@
     }
 }
 
+
 #pragma mark Setup and NSURLSession
 
 - (void)viewDidLoad {
@@ -93,6 +97,8 @@
     self.resultsMutableArray = [[NSMutableArray alloc] init];
     
     [self loadReddit];
+    
+    [self notificationSetupForInitializingRectSelector];
     
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     // Do any additional setup after loading the view, typically from a nib.
@@ -133,9 +139,41 @@
     [dataTask resume];
 }
 
+#pragma mark Rectangle Selector methods
+
+- (void)notificationSetupForInitializingRectSelector
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRect) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+}
+
+- (void)createRect
+{
+    NSLog(@"let's make a rect");
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    RAPRectangleSelector *rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:CGRectMake(100,100,25,25)];
+//    [self.tableView cellForRowAtIndexPath:0].frame
+    [self.view addSubview:rectangleSelector];
+    [self.view bringSubviewToFront:rectangleSelector];
+}
+
+- (void)tapRowAtIndexPathWhenTiltedRight
+{
+    
+}
+
+- (void)cancelRectWhenTiltedleft
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
 }
 
 @end

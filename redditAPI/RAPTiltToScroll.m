@@ -10,12 +10,19 @@
 #import <UIKit/UIKit.h>
 #import <CoreMotion/CoreMotion.h>
 
+#define RAPCreateRectSelectorNotification @"RAPCreateRectSelectorNotification"
+
 @interface RAPTiltToScroll ()
 @property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) CGFloat lastContentOffset;
 @end
 
 @implementation RAPTiltToScroll
+
+-(void)postCreateRectSelectorNotification
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPCreateRectSelectorNotification" object:self];
+}
 
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView
 {
@@ -51,10 +58,12 @@
 
     if (forwardOrBackwardAngle > 10)
     {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPCreateRectSelectorNotification" object:self];
         //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
     }
     else if (forwardOrBackwardAngle < -10)
     {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPCreateRectSelectorNotification" object:self];
         //NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
     }
 }
