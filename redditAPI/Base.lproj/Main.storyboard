@@ -52,7 +52,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="BYZ-38-t0r" kind="show" id="nEL-hu-uDb"/>
+                                            <segue destination="BYZ-38-t0r" kind="show" identifier="subredditSegue" id="WHS-fU-Osg"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -320,6 +320,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="8Xf-ET-DAz"/>
-        <segue reference="nEL-hu-uDb"/>
+        <segue reference="WHS-fU-Osg"/>
     </inferredMetricsTieBreakers>
 </document>

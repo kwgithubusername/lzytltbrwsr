@@ -42,12 +42,12 @@
 {
     if ([segue.identifier isEqualToString:@"threadSegue"])
     {
-        RAPThreadViewController *tvc = segue.destinationViewController;
+        RAPThreadViewController *threadViewController = segue.destinationViewController;
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
         //NSString *testString = @"r/SwingDancing/comments/2uc1f2/question_can_you_help_me_locate_this_song/.json";
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@.json", [redditEntry[@"data"] objectForKey:@"permalink"]];
-        tvc.permalinkURLString = linkIDString;
+        threadViewController.permalinkURLString = linkIDString;
     }
 }
 
@@ -106,13 +106,14 @@
     }
     else
     {
-        [self loadRedditJSONWithAppendingString:self.subRedditURLString];
+        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"/r/%@/.json",self.subRedditURLString]];
     }
 }
 
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
     NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", appendString]];
+    NSLog(@"URL is %@", url);
     NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
     

@@ -7,14 +7,30 @@
 //
 
 #import "RAPFavoritesViewController.h"
-
+#import "ViewController.h"
 @interface RAPFavoritesViewController ()
-@property (nonatomic) NSArray *favoritesArray;
+@property (nonatomic) NSMutableArray *favoritesMutableArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 
 @implementation RAPFavoritesViewController
+
+#pragma mark Segue
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"subredditSegue"])
+    {
+        RAPViewController *subredditViewController = segue.destinationViewController;
+        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        NSString *subredditString = self.favoritesMutableArray[indexPath.row];
+        subredditViewController.subRedditURLString = subredditString;
+    }
+}
+
+#pragma mark Adding subreddits
+
 - (IBAction)addFavoriteButtonTapped:(UIBarButtonItem *)sender
 {
     [self addSubreddit];
@@ -37,7 +53,7 @@
             if (buttonIndex == 1)
             {
                 UITextField *subredditToAddTextField = [alertView textFieldAtIndex:0];
-                NSString *subredditToAddString = subredditToAddTextField.text;
+                NSString *subredditToAddString = [subredditToAddTextField.text lowercaseString];
                 if (subredditToAddString.length > 0)
                 {
                     [self verifySubredditWithString:subredditToAddString];
@@ -90,6 +106,15 @@
                                                                  NSLog(@"subreddit not found");
                                                                  [self alertUserThatSubredditCannotBeFound];
                                                              }
+                                                             else
+                                                             {
+                                                                 [self.favoritesMutableArray addObject:appendString];
+                                                                 [self.favoritesMutableArray sortUsingSelector:@selector(localizedCompare:)];
+                                                                 NSIndexPath *indexPathForWord = [NSIndexPath indexPathForRow:[self.favoritesMutableArray indexOfObject:appendString] inSection:self.tableView.numberOfSections-1];
+                                                                 [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPathForWord] withRowAnimation:UITableViewRowAnimationFade];
+                                                                 [self updateFavorites];
+                                                                 [self.tableView reloadData];
+                                                             }
                                                              
                                                          });
                                       }];
@@ -97,16 +122,39 @@
     [dataTask resume];
 }
 
+#pragma mark Table View Methods
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.favoritesArray count];
+    return [self.favoritesMutableArray count];
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *favoritesCell = [self.tableView dequeueReusableCellWithIdentifier:@"favoritesCell"];
-    favoritesCell.textLabel.text = [self.favoritesArray objectAtIndex:indexPath.row];
+    favoritesCell.textLabel.text = [self.favoritesMutableArray objectAtIndex:indexPath.row];
     return favoritesCell;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete)
+    {
+        [self.favoritesMutableArray removeObjectAtIndex:indexPath.row];
+        [self updateFavorites];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
+
+-(void)updateFavorites
+{
+    [[NSUserDefaults standardUserDefaults] setValue:self.favoritesMutableArray forKey:@"favorites"];
 }
 
 -(NSArray *)defaultSubredditFavorites
@@ -121,7 +169,7 @@
     NSDictionary *defaultFavorites = [NSDictionary dictionaryWithObject:[self defaultSubredditFavorites] forKey:@"favorites"];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultFavorites];
     
-    self.favoritesArray = [[NSArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] valueForKey:@"favorites"]];
+    self.favoritesMutableArray = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] valueForKey:@"favorites"]];
     // Do any additional setup after loading the view.
 }
 
