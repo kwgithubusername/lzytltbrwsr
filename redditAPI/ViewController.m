@@ -74,9 +74,10 @@
     
     if (CGRectIsEmpty(self.tableViewCellRect))
     {
-        self.tableViewCellRect = [tableView rectForRowAtIndexPath:indexPath];
+        CGRect cellRect = [tableView rectForRowAtIndexPath:indexPath];
+        self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
         NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
-        NSLog(@"Bounds is %@", NSStringFromCGRect(self.view.bounds));
+        NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
         [self notificationSetupForInitializingRectSelector];
     }
 
@@ -148,6 +149,12 @@
 }
 
 #pragma mark Rectangle Selector methods
+
+-(float)statusBarHeight
+{
+    CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
+    return MIN(statusBarSize.width, statusBarSize.height);
+}
 
 - (void)notificationSetupForInitializingRectSelector
 {

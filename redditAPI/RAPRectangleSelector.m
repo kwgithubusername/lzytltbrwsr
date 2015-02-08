@@ -9,8 +9,10 @@
 #import "RAPRectangleSelector.h"
 @interface RAPRectangleSelector ()
 @property (nonatomic) UIColor *rectColor;
-@property (nonatomic) CGFloat rectAlphaCGFloat;
-@property (nonatomic) NSTimer *decrementAlphaTimer;
+@property (nonatomic) CGFloat rectRedCGFloat;
+@property (nonatomic) CGFloat rectGreenCGFloat;
+@property (nonatomic) CGFloat rectBlueCGFloat;
+@property (nonatomic) NSTimer *changeColorTimer;
 @end
 @implementation RAPRectangleSelector
 
@@ -32,26 +34,39 @@
 {
     self.opaque = NO;
     self.backgroundColor = [UIColor clearColor];
-    self.rectColor = [UIColor redColor];
-    self.rectAlphaCGFloat = 1;
-    [self setNeedsDisplay];
-    //[self beginDecrementingAlpha];
+    self.rectColor = [UIColor greenColor];
+    self.rectRedCGFloat = 0;
+    self.rectGreenCGFloat = 1.0;
+    self.rectBlueCGFloat = 0;
+    //[self setNeedsDisplay];
+    [self beginDecrementingAlpha];
 }
 
 -(void)beginDecrementingAlpha
 {
-    self.decrementAlphaTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(changeAlpha) userInfo:nil repeats:YES];
+    self.changeColorTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(changeColor) userInfo:nil repeats:YES];
 }
 
--(void)changeAlpha
+-(void)changeColor
 {
-    self.rectColor = [[UIColor redColor] colorWithAlphaComponent:self.rectAlphaCGFloat];
-    self.rectAlphaCGFloat = self.rectAlphaCGFloat - 0.1;
-    [self setNeedsDisplay];
-    if (self.rectAlphaCGFloat == 0)
+    self.rectColor = [UIColor colorWithRed:self.rectRedCGFloat green:self.rectGreenCGFloat blue:self.rectBlueCGFloat alpha:1];
+    if (self.rectRedCGFloat < 0.9)
     {
-        [self.decrementAlphaTimer invalidate];
-        self.decrementAlphaTimer = nil;
+        self.rectRedCGFloat = self.rectRedCGFloat + 0.1;
+    }
+    else
+    {
+        self.rectRedCGFloat = 1;
+    }
+    if (self.rectRedCGFloat == 1)
+    {
+        self.rectGreenCGFloat = self.rectGreenCGFloat - 0.1;
+    }
+    [self setNeedsDisplay];
+    if (self.rectGreenCGFloat == 0)
+    {
+        [self.changeColorTimer invalidate];
+        self.changeColorTimer = nil;
     }
 }
 
