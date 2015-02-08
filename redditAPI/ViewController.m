@@ -21,7 +21,8 @@
 @property (nonatomic) RAPapi *api;
 @property (nonatomic) RAPSelectorView *RAPRectangleSelectorView;
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
-
+@property (nonatomic) CGRect tableViewCellRect;
+@property (nonatomic) RAPRectangleSelector *rectangleSelector;
 
 @end
 
@@ -70,6 +71,15 @@
     RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
     cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
+    
+    if (CGRectIsEmpty(self.tableViewCellRect))
+    {
+        self.tableViewCellRect = [tableView rectForRowAtIndexPath:indexPath];
+        NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
+        NSLog(@"Bounds is %@", NSStringFromCGRect(self.view.bounds));
+        [self notificationSetupForInitializingRectSelector];
+    }
+
     return cell;
 }
 
@@ -97,8 +107,6 @@
     self.resultsMutableArray = [[NSMutableArray alloc] init];
     
     [self loadReddit];
-    
-    [self notificationSetupForInitializingRectSelector];
     
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     // Do any additional setup after loading the view, typically from a nib.
@@ -150,10 +158,9 @@
 {
     NSLog(@"let's make a rect");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
-    RAPRectangleSelector *rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:CGRectMake(100,100,25,25)];
-//    [self.tableView cellForRowAtIndexPath:0].frame
-    [self.view addSubview:rectangleSelector];
-    [self.view bringSubviewToFront:rectangleSelector];
+    self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect];
+    [self.view addSubview:self.rectangleSelector];
+    [self.view bringSubviewToFront:self.rectangleSelector];
 }
 
 - (void)tapRowAtIndexPathWhenTiltedRight

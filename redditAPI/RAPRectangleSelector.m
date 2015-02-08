@@ -9,6 +9,8 @@
 #import "RAPRectangleSelector.h"
 @interface RAPRectangleSelector ()
 @property (nonatomic) UIColor *rectColor;
+@property (nonatomic) CGFloat rectAlphaCGFloat;
+@property (nonatomic) NSTimer *decrementAlphaTimer;
 @end
 @implementation RAPRectangleSelector
 
@@ -31,12 +33,26 @@
     self.opaque = NO;
     self.backgroundColor = [UIColor clearColor];
     self.rectColor = [UIColor redColor];
+    self.rectAlphaCGFloat = 1;
     [self setNeedsDisplay];
+    //[self beginDecrementingAlpha];
+}
+
+-(void)beginDecrementingAlpha
+{
+    self.decrementAlphaTimer = [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(changeAlpha) userInfo:nil repeats:YES];
 }
 
 -(void)changeAlpha
 {
-    self.rectColor = [[UIColor redColor] colorWithAlphaComponent:0.5];
+    self.rectColor = [[UIColor redColor] colorWithAlphaComponent:self.rectAlphaCGFloat];
+    self.rectAlphaCGFloat = self.rectAlphaCGFloat - 0.1;
+    [self setNeedsDisplay];
+    if (self.rectAlphaCGFloat == 0)
+    {
+        [self.decrementAlphaTimer invalidate];
+        self.decrementAlphaTimer = nil;
+    }
 }
 
 // Only override drawRect: if you perform custom drawing.
@@ -52,11 +68,8 @@
     
     borderPath.lineWidth = 5.0;
     
-//    [[UIColor blueColor] setStroke];
-//    [borderPath stroke];
-    
     // Start by filling the area with the blue color
-    [[UIColor blueColor] setFill];
+    [self.rectColor setFill];
     UIRectFill( rect );
     
     // Assume that there's an ivar somewhere called holeRect of type CGRect
@@ -67,20 +80,6 @@
     
     [[UIColor clearColor] setFill];
     UIRectFill( holeRectIntersection );
-    
-//    // Fill the area outside of the bezier path we created with white
-//    // [path fill] does not cover the outside area with white; image shows through outside of the shape
-//    [[UIColor whiteColor] setFill];
-//    UIRectFill(rect);
-//    
-//    // Cut a hole in the shape of the path, revealing the image in DeckViewController
-//    CGContextRef ctx = UIGraphicsGetCurrentContext();
-//    CGContextSetBlendMode(ctx, kCGBlendModeDestinationOut);
-//    [borderPath fill];
-//    
-//    // Redraw the path, as it has been changed to white
-//    CGContextSetBlendMode(ctx, kCGBlendModeNormal);
-//    [borderPath stroke];
     
 }
 
