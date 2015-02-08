@@ -13,6 +13,7 @@
 #import "RAPTiltToScroll.h"
 #import "RAPRedditLinks.h"
 #import "RAPRectangleSelector.h"
+#import "RAPRectangleReferenceForAdjustingScrollView.h"
 #import "RAPThreadViewController.h"
 @interface RAPViewController ()
 
@@ -23,7 +24,7 @@
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
-
+@property (nonatomic) RAPRectangleReferenceForAdjustingScrollView *rectangleReference;
 @end
 
 @implementation RAPViewController
@@ -79,6 +80,7 @@
         NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
         [self notificationSetupForInitializingRectSelector];
+        [self createRectReference];
     }
 
     return cell;
@@ -96,6 +98,11 @@
     }
 }
 
+-(void)adjustTableView
+{
+    [self.tableView scrollRectToVisible:self.rectangleReference.bounds animated:YES];
+    //[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+}
 
 #pragma mark Setup and NSURLSession
 
@@ -142,6 +149,7 @@
                                                          {
                                                              [self.resultsMutableArray addObjectsFromArray:jsonResults];
                                                              [self.tableView reloadData];
+                                                             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPath" object:self.tiltToScroll];
                                                          });
                                       }];
     
@@ -149,6 +157,11 @@
 }
 
 #pragma mark Rectangle Selector methods
+
+-(void)userSelectedRow
+{
+    NSLog(@"Rect is at %@", NSStringFromCGRect(self.rectangleSelector.frame));
+}
 
 -(float)statusBarHeight
 {
@@ -158,17 +171,40 @@
 
 - (void)notificationSetupForInitializingRectSelector
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRect) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    
+//    [[NSNotificationCenter defaultCenter] addObserverForName:@"RAPRectReferenceShouldMoveByCGFloatIncrement" object:self.tiltToScroll queue:nil usingBlock:^(NSNotification *note)
+//    {
+//        [self moveRectReferenceByCGFloatAmount:[[note.userInfo objectForKey:@"incrementKey"] floatValue]];
+//    }];
 }
 
-- (void)createRect
+- (void)createRectSelector
 {
-    NSLog(@"let's make a rect");
+    NSLog(@"let's make a rect selector");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
     self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect];
     self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
     [self.view addSubview:self.rectangleSelector];
     [self.view bringSubviewToFront:self.rectangleSelector];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+}
+
+-(void)createRectReference
+{
+    if (!self.rectangleReference)
+    {
+        self.rectangleReference = [[RAPRectangleReferenceForAdjustingScrollView alloc] initWithFrame:self.tableViewCellRect];
+        [self.view addSubview:self.rectangleReference];
+        [self.view bringSubviewToFront:self.rectangleReference];
+    }
+}
+
+-(void)moveRectReferenceByCGFloatAmount:(CGFloat)incrementCGFloat
+{
+    CGRect newFrame = CGRectMake(self.rectangleReference.frame.origin.x, self.rectangleReference.frame.origin.y + incrementCGFloat, self.rectangleReference.frame.size.width, self.rectangleReference.frame.size.height);
+    self.rectangleReference.frame = newFrame;
+    NSLog(@"Newframe is %@", NSStringFromCGRect(self.rectangleReference.frame));
 }
 
 - (void)tapRowAtIndexPathWhenTiltedRight
@@ -188,6 +224,12 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+    
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRectReferenceShouldMoveByCGFloatIncrement" object:self.tiltToScroll];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPath" object:self.tiltToScroll];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
 }
 

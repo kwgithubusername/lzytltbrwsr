@@ -88,15 +88,6 @@
 // An empty implementation adversely affects performance during animation.
 - (void)drawRect:(CGRect)rect
 {
-    UIBezierPath *borderPath = [[UIBezierPath alloc] init];
-    [borderPath moveToPoint:CGPointMake(0,0)];
-//    [borderPath moveToPoint:CGPointMake(self.bounds.size.width, 0)];
-    [borderPath moveToPoint:CGPointMake(self.bounds.size.width, self.bounds.size.height)];
-    [borderPath moveToPoint:CGPointMake(0,self.bounds.size.height)];
-    [borderPath closePath];
-    
-    borderPath.lineWidth = 5.0;
-    
     // Start by filling the area with the blue color
     [self.rectColor setFill];
     UIRectFill( rect );

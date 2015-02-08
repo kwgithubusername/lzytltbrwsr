@@ -15,6 +15,8 @@
 @interface RAPTiltToScroll ()
 @property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) CGFloat lastContentOffset;
+@property BOOL selectModeIsOn;
+@property BOOL selectModeHasBeenSwitched;
 @end
 
 @implementation RAPTiltToScroll
@@ -47,24 +49,42 @@
     if (leftOrRightAngle > 10 || leftOrRightAngle < -10)
     {
         //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
-        if (scrollView.contentOffset.y + leftOrRightAngle/5 >= -64)
+        if (scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 || !self.selectModeIsOn)
         {
             CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
             scrollView.contentOffset = offsetCGPoint;
+            
+//            [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPRectReferenceShouldMoveByCGFloatIncrement" object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:leftOrRightAngle/5] forKey:@"incrementKey"]];
         }
-
-        //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
+        NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
 
     if (forwardOrBackwardAngle > 10)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPCreateRectSelectorNotification" object:self];
+        if (!self.selectModeHasBeenSwitched)
+        {
+            BOOL change = !self.selectModeIsOn;
+            self.selectModeIsOn = change;
+            self.selectModeHasBeenSwitched = YES;
+        }
         //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
     }
     else if (forwardOrBackwardAngle < -10)
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPCreateRectSelectorNotification" object:self];
         //NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
+    }
+    
+    // if the offset is not a multiple of 44 -> the tableviewcell height
+    // make it the closest multiple of 44 -> the tableviewcell height
+    
+    // Whatever the current contentoffset is
+    // Find the closest multiple of 44 -> the tableviewcell height
+    
+    if (leftOrRightAngle < 10 && forwardOrBackwardAngle < 10)
+    {
+        self.selectModeHasBeenSwitched = NO;
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPTableViewShouldAdjustToNearestRowAtIndexPath" object:self];
     }
 }
 

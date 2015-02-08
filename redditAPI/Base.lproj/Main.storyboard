@@ -176,7 +176,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-321" y="253"/>
+            <point key="canvasLocation" x="-79" y="155"/>
         </scene>
         <!--Thread View Controller-->
         <scene sceneID="CGb-Pg-muh">
