@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface RAPRectangleSelector : UIView
+@property (nonatomic) CGFloat incrementCGFloat;
+@property (nonatomic) BOOL userHasStoppedSelection;
 -(id)initWithFrame:(CGRect)frame;
 @end

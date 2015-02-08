@@ -34,22 +34,24 @@
 {
     self.opaque = NO;
     self.backgroundColor = [UIColor clearColor];
-    self.rectColor = [UIColor greenColor];
-    self.rectRedCGFloat = 0;
-    self.rectGreenCGFloat = 1.0;
-    self.rectBlueCGFloat = 0;
     //[self setNeedsDisplay];
     [self beginDecrementingAlpha];
 }
 
 -(void)beginDecrementingAlpha
 {
+    self.rectColor = [UIColor greenColor];
+    self.rectRedCGFloat = 0;
+    self.rectGreenCGFloat = 1.0;
+    self.rectBlueCGFloat = 0;
     self.changeColorTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(changeColor) userInfo:nil repeats:YES];
 }
 
 -(void)changeColor
 {
     self.rectColor = [UIColor colorWithRed:self.rectRedCGFloat green:self.rectGreenCGFloat blue:self.rectBlueCGFloat alpha:1];
+    
+    // Green to yellow
     if (self.rectRedCGFloat < 0.9)
     {
         self.rectRedCGFloat = self.rectRedCGFloat + 0.1;
@@ -58,16 +60,28 @@
     {
         self.rectRedCGFloat = 1;
     }
+    
+    // Yellow to red
     if (self.rectRedCGFloat == 1)
     {
         self.rectGreenCGFloat = self.rectGreenCGFloat - 0.1;
     }
     [self setNeedsDisplay];
-    if (self.rectGreenCGFloat == 0)
+    if (self.rectGreenCGFloat < 0.1)
     {
         [self.changeColorTimer invalidate];
         self.changeColorTimer = nil;
+        [self moveRect];
     }
+}
+
+-(void)moveRect
+{
+    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat, self.frame.size.width, self.frame.size.height);
+    self.frame = newFrame;
+    NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
+    
+    [self beginDecrementingAlpha];
 }
 
 // Only override drawRect: if you perform custom drawing.

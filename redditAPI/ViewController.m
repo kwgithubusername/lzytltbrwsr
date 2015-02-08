@@ -166,6 +166,7 @@
     NSLog(@"let's make a rect");
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
     self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect];
+    self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
     [self.view addSubview:self.rectangleSelector];
     [self.view bringSubviewToFront:self.rectangleSelector];
 }
