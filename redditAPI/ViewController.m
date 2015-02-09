@@ -10,7 +10,6 @@
 #import "RAPTableViewCell.h"
 #import "RAPapi.h"
 #import "RAPSelectorView.h"
-#import "RAPTiltToScroll.h"
 #import "RAPRedditLinks.h"
 #import "RAPRectangleSelector.h"
 #import "RAPRectangleReferenceForAdjustingScrollView.h"
@@ -25,7 +24,6 @@
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
 @property (nonatomic) RAPRectangleReferenceForAdjustingScrollView *rectangleReference;
-@property BOOL hasStartedScrolling;
 @end
 
 @implementation RAPViewController
@@ -102,15 +100,15 @@
 
 -(void)adjustTableView
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
     NSLog(@"IndexPath is %d", indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
 }
 
--(void)scrollViewDidScroll:(UIScrollView *)scrollView
+-(void)addAdjustToNearestRowNotification
 {
-    NSLog(@"SCrollview ending aclled");
+    NSLog(@"Schmee");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
 }
 
@@ -126,6 +124,7 @@
     
     [self loadReddit];
     
+    self.tiltToScroll.delegate = self;
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     // Do any additional setup after loading the view, typically from a nib.
 }

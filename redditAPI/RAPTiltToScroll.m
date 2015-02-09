@@ -20,6 +20,7 @@
 @property (nonatomic) CGFloat lastContentOffset;
 @property BOOL selectModeIsOn;
 @property BOOL selectModeHasBeenSwitched;
+@property BOOL scrollingSessionHasStarted;
 @end
 
 @implementation RAPTiltToScroll
@@ -57,8 +58,13 @@
             CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
             scrollView.contentOffset = offsetCGPoint;
             
-            // We are no longer incrementing the reference rect
-//            [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPRectReferenceShouldMoveByCGFloatIncrement" object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:leftOrRightAngle/5] forKey:@"incrementKey"]];
+            if (!self.scrollingSessionHasStarted)
+            {
+                // This should happen only ONCE per scrolling session- note when a scrollingsession began and when it ends
+                [self.delegate addAdjustToNearestRowNotification];
+                self.scrollingSessionHasStarted = YES;
+            }
+
         }
         
         if (self.selectModeIsOn)
@@ -104,6 +110,7 @@
     {
         // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
         self.selectModeHasBeenSwitched = NO;
+        self.scrollingSessionHasStarted = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self];
     }
 }

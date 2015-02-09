@@ -8,8 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RAPTiltToScroll : NSObject
+@protocol TiltToScrollDelegate <NSObject>
 
+-(void)addAdjustToNearestRowNotification;
+
+@end
+
+@interface RAPTiltToScroll : NSObject
+@property (nonatomic) id <TiltToScrollDelegate> delegate;
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView;
 
 @end
