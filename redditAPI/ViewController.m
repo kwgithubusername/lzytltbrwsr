@@ -25,6 +25,7 @@
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
 @property (nonatomic) RAPRectangleReferenceForAdjustingScrollView *rectangleReference;
+@property BOOL hasStartedScrolling;
 @end
 
 @implementation RAPViewController
@@ -79,6 +80,7 @@
         self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
         NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
+        // Now that we have a cell, we can get rect selector's shape
         [self notificationSetupForInitializingRectSelector];
         [self createRectReference];
     }
@@ -100,8 +102,16 @@
 
 -(void)adjustTableView
 {
-    [self.tableView scrollRectToVisible:self.rectangleReference.bounds animated:YES];
-    //[self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
+    NSLog(@"IndexPath is %d", indexPath.row);
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
+}
+
+-(void)scrollViewDidScroll:(UIScrollView *)scrollView
+{
+    NSLog(@"SCrollview ending aclled");
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
 }
 
 #pragma mark Setup and NSURLSession
@@ -143,13 +153,13 @@
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                                           NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          NSLog(@"Results are %@", jsonData);
+                                          //NSLog(@"Results are %@", jsonData);
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
                                                              [self.resultsMutableArray addObjectsFromArray:jsonResults];
                                                              [self.tableView reloadData];
-                                                             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPath" object:self.tiltToScroll];
+                                                            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
                                                          });
                                       }];
     
@@ -185,9 +195,25 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
     self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect];
     self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
+    self.rectangleSelector.tag = 999;
     [self.view addSubview:self.rectangleSelector];
     [self.view bringSubviewToFront:self.rectangleSelector];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
+}
+
+- (void)removeRectSelector
+{
+    for (UIView *view in self.view.subviews)
+    {
+        if (view.tag == 999)
+        {
+            [view removeFromSuperview];
+        }
+    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
 }
 
 -(void)createRectReference
@@ -228,9 +254,11 @@
     
 //    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRectReferenceShouldMoveByCGFloatIncrement" object:self.tiltToScroll];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPath" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
 }
 
 @end

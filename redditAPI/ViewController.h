@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RAPViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface RAPViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate>
 @property (nonatomic) NSString *subRedditURLString;
 @end
 

@@ -11,6 +11,9 @@
 #import <CoreMotion/CoreMotion.h>
 
 #define RAPCreateRectSelectorNotification @"RAPCreateRectSelectorNotification"
+#define RAPRemoveRectSelectorNotification @"RAPRemoveRectSelectorNotification"
+#define RAPSelectARowNotification @"RAPSelectARowNotification"
+#define RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification @"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification"
 
 @interface RAPTiltToScroll ()
 @property (nonatomic) CMMotionManager *motionManager;
@@ -49,24 +52,40 @@
     if (leftOrRightAngle > 10 || leftOrRightAngle < -10)
     {
         //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
-        if (scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 || !self.selectModeIsOn)
+        if (scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 && !self.selectModeIsOn)
         {
             CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
             scrollView.contentOffset = offsetCGPoint;
             
+            // We are no longer incrementing the reference rect
 //            [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPRectReferenceShouldMoveByCGFloatIncrement" object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:leftOrRightAngle/5] forKey:@"incrementKey"]];
         }
-        NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
+        
+        if (self.selectModeIsOn)
+        {
+            // Post this notification and immediately remove the observer, as we want this to happen only once
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPSelectARowNotification" object:self];
+        }
+        //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
 
     if (forwardOrBackwardAngle > 10)
     {
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPCreateRectSelectorNotification" object:self];
         if (!self.selectModeHasBeenSwitched)
         {
             BOOL change = !self.selectModeIsOn;
             self.selectModeIsOn = change;
             self.selectModeHasBeenSwitched = YES;
+        }
+        if (self.selectModeIsOn)
+        {
+            // Post this notification and immediately remove the observer, as we want this to happen only once
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPCreateRectSelectorNotification" object:self];
+        }
+        if (!self.selectModeIsOn)
+        {
+            // Post this notification and immediately remove the observer, as we want this to happen only once
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPRemoveRectSelectorNotification" object:self];
         }
         //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
     }
@@ -83,8 +102,9 @@
     
     if (leftOrRightAngle < 10 && forwardOrBackwardAngle < 10)
     {
+        // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
         self.selectModeHasBeenSwitched = NO;
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPTableViewShouldAdjustToNearestRowAtIndexPath" object:self];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self];
     }
 }
 
