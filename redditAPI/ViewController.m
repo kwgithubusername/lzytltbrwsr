@@ -45,7 +45,15 @@
     if ([segue.identifier isEqualToString:@"threadSegue"])
     {
         RAPThreadViewController *threadViewController = segue.destinationViewController;
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
+        NSIndexPath *indexPath;
+        if (!CGRectIsEmpty(self.rectangleSelector.frame))
+        {
+            indexPath = [self.tableView indexPathForRowAtPoint:self.rectangleSelector.currentLocationRect.origin];
+        }
+        else
+        {
+            indexPath = [self.tableView indexPathForSelectedRow];
+        }
         NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
         //NSString *testString = @"r/SwingDancing/comments/2uc1f2/question_can_you_help_me_locate_this_song/.json";
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@.json", [redditEntry[@"data"] objectForKey:@"permalink"]];
@@ -55,10 +63,10 @@
 
 #pragma mark TableView Methods
 
--(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-}
+//-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+//}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -102,13 +110,12 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
-    NSLog(@"IndexPath is %d", indexPath.row);
+    //NSLog(@"IndexPath is %d", indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 -(void)addAdjustToNearestRowNotification
 {
-    NSLog(@"Schmee");
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
 }
 
@@ -127,6 +134,9 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     
     self.tiltToScroll.delegate = self;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:@"RAPSelectARowNotification" object:self.tiltToScroll];
+    
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     // Do any additional setup after loading the view, typically from a nib.
 }
@@ -171,7 +181,9 @@
 
 -(void)userSelectedRow
 {
-    NSLog(@"Rect is at %@", NSStringFromCGRect(self.rectangleSelector.frame));
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+    NSLog(@"User selected row");
+    [self performSegueWithIdentifier:@"threadSegue" sender:nil];
 }
 
 -(float)statusBarHeight
@@ -252,8 +264,6 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
-    
-//    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRectReferenceShouldMoveByCGFloatIncrement" object:self.tiltToScroll];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
     

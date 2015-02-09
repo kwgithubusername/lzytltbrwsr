@@ -11,5 +11,8 @@
 @interface RAPRectangleSelector : UIView
 @property (nonatomic) CGFloat incrementCGFloat;
 @property (nonatomic) BOOL userHasStoppedSelection;
+@property (nonatomic) CGRect currentLocationRect;
+
 -(id)initWithFrame:(CGRect)frame;
+
 @end

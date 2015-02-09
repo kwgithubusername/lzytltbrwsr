@@ -80,6 +80,7 @@
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat, self.frame.size.width, self.frame.size.height);
     self.frame = newFrame;
     NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
+    self.currentLocationRect = newFrame;
     
     [self beginDecrementingAlpha];
 }

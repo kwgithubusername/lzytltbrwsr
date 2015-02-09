@@ -115,20 +115,6 @@
     }
 }
 
--(void)croll:(UIScrollView *)scrollView
-{
-    if (self.lastContentOffset > scrollView.contentOffset.y)
-    {
-        //        [self maintainFixedPositionOfScrollRectInDirectionDown:NO inScrollView:scrollView];
-    }
-    else if (self.lastContentOffset < scrollView.contentOffset.y)
-    {
-        //        [self maintainFixedPositionOfScrollRectInDirectionDown:YES inScrollView:scrollView];
-    }
-    self.lastContentOffset = scrollView.contentOffset.y;
-    //NSLog(@"ScrollviewDidScroll contentOffSet is %f", scrollView.contentOffset.y);
-}
-
 #pragma mark Motion Manager
 
 -(CMMotionManager *)motionManager

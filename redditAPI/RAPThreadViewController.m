@@ -81,6 +81,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     NSLog(@"permalinkis = %@", self.permalinkURLString);
     self.resultsMutableArray = [[NSMutableArray alloc] init];
     [self loadRedditJSONWithAppendingString:self.permalinkURLString];
