@@ -10,12 +10,12 @@
 
 @protocol TiltToScrollDelegate <NSObject>
 
--(void)addAdjustToNearestRowNotification;
+-(void)addObserverForAdjustToNearestRowNotification;
 
 @end
 
 @interface RAPTiltToScroll : NSObject
 @property (nonatomic) id <TiltToScrollDelegate> delegate;
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView;
-
+-(void)stopTiltToScroll;
 @end

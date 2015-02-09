@@ -45,6 +45,11 @@
      }];
 }
 
+-(void)stopTiltToScroll
+{
+    [self.motionManager stopDeviceMotionUpdates];
+}
+
 
 #pragma mark Scrolling
 
@@ -61,7 +66,7 @@
             if (!self.scrollingSessionHasStarted)
             {
                 // This should happen only ONCE per scrolling session- note when a scrollingsession began and when it ends
-                [self.delegate addAdjustToNearestRowNotification];
+                [self.delegate addObserverForAdjustToNearestRowNotification];
                 self.scrollingSessionHasStarted = YES;
             }
 

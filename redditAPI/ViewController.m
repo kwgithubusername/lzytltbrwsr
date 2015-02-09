@@ -46,6 +46,7 @@
     {
         RAPThreadViewController *threadViewController = segue.destinationViewController;
         NSIndexPath *indexPath;
+        
         if (!CGRectIsEmpty(self.rectangleSelector.frame))
         {
             indexPath = [self.tableView indexPathForRowAtPoint:self.rectangleSelector.currentLocationRect.origin];
@@ -54,10 +55,12 @@
         {
             indexPath = [self.tableView indexPathForSelectedRow];
         }
+        
         NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
         //NSString *testString = @"r/SwingDancing/comments/2uc1f2/question_can_you_help_me_locate_this_song/.json";
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@.json", [redditEntry[@"data"] objectForKey:@"permalink"]];
         threadViewController.permalinkURLString = linkIDString;
+        [self.tiltToScroll stopTiltToScroll];
     }
 }
 
@@ -114,7 +117,7 @@
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
--(void)addAdjustToNearestRowNotification
+-(void)addObserverForAdjustToNearestRowNotification
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
 }
