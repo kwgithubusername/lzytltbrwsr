@@ -111,7 +111,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="vqX-6f-MZx">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="86f-4f-iIy" detailTextLabel="62p-l4-U5Y" style="IBUITableViewCellStyleSubtitle" id="hSy-p7-JVd" customClass="RAPTableViewCell">
@@ -159,13 +159,13 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="centerY" secondItem="vqX-6f-MZx" secondAttribute="centerY" id="1WX-DL-5yN"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="vqX-6f-MZx" secondAttribute="bottom" id="CF5-zf-cdh"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="LeF-fn-20Q" secondAttribute="bottom" id="DgI-8N-NN0"/>
-                            <constraint firstItem="LeF-fn-20Q" firstAttribute="width" secondItem="vqX-6f-MZx" secondAttribute="width" id="FZH-MC-GPq"/>
-                            <constraint firstItem="vqX-6f-MZx" firstAttribute="height" secondItem="8bC-Xf-vdC" secondAttribute="height" id="OvA-We-uO4"/>
-                            <constraint firstItem="LeF-fn-20Q" firstAttribute="centerX" secondItem="vqX-6f-MZx" secondAttribute="centerX" id="Ro8-H6-ESt"/>
-                            <constraint firstAttribute="centerX" secondItem="vqX-6f-MZx" secondAttribute="centerX" id="diT-6v-jGC"/>
-                            <constraint firstItem="vqX-6f-MZx" firstAttribute="width" secondItem="8bC-Xf-vdC" secondAttribute="width" id="uPj-2c-KQw"/>
+                            <constraint firstItem="vqX-6f-MZx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="E09-ON-RyT"/>
+                            <constraint firstItem="LeF-fn-20Q" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="XUc-UJ-x7h"/>
+                            <constraint firstItem="vqX-6f-MZx" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="dU5-NW-dVy"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="vqX-6f-MZx" secondAttribute="trailing" constant="-16" id="iqJ-OS-L37"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="LeF-fn-20Q" secondAttribute="trailing" constant="-16" id="mfU-fB-KdU"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="Rsr-a3-Pt6"/>

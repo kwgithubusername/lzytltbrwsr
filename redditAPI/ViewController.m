@@ -124,6 +124,8 @@
     
     [self loadReddit];
     
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    
     self.tiltToScroll.delegate = self;
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     // Do any additional setup after loading the view, typically from a nib.
