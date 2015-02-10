@@ -14,5 +14,5 @@
 @property (nonatomic) CGRect currentLocationRect;
 
 -(id)initWithFrame:(CGRect)frame;
-
+-(void)reset;
 @end

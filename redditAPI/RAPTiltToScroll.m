@@ -75,7 +75,8 @@
         if (self.selectModeIsOn)
         {
             // Post this notification and immediately remove the observer, as we want this to happen only once
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPSelectARowNotification" object:self];
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"RAPSelectRowNotification" object:self];
+            self.selectModeIsOn = NO;
         }
         //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
@@ -104,12 +105,6 @@
     {
         //NSLog(@"Tilted %f degrees backward", forwardOrBackwardAngle);
     }
-    
-    // if the offset is not a multiple of 44 -> the tableviewcell height
-    // make it the closest multiple of 44 -> the tableviewcell height
-    
-    // Whatever the current contentoffset is
-    // Find the closest multiple of 44 -> the tableviewcell height
     
     if (leftOrRightAngle < 10 && forwardOrBackwardAngle < 10)
     {

@@ -42,34 +42,33 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+    [self.tiltToScroll stopTiltToScroll];
+    [self removeRectSelector];
+    
     if ([segue.identifier isEqualToString:@"threadSegue"])
     {
         RAPThreadViewController *threadViewController = segue.destinationViewController;
         NSIndexPath *indexPath;
         
+        // If the the rectangle selector is being used, pick the row that the selector is currently over
+        
         if (!CGRectIsEmpty(self.rectangleSelector.frame))
         {
             indexPath = [self.tableView indexPathForRowAtPoint:self.rectangleSelector.currentLocationRect.origin];
         }
-        else
+        else // Otherwise, the user has tapped the row, so use the row that was tapped
         {
             indexPath = [self.tableView indexPathForSelectedRow];
         }
         
         NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
-        //NSString *testString = @"r/SwingDancing/comments/2uc1f2/question_can_you_help_me_locate_this_song/.json";
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@.json", [redditEntry[@"data"] objectForKey:@"permalink"]];
         threadViewController.permalinkURLString = linkIDString;
-        [self.tiltToScroll stopTiltToScroll];
     }
 }
 
 #pragma mark TableView Methods
-
-//-(void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
-//}
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
@@ -83,15 +82,15 @@
     cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
     cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
     
+    // Need to get the frame we will use for the rect selector
+    
     if (CGRectIsEmpty(self.tableViewCellRect))
     {
         CGRect cellRect = [tableView rectForRowAtIndexPath:indexPath];
         self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
         NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
-        // Now that we have a cell, we can get rect selector's shape
-        [self notificationSetupForInitializingRectSelector];
-        [self createRectReference];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
     }
 
     return cell;
@@ -100,6 +99,7 @@
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     // App will not register reaching the bottom of the tableview with tilt-to-scroll, so fetch more data when second-to-last row has been reached
+    
     if (indexPath.row == [self.resultsMutableArray count]-2)
     {
         NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row+1]];
@@ -111,38 +111,54 @@
 
 -(void)adjustTableView
 {
+    // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
     //NSLog(@"IndexPath is %d", indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
+#pragma mark TiltToScroll Delegate Method
+
 -(void)addObserverForAdjustToNearestRowNotification
 {
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
 }
 
-#pragma mark Setup and NSURLSession
+#pragma mark View methods
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
-    NSDictionary *d = @{@"poo":@3};
-    NSArray *a = @[@"s"];
-    
-    NSLog(@"Dictionary is %@, Array is %@", d, a);
     self.resultsMutableArray = [[NSMutableArray alloc] init];
-    
     [self loadReddit];
-    
     self.automaticallyAdjustsScrollViewInsets = NO;
-    
     self.tiltToScroll.delegate = self;
-    
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:@"RAPSelectARowNotification" object:self.tiltToScroll];
-    
-    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
-    // Do any additional setup after loading the view, typically from a nib.
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    // Tilt detection must be separate for each VC due to overreactivity with segues
+    
+    [self.tiltToScroll stopTiltToScroll];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
+}
+
+#pragma mark Load Reddit and NSURLsession
 
 - (void)loadReddit
 {
@@ -173,7 +189,6 @@
                                                          {
                                                              [self.resultsMutableArray addObjectsFromArray:jsonResults];
                                                              [self.tableView reloadData];
-                                                            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
                                                          });
                                       }];
     
@@ -184,7 +199,6 @@
 
 -(void)userSelectedRow
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
     NSLog(@"User selected row");
     [self performSegueWithIdentifier:@"threadSegue" sender:nil];
 }
@@ -193,16 +207,6 @@
 {
     CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
     return MIN(statusBarSize.width, statusBarSize.height);
-}
-
-- (void)notificationSetupForInitializingRectSelector
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
-    
-//    [[NSNotificationCenter defaultCenter] addObserverForName:@"RAPRectReferenceShouldMoveByCGFloatIncrement" object:self.tiltToScroll queue:nil usingBlock:^(NSNotification *note)
-//    {
-//        [self moveRectReferenceByCGFloatAmount:[[note.userInfo objectForKey:@"incrementKey"] floatValue]];
-//    }];
 }
 
 - (void)createRectSelector
@@ -227,6 +231,7 @@
             [view removeFromSuperview];
         }
     }
+    [self.rectangleSelector reset];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
@@ -262,17 +267,6 @@
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
-}
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
 }
 
 @end

@@ -13,6 +13,7 @@
 @property (nonatomic) CGFloat rectGreenCGFloat;
 @property (nonatomic) CGFloat rectBlueCGFloat;
 @property (nonatomic) NSTimer *changeColorTimer;
+@property (nonatomic) CGRect initialFrame;
 @end
 @implementation RAPRectangleSelector
 
@@ -20,6 +21,7 @@
 {
     if (self = [super initWithFrame:frame])
     {
+        self.initialFrame = frame;
         [self setup];
     }
     return self;
@@ -36,6 +38,15 @@
     self.backgroundColor = [UIColor clearColor];
     //[self setNeedsDisplay];
     [self beginDecrementingAlpha];
+}
+
+-(void)reset
+{
+    [self.changeColorTimer invalidate];
+    CGRect newFrame = self.initialFrame;
+    self.frame = newFrame;
+    NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
+    self.currentLocationRect = newFrame;
 }
 
 -(void)beginDecrementingAlpha
