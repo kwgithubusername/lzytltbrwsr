@@ -14,6 +14,12 @@
 #import "RAPRectangleSelector.h"
 #import "RAPRectangleReferenceForAdjustingScrollView.h"
 #import "RAPThreadViewController.h"
+
+#define RAPSelectRowNotification @"RAPSelectRowNotification"
+#define RAPCreateRectSelectorNotification @"RAPCreateRectSelectorNotification"
+#define RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification @"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification"
+#define RAPRemoveRectSelectorNotification @"RAPRemoveRectSelectorNotification"
+
 @interface RAPViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -42,7 +48,7 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
     [self.tiltToScroll stopTiltToScroll];
     [self removeRectSelector];
     
@@ -90,7 +96,7 @@
         self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
         NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
     }
 
     return cell;
@@ -113,7 +119,7 @@
 {
     // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
     //NSLog(@"IndexPath is %d", indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
@@ -123,7 +129,7 @@
 
 -(void)addObserverForAdjustToNearestRowNotification
 {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
 }
 
 #pragma mark View methods
@@ -140,7 +146,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -149,13 +155,13 @@
     
     [self.tiltToScroll stopTiltToScroll];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
 }
 
 #pragma mark Load Reddit and NSURLsession
@@ -212,14 +218,14 @@
 - (void)createRectSelector
 {
     NSLog(@"let's make a rect selector");
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
     self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect];
     self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
     self.rectangleSelector.tag = 999;
     [self.view addSubview:self.rectangleSelector];
     [self.view bringSubviewToFront:self.rectangleSelector];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:@"RAPSelectRowNotification" object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
 }
 
 - (void)removeRectSelector
@@ -232,9 +238,9 @@
         }
     }
     [self.rectangleSelector reset];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPSelectRowNotification" object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPRemoveRectSelectorNotification" object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
 }
 
 -(void)createRectReference
@@ -261,7 +267,7 @@
 
 - (void)cancelRectWhenTiltedleft
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"RAPCreateRectSelectorNotification" object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
 }
 
 - (void)didReceiveMemoryWarning {
