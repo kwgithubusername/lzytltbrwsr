@@ -29,7 +29,6 @@
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
-@property (nonatomic) RAPRectangleReferenceForAdjustingScrollView *rectangleReference;
 @end
 
 @implementation RAPViewController
@@ -145,6 +144,7 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:animated];
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
 }
@@ -189,7 +189,7 @@
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                                           NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          //NSLog(@"Results are %@", jsonData);
+                                          NSLog(@"Results are %@", jsonData);
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
@@ -241,23 +241,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
-}
-
--(void)createRectReference
-{
-    if (!self.rectangleReference)
-    {
-        self.rectangleReference = [[RAPRectangleReferenceForAdjustingScrollView alloc] initWithFrame:self.tableViewCellRect];
-        [self.view addSubview:self.rectangleReference];
-        [self.view bringSubviewToFront:self.rectangleReference];
-    }
-}
-
--(void)moveRectReferenceByCGFloatAmount:(CGFloat)incrementCGFloat
-{
-    CGRect newFrame = CGRectMake(self.rectangleReference.frame.origin.x, self.rectangleReference.frame.origin.y + incrementCGFloat, self.rectangleReference.frame.size.width, self.rectangleReference.frame.size.height);
-    self.rectangleReference.frame = newFrame;
-    NSLog(@"Newframe is %@", NSStringFromCGRect(self.rectangleReference.frame));
 }
 
 - (void)tapRowAtIndexPathWhenTiltedRight
