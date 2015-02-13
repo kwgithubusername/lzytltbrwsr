@@ -178,6 +178,12 @@
     }
 }
 
+- (void)alertUserThatErrorOccurred
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error retrieving data" message:@"Could not get reddit data" delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alertView show];
+}
+
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
     NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", appendString]];
@@ -189,10 +195,13 @@
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                                           NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          NSLog(@"Results are %@", jsonData);
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
+                                                             if (![jsonResults count])
+                                                             {
+                                                                 [self alertUserThatErrorOccurred];
+                                                             }
                                                              [self.resultsMutableArray addObjectsFromArray:jsonResults];
                                                              [self.tableView reloadData];
                                                          });
