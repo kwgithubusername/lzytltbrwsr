@@ -29,6 +29,7 @@
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
+@property (nonatomic) BOOL rectSelectorHasBeenMade;
 @end
 
 @implementation RAPViewController
@@ -95,7 +96,7 @@
         self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
         NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
+        [self addObserverForRectSelector];
     }
 
     return cell;
@@ -146,7 +147,7 @@
 {
     [super viewWillAppear:animated];
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
+    [self addObserverForRectSelector];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -224,17 +225,21 @@
     return MIN(statusBarSize.width, statusBarSize.height);
 }
 
-- (void)createRectSelector
+- (void)createRectSelectorAtTop:(BOOL)atTop
 {
-    NSLog(@"let's make a rect selector");
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
-    self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect];
-    self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
-    self.rectangleSelector.tag = 999;
-    [self.view addSubview:self.rectangleSelector];
-    [self.view bringSubviewToFront:self.rectangleSelector];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
+    if (!self.rectSelectorHasBeenMade)
+    {
+        NSLog(@"let's make a rect selector");
+        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop];
+        self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
+        self.rectangleSelector.tag = 999;
+        [self.view addSubview:self.rectangleSelector];
+        [self.view bringSubviewToFront:self.rectangleSelector];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
+        self.rectSelectorHasBeenMade = YES;
+    }
+
 }
 
 - (void)removeRectSelector
@@ -249,7 +254,17 @@
     [self.rectangleSelector reset];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
+    [self addObserverForRectSelector];
+    self.rectSelectorHasBeenMade = NO;
+}
+
+-(void)addObserverForRectSelector
+{
+    [[NSNotificationCenter defaultCenter] addObserverForName:RAPCreateRectSelectorNotification object:self.tiltToScroll queue:nil usingBlock:^(NSNotification *note)
+    {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
+        [self createRectSelectorAtTop:[[note.userInfo objectForKey:@"atTop"] boolValue]];
+        }];
 }
 
 - (void)tapRowAtIndexPathWhenTiltedRight
