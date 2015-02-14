@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "RAPTiltToScroll.h"
+#import "RAPRectangleSelector.h"
 @interface RAPTiltToScrollViewController : UIViewController <UIScrollViewDelegate, TiltToScrollDelegate>
 @property (weak, nonatomic) UITableView *tableView;
+@property (nonatomic) RAPRectangleSelector *rectangleSelector;
 @end

@@ -11,6 +11,10 @@
 #import "RAPapi.h"
 #import "RAPRedditLinks.h"
 #import "RAPThreadViewController.h"
+@interface RAPTiltToScrollViewController()
+-(CGPoint)getRectSelectorOrigin;
+- (void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
+@end
 
 @interface RAPViewController ()
 
@@ -29,14 +33,23 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    
     if ([segue.identifier isEqualToString:@"threadSegue"])
     {
-        RAPThreadViewController *threadViewController = segue.destinationViewController;
         NSIndexPath *indexPath;
+        if (!CGRectIsEmpty(super.rectangleSelector.frame))
+        {
+            CGRect currentLocationRect = super.rectangleSelector.currentLocationRect;
+            CGPoint pointToTarget = CGPointMake(0, currentLocationRect.origin.y - currentLocationRect.size.height/2);
+            indexPath = [self.tableView indexPathForRowAtPoint:pointToTarget];
+            NSLog(@"Subclass: Originselected is %@", NSStringFromCGPoint(super.rectangleSelector.currentLocationRect.origin));
+            NSLog(@"Indexpath.row is %d", indexPath.row);
+        }
+        else // Otherwise, the user has tapped the row, so use the row that was tapped
+        {
+            indexPath = [self.tableView indexPathForSelectedRow];
+        }
         
-        [super prepareForSegue:segue sender:sender];
-        
+        RAPThreadViewController *threadViewController = segue.destinationViewController;
         NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@.json", [redditEntry[@"data"] objectForKey:@"permalink"]];
         threadViewController.permalinkURLString = linkIDString;
@@ -57,17 +70,8 @@
     cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
     cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
     
-    // Need to get the frame we will use for the rect selector
+    [super createTableViewCellRectWithCellRect:[tableView rectForRowAtIndexPath:indexPath]];
     
-//    if (CGRectIsEmpty(self.tableViewCellRect))
-//    {
-//        CGRect cellRect = [tableView rectForRowAtIndexPath:indexPath];
-//        self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
-//        NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
-//        NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
-//        [self addObserverForRectSelector];
-//    }
-
     return cell;
 }
 

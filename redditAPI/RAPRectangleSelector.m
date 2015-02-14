@@ -47,7 +47,7 @@
     [self.changeColorTimer invalidate];
     CGRect newFrame = self.initialFrame;
     self.frame = newFrame;
-    NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
+    //NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
     self.currentLocationRect = newFrame;
 }
 
@@ -95,6 +95,7 @@
     self.frame = newFrame;
     NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
     self.currentLocationRect = newFrame;
+    NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
     
     [self beginDecrementingAlpha];
 }

@@ -7,7 +7,6 @@
 //
 
 #import "RAPTiltToScrollViewController.h"
-#import "RAPRectangleSelector.h"
 
 #define RAPSelectRowNotification @"RAPSelectRowNotification"
 #define RAPCreateRectSelectorNotification @"RAPCreateRectSelectorNotification"
@@ -17,7 +16,6 @@
 @interface RAPTiltToScrollViewController ()
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
-@property (nonatomic) RAPRectangleSelector *rectangleSelector;
 @property (nonatomic) BOOL rectSelectorHasBeenMade;
 @end
 
@@ -29,39 +27,13 @@
     return _tiltToScroll;
 }
 
--(NSIndexPath *)checkIfUserTapped
-{
-    // If the the rectangle selector is being used, pick the row that the selector is currently over
-    NSIndexPath *indexPath;
-    if (!CGRectIsEmpty(self.rectangleSelector.frame))
-    {
-        indexPath = [self.tableView indexPathForRowAtPoint:self.rectangleSelector.currentLocationRect.origin];
-    }
-    else // Otherwise, the user has tapped the row, so use the row that was tapped
-    {
-        indexPath = [self.tableView indexPathForSelectedRow];
-    }
-    return indexPath;
-}
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
-    [self.tiltToScroll stopTiltToScroll];
-    [self removeRectSelector];
-        // If the the rectangle selector is being used, pick the row that the selector is currently over
-}
-
 -(void)createTableViewCellRectWithCellRect:(CGRect)cellRect
 {
     // Need to get the frame we will use for the rect selector
     
     if (CGRectIsEmpty(self.tableViewCellRect))
     {
-        //CGRect cellRect = [tableView rectForRowAtIndexPath:indexPath];
         self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
-        NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
-        NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
         [self addObserverForRectSelector];
     }
 }
@@ -72,13 +44,13 @@
 {
     // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
     
+    // Readjust pointToTarget by contentoffset?
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
     //NSLog(@"IndexPath is %d", indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
-
-
 
 -(void)addObserverForAdjustToNearestRowNotification
 {
@@ -122,7 +94,12 @@
 -(void)userSelectedRow
 {
     NSLog(@"User selected row");
-    //[self performSegueWithIdentifier:@"threadSegue" sender:nil];
+    
+    NSLog(@"Superclass: Originselected is %@", NSStringFromCGPoint(self.rectangleSelector.currentLocationRect.origin));
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
+    [self performSegueWithIdentifier:@"threadSegue" sender:nil];
+    [self.tiltToScroll stopTiltToScroll];
+    [self removeRectSelector];
 }
 
 -(float)statusBarHeight
@@ -138,6 +115,7 @@
         NSLog(@"let's make a rect selector");
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop];
         self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
+        NSLog(@"CGIncrement is %f", self.rectangleSelector.incrementCGFloat);
         self.rectangleSelector.tag = 999;
         [self.view addSubview:self.rectangleSelector];
         [self.view bringSubviewToFront:self.rectangleSelector];

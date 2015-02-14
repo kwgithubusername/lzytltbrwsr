@@ -56,8 +56,8 @@
         {
             CGRect cellRect = [tableView rectForRowAtIndexPath:indexPath];
             self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
-            NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
-            NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
+            //NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
+            //NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
             [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
         }
         
