@@ -99,7 +99,7 @@
             // Post this notification and immediately remove the observer, as we want this to happen only once
             [[NSNotificationCenter defaultCenter] postNotificationName:RAPRemoveRectSelectorNotification object:self];
         }
-        //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
+        NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
     }
     else if (forwardOrBackwardAngle < -10)
     {
