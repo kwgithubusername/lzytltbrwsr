@@ -62,7 +62,7 @@
         {
             CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
             scrollView.contentOffset = offsetCGPoint;
-            
+            NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
             if (!self.scrollingSessionHasStarted)
             {
                 // This should happen only ONCE per scrolling session- note when a scrollingsession began and when it ends

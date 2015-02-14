@@ -38,7 +38,7 @@
 {
     self.opaque = NO;
     self.backgroundColor = [UIColor clearColor];
-    //[self setNeedsDisplay];
+    self.cellIndex = 0;
     [self beginDecrementingAlpha];
 }
 
@@ -47,6 +47,7 @@
     [self.changeColorTimer invalidate];
     CGRect newFrame = self.initialFrame;
     self.frame = newFrame;
+    self.cellIndex = 0;
     //NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
     self.currentLocationRect = newFrame;
 }
@@ -90,6 +91,7 @@
 
 -(void)moveRect
 {
+    self.cellIndex++;
     int direction = self.atTop ? 1 : -1;
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat*direction, self.frame.size.width, self.frame.size.height);
     self.frame = newFrame;

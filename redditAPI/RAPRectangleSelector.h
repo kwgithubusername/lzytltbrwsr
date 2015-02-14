@@ -12,6 +12,7 @@
 @property (nonatomic) CGFloat incrementCGFloat;
 @property (nonatomic) BOOL userHasStoppedSelection;
 @property (nonatomic) CGRect currentLocationRect;
+@property (nonatomic) int cellIndex;
 
 -(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop;
 -(void)reset;

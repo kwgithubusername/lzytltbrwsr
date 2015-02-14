@@ -38,10 +38,10 @@
         NSIndexPath *indexPath;
         if (!CGRectIsEmpty(super.rectangleSelector.frame))
         {
-            CGRect currentLocationRect = super.rectangleSelector.currentLocationRect;
-            CGPoint pointToTarget = CGPointMake(0, currentLocationRect.origin.y - currentLocationRect.size.height/2);
-            indexPath = [self.tableView indexPathForRowAtPoint:pointToTarget];
-            NSLog(@"Subclass: Originselected is %@", NSStringFromCGPoint(super.rectangleSelector.currentLocationRect.origin));
+//            CGRect currentLocationRect = super.rectangleSelector.currentLocationRect;
+//            CGPoint pointToTarget = CGPointMake(0, currentLocationRect.origin.y - currentLocationRect.size.height/2 - 64 + self.tableView.contentOffset.y);
+            indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
+            //NSLog(@"Subclass: Originselected is %@", NSStringFromCGPoint(super.rectangleSelector.currentLocationRect.origin));
             NSLog(@"Indexpath.row is %d", indexPath.row);
         }
         else // Otherwise, the user has tapped the row, so use the row that was tapped
