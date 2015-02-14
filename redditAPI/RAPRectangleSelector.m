@@ -14,13 +14,15 @@
 @property (nonatomic) CGFloat rectBlueCGFloat;
 @property (nonatomic) NSTimer *changeColorTimer;
 @property (nonatomic) CGRect initialFrame;
+@property (nonatomic) BOOL atTop;
 @end
 @implementation RAPRectangleSelector
 
--(id)initWithFrame:(CGRect)frame
+-(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop
 {
     if (self = [super initWithFrame:frame])
     {
+        self.atTop = atTop;
         self.initialFrame = frame;
         [self setup];
     }
@@ -88,7 +90,8 @@
 
 -(void)moveRect
 {
-    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat, self.frame.size.width, self.frame.size.height);
+    int direction = self.atTop ? 1 : -1;
+    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat*direction, self.frame.size.width, self.frame.size.height);
     self.frame = newFrame;
     NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
     self.currentLocationRect = newFrame;

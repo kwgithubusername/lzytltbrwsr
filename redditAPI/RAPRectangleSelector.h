@@ -13,6 +13,6 @@
 @property (nonatomic) BOOL userHasStoppedSelection;
 @property (nonatomic) CGRect currentLocationRect;
 
--(id)initWithFrame:(CGRect)frame;
+-(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop;
 -(void)reset;
 @end
