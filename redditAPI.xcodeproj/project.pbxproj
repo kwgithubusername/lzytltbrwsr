@@ -22,6 +22,7 @@
 		9ECF834C1A660B8200E7D9C7 /* RAPTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */; };
 		9ED517011A8432F700929C35 /* RAPThreadTopicTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */; };
 		9ED517041A84330A00929C35 /* RAPThreadCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED517031A84330A00929C35 /* RAPThreadCommentTableViewCell.m */; };
+		9ED7E13C1A8FB3D900020696 /* RAPTiltToScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */; };
 		9EE5AEE61A86B11700F25DB7 /* RAPRectangleSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */; };
 		9EE5AEE91A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE5AEE81A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.m */; };
 /* End PBXBuildFile section */
@@ -67,6 +68,8 @@
 		9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPThreadTopicTableViewCell.m; sourceTree = "<group>"; };
 		9ED517021A84330A00929C35 /* RAPThreadCommentTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPThreadCommentTableViewCell.h; sourceTree = "<group>"; };
 		9ED517031A84330A00929C35 /* RAPThreadCommentTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPThreadCommentTableViewCell.m; sourceTree = "<group>"; };
+		9ED7E13A1A8FB3D900020696 /* RAPTiltToScrollViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPTiltToScrollViewController.h; sourceTree = "<group>"; };
+		9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPTiltToScrollViewController.m; sourceTree = "<group>"; };
 		9EE5AEE41A86B11700F25DB7 /* RAPRectangleSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPRectangleSelector.h; sourceTree = "<group>"; };
 		9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPRectangleSelector.m; sourceTree = "<group>"; };
 		9EE5AEE71A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPRectangleReferenceForAdjustingScrollView.h; sourceTree = "<group>"; };
@@ -116,6 +119,8 @@
 				9ECF83291A66096E00E7D9C7 /* AppDelegate.m */,
 				9ECF832B1A66096E00E7D9C7 /* ViewController.h */,
 				9ECF832C1A66096E00E7D9C7 /* ViewController.m */,
+				9ED7E13A1A8FB3D900020696 /* RAPTiltToScrollViewController.h */,
+				9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */,
 				9ECF834A1A660B8200E7D9C7 /* RAPTableViewCell.h */,
 				9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */,
 				9EE5AEE71A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.h */,
@@ -280,6 +285,7 @@
 				9ECF83271A66096E00E7D9C7 /* main.m in Sources */,
 				9E9D75D81A804BA0005CEB64 /* RAPSelectorView.m in Sources */,
 				9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */,
+				9ED7E13C1A8FB3D900020696 /* RAPTiltToScrollViewController.m in Sources */,
 				9ECF834C1A660B8200E7D9C7 /* RAPTableViewCell.m in Sources */,
 				9E9D75E81A828187005CEB64 /* RAPThreadViewController.m in Sources */,
 				9EE5AEE61A86B11700F25DB7 /* RAPRectangleSelector.m in Sources */,

@@ -9,7 +9,6 @@
 #import "ViewController.h"
 #import "RAPTableViewCell.h"
 #import "RAPapi.h"
-#import "RAPSelectorView.h"
 #import "RAPRedditLinks.h"
 #import "RAPRectangleSelector.h"
 #import "RAPRectangleReferenceForAdjustingScrollView.h"
@@ -25,7 +24,6 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *resultsMutableArray;
 @property (nonatomic) RAPapi *api;
-@property (nonatomic) RAPSelectorView *RAPRectangleSelectorView;
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
@@ -115,6 +113,8 @@
     }
 }
 
+#pragma mark TiltToScroll Delegate Method
+
 -(void)adjustTableView
 {
     // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
@@ -125,7 +125,7 @@
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
-#pragma mark TiltToScroll Delegate Method
+
 
 -(void)addObserverForAdjustToNearestRowNotification
 {
