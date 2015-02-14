@@ -23,19 +23,33 @@
 
 @implementation RAPTiltToScrollViewController
 
--(instancetype)initWithTableView:(UITableView *)tableView
-{
-    if (self = [super init])
-    {
-        self.tableView = tableView;
-    }
-    return self;
-}
-
 -(RAPTiltToScroll *)tiltToScroll
 {
     if (!_tiltToScroll) _tiltToScroll = [[RAPTiltToScroll alloc] init];
     return _tiltToScroll;
+}
+
+-(NSIndexPath *)checkIfUserTapped
+{
+    // If the the rectangle selector is being used, pick the row that the selector is currently over
+    NSIndexPath *indexPath;
+    if (!CGRectIsEmpty(self.rectangleSelector.frame))
+    {
+        indexPath = [self.tableView indexPathForRowAtPoint:self.rectangleSelector.currentLocationRect.origin];
+    }
+    else // Otherwise, the user has tapped the row, so use the row that was tapped
+    {
+        indexPath = [self.tableView indexPathForSelectedRow];
+    }
+    return indexPath;
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
+    [self.tiltToScroll stopTiltToScroll];
+    [self removeRectSelector];
+        // If the the rectangle selector is being used, pick the row that the selector is currently over
 }
 
 -(void)createTableViewCellRectWithCellRect:(CGRect)cellRect

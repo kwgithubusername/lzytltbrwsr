@@ -9,8 +9,5 @@
 #import <UIKit/UIKit.h>
 #import "RAPTiltToScroll.h"
 @interface RAPTiltToScrollViewController : UIViewController <UIScrollViewDelegate, TiltToScrollDelegate>
-@property (nonatomic) UITableView *tableView;
-
--(instancetype)initWithTableView:(UITableView *)tableView;
-
+@property (weak, nonatomic) UITableView *tableView;
 @end

@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "RAPTiltToScroll.h"
-
-@interface RAPViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIScrollViewDelegate, TiltToScrollDelegate>
+#import "RAPTiltToScrollViewController.h"
+@interface RAPViewController : RAPTiltToScrollViewController <UITableViewDataSource, UITableViewDelegate>
 @property (nonatomic) NSString *subRedditURLString;
 @end
 
