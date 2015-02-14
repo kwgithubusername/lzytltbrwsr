@@ -34,6 +34,8 @@
     return _tiltToScroll;
 }
 
+#pragma mark Table View Methods
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if ([self.resultsMutableArray count])
@@ -81,6 +83,18 @@
     
 }
 
+-(void)adjustTableView
+{
+    // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
+    //NSLog(@"IndexPath is %d", indexPath.row);
+    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+}
+
+#pragma mark Load reddit method
+
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
     NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", appendString]];
@@ -104,16 +118,6 @@
                                       }];
     
     [dataTask resume];
-}
-
--(void)adjustTableView
-{
-    // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
-    //NSLog(@"IndexPath is %d", indexPath.row);
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 #pragma mark TiltToScroll Delegate Method

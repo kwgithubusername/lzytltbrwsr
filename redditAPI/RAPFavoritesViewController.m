@@ -259,7 +259,7 @@
 -(void)userSelectedRow
 {
     NSLog(@"User selected row");
-    //[self performSegueWithIdentifier:@"threadSegue" sender:nil];
+    [self performSegueWithIdentifier:@"subredditSegue" sender:nil];
 }
 
 -(void)createRectSelector
