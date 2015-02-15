@@ -114,6 +114,8 @@
     {
         NSLog(@"let's make a rect selector");
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop];
+        self.rectangleSelector.cellMax = [[self.tableView visibleCells] count]-1;
+        NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
         self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
         NSLog(@"CGIncrement is %f", self.rectangleSelector.incrementCGFloat);
         self.rectangleSelector.tag = 999;

@@ -91,15 +91,23 @@
 
 -(void)moveRect
 {
-    self.cellIndex++;
     int direction = self.atTop ? 1 : -1;
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat*direction, self.frame.size.width, self.frame.size.height);
     self.frame = newFrame;
+    self.cellIndex++;
     NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
     self.currentLocationRect = newFrame;
     NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
     
     [self beginDecrementingAlpha];
+}
+
+-(void)setCellIndex:(int)cellIndex
+{
+    if (cellIndex <= self.cellMax)
+    {
+        _cellIndex = cellIndex;
+    }
 }
 
 // Only override drawRect: if you perform custom drawing.

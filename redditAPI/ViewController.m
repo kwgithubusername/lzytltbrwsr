@@ -38,10 +38,7 @@
         NSIndexPath *indexPath;
         if (!CGRectIsEmpty(super.rectangleSelector.frame))
         {
-//            CGRect currentLocationRect = super.rectangleSelector.currentLocationRect;
-//            CGPoint pointToTarget = CGPointMake(0, currentLocationRect.origin.y - currentLocationRect.size.height/2 - 64 + self.tableView.contentOffset.y);
             indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
-            //NSLog(@"Subclass: Originselected is %@", NSStringFromCGPoint(super.rectangleSelector.currentLocationRect.origin));
             NSLog(@"Indexpath.row is %d", indexPath.row);
         }
         else // Otherwise, the user has tapped the row, so use the row that was tapped
@@ -86,6 +83,12 @@
         [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]];
         NSLog(@"Appending json info %@",[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]);
     }
+    
+    if(indexPath.row == [tableView indexPathForCell:[[tableView visibleCells] lastObject]].row)
+    {
+        //[activityIndicator stopAnimating];
+    }
+
 }
 
 #pragma mark View methods

@@ -13,6 +13,7 @@
 @property (nonatomic) BOOL userHasStoppedSelection;
 @property (nonatomic) CGRect currentLocationRect;
 @property (nonatomic) int cellIndex;
+@property (nonatomic) int cellMax;
 
 -(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop;
 -(void)reset;
