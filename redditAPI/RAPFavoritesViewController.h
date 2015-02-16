@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RAPTiltToScroll.h"
-@interface RAPFavoritesViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate, TiltToScrollDelegate>
+#import "RAPTiltToScrollViewController.h"
+@interface RAPFavoritesViewController : RAPTiltToScrollViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
 
 @end

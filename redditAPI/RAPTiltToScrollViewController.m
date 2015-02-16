@@ -12,6 +12,7 @@
 #define RAPCreateRectSelectorNotification @"RAPCreateRectSelectorNotification"
 #define RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification @"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification"
 #define RAPRemoveRectSelectorNotification @"RAPRemoveRectSelectorNotification"
+#define RAPSegueNotification @"RAPSegueNotification"
 
 @interface RAPTiltToScrollViewController ()
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
@@ -43,8 +44,6 @@
 -(void)adjustTableView
 {
     // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
-    
-    // Readjust pointToTarget by contentoffset?
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
@@ -86,6 +85,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueNotification object:nil];
 }
 
 
@@ -97,7 +98,7 @@
     
     NSLog(@"Superclass: Originselected is %@", NSStringFromCGPoint(self.rectangleSelector.currentLocationRect.origin));
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
-    [self performSegueWithIdentifier:@"threadSegue" sender:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueNotification object:nil];
     [self.tiltToScroll stopTiltToScroll];
     [self removeRectSelector];
 }

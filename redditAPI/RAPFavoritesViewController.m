@@ -11,10 +11,11 @@
 #import "RAPRectangleReferenceForAdjustingScrollView.h"
 #import "RAPRectangleSelector.h"
 
-#define RAPSelectRowNotification @"RAPSelectRowNotification"
-#define RAPCreateRectSelectorNotification @"RAPCreateRectSelectorNotification"
-#define RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification @"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification"
-#define RAPRemoveRectSelectorNotification @"RAPRemoveRectSelectorNotification"
+#define RAPSegueNotification @"RAPSegueNotification"
+
+@interface RAPTiltToScrollViewController()
+- (void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
+@end
 
 @interface RAPFavoritesViewController ()
 @property (nonatomic) NSMutableArray *favoritesMutableArray;
@@ -34,17 +35,32 @@
     return _tiltToScroll;
 }
 
-#pragma mark Segue
+#pragma mark Segue methods
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([segue.identifier isEqualToString:@"subredditSegue"])
     {
+        NSIndexPath *indexPath;
+        if (!CGRectIsEmpty(super.rectangleSelector.frame))
+        {
+            indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
+            NSLog(@"Indexpath.row is %d", indexPath.row);
+        }
+        else // Otherwise, the user has tapped the row, so use the row that was tapped
+        {
+            indexPath = [self.tableView indexPathForSelectedRow];
+        }
+        
         RAPViewController *subredditViewController = segue.destinationViewController;
-        NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         NSString *subredditString = self.favoritesMutableArray[indexPath.row];
         subredditViewController.subRedditURLString = subredditString;
     }
+}
+
+-(void)segueWhenSelectedRow
+{
+    [self performSegueWithIdentifier:@"subredditSegue" sender:nil];
 }
 
 #pragma mark Adding subreddits
@@ -140,13 +156,6 @@
     [dataTask resume];
 }
 
-#pragma mark TiltToScroll Delegate Method
-
--(void)addObserverForAdjustToNearestRowNotification
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
-}
-
 #pragma mark Table View Methods
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -156,17 +165,11 @@
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    if (CGRectIsEmpty(self.tableViewCellRect))
-    {
-        CGRect cellRect = [tableView rectForRowAtIndexPath:indexPath];
-        self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
-        //NSLog(@"Tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
-        //NSLog(@"Frame is %@", NSStringFromCGRect(self.view.frame));
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
-    }
-    
     UITableViewCell *favoritesCell = [self.tableView dequeueReusableCellWithIdentifier:@"favoritesCell"];
     favoritesCell.textLabel.text = [self.favoritesMutableArray objectAtIndex:indexPath.row];
+    
+    [super createTableViewCellRectWithCellRect:[tableView rectForRowAtIndexPath:indexPath]];
+    
     return favoritesCell;
 }
 
@@ -183,16 +186,6 @@
         [self updateFavorites];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     }
-}
-
--(void)adjustTableView
-{
-    // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
-    NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
-    //NSLog(@"IndexPath is %d", indexPath.row);
-    [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
 }
 
 #pragma mark Favorites methods
@@ -212,6 +205,7 @@
 - (void)viewDidLoad {
     
     [super viewDidLoad];
+    
     self.automaticallyAdjustsScrollViewInsets = NO;
     NSDictionary *defaultFavorites = [NSDictionary dictionaryWithObject:[self defaultSubredditFavorites] forKey:@"favorites"];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultFavorites];
@@ -223,81 +217,18 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    self.tiltToScroll.delegate = self;
-    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
+    
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
 - (void)viewWillDisappear:(BOOL)animated
 {
-    // Tilt detection must be separate for each VC due to overreactivity with segues
-    
-    [self.tiltToScroll stopTiltToScroll];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
-    
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
+    [super viewWillDisappear:animated];
 }
-
-#pragma mark Rect Selector Methods
-
--(float)statusBarHeight
-{
-    CGSize statusBarSize = [[UIApplication sharedApplication] statusBarFrame].size;
-    return MIN(statusBarSize.width, statusBarSize.height);
-}
-
--(void)userSelectedRow
-{
-    NSLog(@"User selected row");
-    [self performSegueWithIdentifier:@"subredditSegue" sender:nil];
-}
-
--(void)createRectSelector
-{
-    NSLog(@"let's make a rect selector");
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
-    self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect];
-    self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
-    self.rectangleSelector.tag = 999;
-    [self.view addSubview:self.rectangleSelector];
-    [self.view bringSubviewToFront:self.rectangleSelector];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
-}
-
-- (void)removeRectSelector
-{
-    for (UIView *view in self.view.subviews)
-    {
-        if (view.tag == 999)
-        {
-            [view removeFromSuperview];
-        }
-    }
-    [self.rectangleSelector reset];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createRectSelector) name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
-}
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end

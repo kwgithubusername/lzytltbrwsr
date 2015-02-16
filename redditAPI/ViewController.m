@@ -11,8 +11,10 @@
 #import "RAPapi.h"
 #import "RAPRedditLinks.h"
 #import "RAPThreadViewController.h"
+
+#define RAPSegueNotification @"RAPSegueNotification"
+
 @interface RAPTiltToScrollViewController()
--(CGPoint)getRectSelectorOrigin;
 - (void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
 @end
 
@@ -30,6 +32,8 @@
     if (!_api) _api = [[RAPapi alloc] init];
     return _api;
 }
+
+#pragma mark Segue methods
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -51,6 +55,11 @@
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@.json", [redditEntry[@"data"] objectForKey:@"permalink"]];
         threadViewController.permalinkURLString = linkIDString;
     }
+}
+
+-(void)segueWhenSelectedRow
+{
+    [self performSegueWithIdentifier:@"threadSegue" sender:nil];
 }
 
 #pragma mark TableView Methods
@@ -104,6 +113,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

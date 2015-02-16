@@ -45,6 +45,7 @@
 -(void)reset
 {
     [self.changeColorTimer invalidate];
+    self.changeColorTimer = nil;
     CGRect newFrame = self.initialFrame;
     self.frame = newFrame;
     self.cellIndex = 0;
@@ -80,12 +81,19 @@
     {
         self.rectGreenCGFloat = self.rectGreenCGFloat - 0.1;
     }
+    
     [self setNeedsDisplay];
-    if (self.rectGreenCGFloat < 0.1)
+    
+    if (self.rectGreenCGFloat < 0.1 && self.cellIndex < self.cellMax)
     {
         [self.changeColorTimer invalidate];
         self.changeColorTimer = nil;
         [self moveRect];
+    }
+    else if (self.rectGreenCGFloat < 0.1 && self.cellIndex == self.cellMax)
+    {
+        [self reset];
+        [self setup];
     }
 }
 
@@ -95,7 +103,7 @@
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat*direction, self.frame.size.width, self.frame.size.height);
     self.frame = newFrame;
     self.cellIndex++;
-    NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
+    NSLog(@"Cellindex is %d", self.cellIndex);
     self.currentLocationRect = newFrame;
     NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
     
