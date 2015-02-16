@@ -8,7 +8,6 @@
 
 #import "RAPFavoritesViewController.h"
 #import "ViewController.h"
-#import "RAPRectangleReferenceForAdjustingScrollView.h"
 #import "RAPRectangleSelector.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
@@ -23,8 +22,6 @@
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
-@property (nonatomic) RAPRectangleReferenceForAdjustingScrollView *rectangleReference;
-
 @end
 
 @implementation RAPFavoritesViewController

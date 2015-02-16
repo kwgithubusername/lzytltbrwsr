@@ -7,9 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "RAPTiltToScroll.h"
-
-@interface RAPThreadViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, TiltToScrollDelegate>
+#import "RAPTiltToScrollViewController.h"
+@interface RAPThreadViewController : RAPTiltToScrollViewController <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic) NSString *permalinkURLString;
 

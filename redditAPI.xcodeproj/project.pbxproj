@@ -24,7 +24,6 @@
 		9ED517041A84330A00929C35 /* RAPThreadCommentTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED517031A84330A00929C35 /* RAPThreadCommentTableViewCell.m */; };
 		9ED7E13C1A8FB3D900020696 /* RAPTiltToScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */; };
 		9EE5AEE61A86B11700F25DB7 /* RAPRectangleSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */; };
-		9EE5AEE91A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE5AEE81A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,8 +71,6 @@
 		9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPTiltToScrollViewController.m; sourceTree = "<group>"; };
 		9EE5AEE41A86B11700F25DB7 /* RAPRectangleSelector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPRectangleSelector.h; sourceTree = "<group>"; };
 		9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPRectangleSelector.m; sourceTree = "<group>"; };
-		9EE5AEE71A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPRectangleReferenceForAdjustingScrollView.h; sourceTree = "<group>"; };
-		9EE5AEE81A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPRectangleReferenceForAdjustingScrollView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,16 +114,16 @@
 			children = (
 				9ECF83281A66096E00E7D9C7 /* AppDelegate.h */,
 				9ECF83291A66096E00E7D9C7 /* AppDelegate.m */,
+				9ED7E13A1A8FB3D900020696 /* RAPTiltToScrollViewController.h */,
+				9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */,
 				9ECF832B1A66096E00E7D9C7 /* ViewController.h */,
 				9ECF832C1A66096E00E7D9C7 /* ViewController.m */,
 				9E9D75E31A81C447005CEB64 /* RAPFavoritesViewController.h */,
 				9E9D75E41A81C447005CEB64 /* RAPFavoritesViewController.m */,
-				9ED7E13A1A8FB3D900020696 /* RAPTiltToScrollViewController.h */,
-				9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */,
+				9E9D75E61A828187005CEB64 /* RAPThreadViewController.h */,
+				9E9D75E71A828187005CEB64 /* RAPThreadViewController.m */,
 				9ECF834A1A660B8200E7D9C7 /* RAPTableViewCell.h */,
 				9ECF834B1A660B8200E7D9C7 /* RAPTableViewCell.m */,
-				9EE5AEE71A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.h */,
-				9EE5AEE81A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.m */,
 				9EE5AEE41A86B11700F25DB7 /* RAPRectangleSelector.h */,
 				9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */,
 				9E9D75DF1A81B941005CEB64 /* RAPRedditLinks.h */,
@@ -136,8 +133,6 @@
 				9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */,
 				9E9D75D31A801E4A005CEB64 /* RAPapi.h */,
 				9E9D75D41A801E4A005CEB64 /* RAPapi.m */,
-				9E9D75E61A828187005CEB64 /* RAPThreadViewController.h */,
-				9E9D75E71A828187005CEB64 /* RAPThreadViewController.m */,
 				9ED516FF1A8432F700929C35 /* RAPThreadTopicTableViewCell.h */,
 				9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */,
 				9ED517021A84330A00929C35 /* RAPThreadCommentTableViewCell.h */,
@@ -281,7 +276,6 @@
 				9ECF832A1A66096E00E7D9C7 /* AppDelegate.m in Sources */,
 				9ED517011A8432F700929C35 /* RAPThreadTopicTableViewCell.m in Sources */,
 				9ED517041A84330A00929C35 /* RAPThreadCommentTableViewCell.m in Sources */,
-				9EE5AEE91A87D5E300F25DB7 /* RAPRectangleReferenceForAdjustingScrollView.m in Sources */,
 				9ECF83271A66096E00E7D9C7 /* main.m in Sources */,
 				9E9D75D81A804BA0005CEB64 /* RAPSelectorView.m in Sources */,
 				9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */,
