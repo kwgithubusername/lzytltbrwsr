@@ -13,6 +13,7 @@
 #define RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification @"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification"
 #define RAPRemoveRectSelectorNotification @"RAPRemoveRectSelectorNotification"
 #define RAPSegueNotification @"RAPSegueNotification"
+#define RAPSegueBackNotification @"RAPSegueBackNotification"
 
 @interface RAPTiltToScrollViewController ()
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
@@ -36,6 +37,18 @@
     {
         self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
         [self addObserverForRectSelector];
+    }
+}
+
+#pragma mark Segue
+
+-(void)segueBack
+{
+    if (self.navigationController.navigationBar.backItem)
+    {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:self.tiltToScroll];
+        [self.tiltToScroll segueSuccessful];
+        [self.navigationController popViewControllerAnimated:YES];
     }
 }
 
@@ -70,6 +83,7 @@
     [super viewWillAppear:animated];
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
     [self addObserverForRectSelector];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -78,6 +92,16 @@
     
     [self.tiltToScroll stopTiltToScroll];
     
+    for (UIView *view in self.view.subviews)
+    {
+        if (view.tag == 999)
+        {
+            [view removeFromSuperview];
+        }
+    }
+    [self.rectangleSelector reset];
+    self.rectSelectorHasBeenMade = NO;
+
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
@@ -87,6 +111,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:nil];
 }
 
 
@@ -115,7 +141,7 @@
     {
         NSLog(@"let's make a rect selector");
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop];
-        self.rectangleSelector.cellMax = [[self.tableView visibleCells] count]-1;
+        self.rectangleSelector.cellMax = (int)[[self.tableView visibleCells] count]-1;
         NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
         self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
         NSLog(@"CGIncrement is %f", self.rectangleSelector.incrementCGFloat);

@@ -43,7 +43,7 @@
         if (!CGRectIsEmpty(super.rectangleSelector.frame))
         {
             indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
-            NSLog(@"Indexpath.row is %d", indexPath.row);
+            //NSLog(@"Indexpath.row is %d", indexPath.row);
         }
         else // Otherwise, the user has tapped the row, so use the row that was tapped
         {
@@ -60,6 +60,11 @@
 -(void)segueWhenSelectedRow
 {
     [self performSegueWithIdentifier:@"threadSegue" sender:nil];
+}
+
+-(void)segueBack
+{
+    [self.navigationController popViewControllerAnimated:YES];
 }
 
 #pragma mark TableView Methods

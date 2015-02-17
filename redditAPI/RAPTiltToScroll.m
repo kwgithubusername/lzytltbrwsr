@@ -14,6 +14,7 @@
 #define RAPCreateRectSelectorNotification @"RAPCreateRectSelectorNotification"
 #define RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification @"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification"
 #define RAPRemoveRectSelectorNotification @"RAPRemoveRectSelectorNotification"
+#define RAPSegueBackNotification @"RAPSegueBackNotification"
 
 @interface RAPTiltToScroll ()
 @property (nonatomic) CMMotionManager *motionManager;
@@ -74,9 +75,17 @@
         
         if (self.selectModeIsOn)
         {
-            // Post this notification and immediately remove the observer, as we want this to happen only once
-            [[NSNotificationCenter defaultCenter] postNotificationName:RAPSelectRowNotification object:self];
-            self.selectModeIsOn = NO;
+            if (leftOrRightAngle > 10)
+            {
+                // Post this notification and immediately remove the observer, as we want this to happen only once
+                [[NSNotificationCenter defaultCenter] postNotificationName:RAPSelectRowNotification object:self];
+                self.selectModeIsOn = NO;
+            }
+            else if (leftOrRightAngle < -10)
+            {
+                [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueBackNotification object:self];
+            }
+
         }
         //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
@@ -113,6 +122,12 @@
         self.scrollingSessionHasStarted = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self];
     }
+}
+
+-(void)segueSuccessful
+{
+    // If segue succeeds, turn off selectMode. If it was unsuccessful, leave selectMode on
+    self.selectModeIsOn = NO;
 }
 
 #pragma mark Motion Manager
