@@ -151,7 +151,7 @@
                                 <items>
                                     <barButtonItem title="Favorites" id="WIq-PF-JJj">
                                         <connections>
-                                            <segue destination="6nb-8H-7xn" kind="show" id="8Xf-ET-DAz"/>
+                                            <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="8Xf-ET-DAz"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>

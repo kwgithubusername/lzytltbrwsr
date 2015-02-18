@@ -59,7 +59,14 @@
 
 -(void)segueWhenSelectedRow
 {
-    [self performSegueWithIdentifier:@"threadSegue" sender:nil];
+    if (super.rectangleSelector.cellIndex != super.rectangleSelector.cellMax)
+    {
+        [self performSegueWithIdentifier:@"threadSegue" sender:nil];
+    }
+    else if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
+    {
+        [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
+    }
 }
 
 -(void)segueBack
@@ -123,6 +130,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    // Observer for RAPSegueNotification is removed in the superclass
     [super viewWillDisappear:animated];
 }
 
