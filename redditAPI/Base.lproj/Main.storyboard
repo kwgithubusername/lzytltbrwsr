@@ -178,6 +178,39 @@
             </objects>
             <point key="canvasLocation" x="-79" y="155"/>
         </scene>
+        <!--Link View Controller-->
+        <scene sceneID="e6F-VC-uIU">
+            <objects>
+                <viewController id="Vii-1O-EXo" customClass="RAPLinkViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="VYZ-HB-8dE"/>
+                        <viewControllerLayoutGuide type="bottom" id="rcp-8g-SOE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xY1-Co-3sM">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3DV-Ec-dyO">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="3DV-Ec-dyO" secondAttribute="trailing" constant="-16" id="KIs-3r-MeH"/>
+                            <constraint firstItem="3DV-Ec-dyO" firstAttribute="leading" secondItem="xY1-Co-3sM" secondAttribute="leadingMargin" constant="-16" id="M76-fW-fO1"/>
+                            <constraint firstItem="rcp-8g-SOE" firstAttribute="top" secondItem="3DV-Ec-dyO" secondAttribute="bottom" id="WkG-06-Ig6"/>
+                            <constraint firstItem="3DV-Ec-dyO" firstAttribute="top" secondItem="VYZ-HB-8dE" secondAttribute="bottom" constant="-64" id="miZ-At-KQ6"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="3DV-Ec-dyO" id="7mI-KI-hdm"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="H7B-7p-DXV" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1350" y="116"/>
+        </scene>
         <!--Thread View Controller-->
         <scene sceneID="CGb-Pg-muh">
             <objects>
@@ -220,6 +253,9 @@
                                                     <state key="normal" title="Link">
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <connections>
+                                                        <segue destination="Vii-1O-EXo" kind="show" identifier="linkSegue" id="tCJ-oG-Edx"/>
+                                                    </connections>
                                                 </button>
                                             </subviews>
                                             <constraints>
@@ -285,7 +321,7 @@
                                 <items>
                                     <barButtonItem title="Favorites" id="0dD-ZG-13a">
                                         <connections>
-                                            <segue destination="6nb-8H-7xn" kind="show" id="7YB-UM-pDa"/>
+                                            <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="7YB-UM-pDa"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -319,7 +355,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="8Xf-ET-DAz"/>
         <segue reference="WHS-fU-Osg"/>
+        <segue reference="7YB-UM-pDa"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -10,6 +10,7 @@
 #import "RAPThreadTopicTableViewCell.h"
 #import "RAPThreadCommentTableViewCell.h"
 #import "RAPRectangleSelector.h"
+#import "RAPLinkViewController.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 
@@ -26,8 +27,22 @@
 
 #pragma mark Segue Methods
 
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"linkSegue"])
+    {
+        RAPLinkViewController *linkViewController = segue.destinationViewController;
+        id data = [[self.resultsMutableArray firstObject][@"data"][@"children"] firstObject][@"data"];
+        linkViewController.URLstring = data[@"url"];
+    }
+}
+
 -(void)segueWhenSelectedRow
 {
+    if (super.rectangleSelector.cellIndex == 0)
+    {
+        [self performSegueWithIdentifier:@"linkSegue" sender:nil];
+    }
     //[self performSegueWithIdentifier:@"subredditSegue" sender:nil];
 }
 
@@ -37,6 +52,7 @@
 {
     if ([self.resultsMutableArray count])
     {
+        // Object at index 0 is the thread topic, so count the number of cells and add 1
         return [[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] count] + 1;
     }
     else
