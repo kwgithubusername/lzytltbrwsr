@@ -23,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *resultsMutableArray;
 @property (nonatomic) RAPapi *api;
+@property (nonatomic) UIActivityIndicatorView *spinner;
 @end
 
 @implementation RAPViewController
@@ -128,6 +129,17 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
 }
 
+-(void)startSpinner
+{
+    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.spinner.color = [UIColor grayColor];
+    self.spinner.center = self.view.center;
+    self.spinner.hidesWhenStopped = YES;
+    [self.view addSubview:self.spinner];
+    [self.view bringSubviewToFront:self.spinner];
+    [self.spinner startAnimating];
+}
+
 - (void)viewWillDisappear:(BOOL)animated
 {
     // Observer for RAPSegueNotification is removed in the superclass
@@ -156,6 +168,7 @@
 
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
+    [self startSpinner];
     NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", appendString]];
     NSLog(@"URL is %@", url);
     NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
@@ -174,6 +187,7 @@
                                                              }
                                                              [self.resultsMutableArray addObjectsFromArray:jsonResults];
                                                              [self.tableView reloadData];
+                                                             [self.spinner stopAnimating];
                                                          });
                                       }];
     

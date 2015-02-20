@@ -20,6 +20,7 @@
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) BOOL rectSelectorHasBeenMade;
 @property (nonatomic) CGRect defaultCellRect;
+@property (nonatomic) UIActivityIndicatorView *spinner;
 @end
 
 @implementation RAPTiltToScrollViewController
@@ -122,12 +123,15 @@
 -(void)userSelectedRow
 {
     NSLog(@"User selected row");
-    
     NSLog(@"Superclass: Originselected is %@", NSStringFromCGPoint(self.rectangleSelector.currentLocationRect.origin));
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
-    [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueNotification object:nil];
-    [self.tiltToScroll stopTiltToScroll];
-    [self removeRectSelector];
+    if (!self.spinner.isAnimating)
+    {
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
+        [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueNotification object:nil];
+        [self.tiltToScroll stopTiltToScroll];
+        [self removeRectSelector];
+    }
+
 }
 
 -(float)statusBarHeight
