@@ -10,10 +10,38 @@
 
 @interface RAPLinkViewController ()
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
+@property (nonatomic) UIActivityIndicatorView *spinner;
 
 @end
 
 @implementation RAPLinkViewController
+
+-(void)startSpinner
+{
+    self.spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+    self.spinner.color = [UIColor grayColor];
+    self.spinner.center = self.view.center;
+    self.spinner.hidesWhenStopped = YES;
+    [self.view addSubview:self.spinner];
+    [self.view bringSubviewToFront:self.spinner];
+    [self.spinner startAnimating];
+}
+
+-(void)webViewDidStartLoad:(UIWebView *)webView
+{
+
+}
+
+-(void)webViewDidFinishLoad:(UIWebView *)webView
+{
+    [self.spinner stopAnimating];
+}
+
+-(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error loading page" message:@"Page could not be loaded." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alertView show];
+}
 
 -(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
 {
@@ -22,6 +50,7 @@
 
 -(void)loadWebpage
 {
+    [self startSpinner];
     NSURL *url = [NSURL URLWithString:self.URLstring];
     NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     NSURLSession *session = [NSURLSession sessionWithConfiguration:config delegate:self delegateQueue:[NSOperationQueue mainQueue]];

@@ -105,12 +105,6 @@
         [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]];
         NSLog(@"Appending json info %@",[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]);
     }
-    
-    if(indexPath.row == [tableView indexPathForCell:[[tableView visibleCells] lastObject]].row)
-    {
-        //[activityIndicator stopAnimating];
-    }
-
 }
 
 #pragma mark View methods

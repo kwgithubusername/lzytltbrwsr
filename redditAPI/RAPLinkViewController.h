@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RAPLinkViewController : UIViewController <NSURLSessionDownloadDelegate>
+@interface RAPLinkViewController : UIViewController <NSURLSessionDownloadDelegate, UIWebViewDelegate>
 @property (nonatomic) NSString *URLstring;
 @end
