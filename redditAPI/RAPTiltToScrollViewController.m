@@ -140,7 +140,14 @@
     if (!self.rectSelectorHasBeenMade)
     {
         NSLog(@"let's make a rect selector");
+        
+        if (!atTop)
+        {
+            self.tableViewCellRect = CGRectMake(self.tableViewCellRect.origin.x, self.view.frame.size.height-self.tableViewCellRect.size.height, self.tableViewCellRect.size.width, self.tableViewCellRect.size.height);
+        }
+        
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop];
+
         self.rectangleSelector.cellMax = (int)[[self.tableView visibleCells] count]-1;
         NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
         self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
