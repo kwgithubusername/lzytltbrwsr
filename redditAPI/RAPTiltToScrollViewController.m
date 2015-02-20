@@ -19,6 +19,7 @@
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) BOOL rectSelectorHasBeenMade;
+@property (nonatomic) CGRect defaultCellRect;
 @end
 
 @implementation RAPTiltToScrollViewController
@@ -32,9 +33,9 @@
 -(void)createTableViewCellRectWithCellRect:(CGRect)cellRect
 {
     // Need to get the frame we will use for the rect selector
-    
     if (CGRectIsEmpty(self.tableViewCellRect))
     {
+        self.defaultCellRect = cellRect;
         self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
         [self addObserverForRectSelector];
     }
@@ -140,10 +141,16 @@
     if (!self.rectSelectorHasBeenMade)
     {
         NSLog(@"let's make a rect selector");
+        NSLog(@"atTop in createRect method is %d", atTop);
         
         if (!atTop)
         {
+            NSLog(@"atTop in ifstatement is %d", atTop);
             self.tableViewCellRect = CGRectMake(self.tableViewCellRect.origin.x, self.view.frame.size.height-self.tableViewCellRect.size.height, self.tableViewCellRect.size.width, self.tableViewCellRect.size.height);
+        }
+        else if (atTop)
+        {
+            self.tableViewCellRect = CGRectMake(self.defaultCellRect.origin.x, self.defaultCellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], self.defaultCellRect.size.width, self.defaultCellRect.size.height);
         }
         
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop];
@@ -184,6 +191,7 @@
      {
          [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
          [self createRectSelectorAtTop:[[note.userInfo objectForKey:@"atTop"] boolValue]];
+         NSLog(@"atTop notification is %d", [[note.userInfo objectForKey:@"atTop"] boolValue]);
      }];
 }
 

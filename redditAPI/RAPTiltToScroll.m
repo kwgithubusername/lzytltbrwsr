@@ -89,6 +89,7 @@
             else if (leftOrRightAngle < -10)
             {
                 [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueBackNotification object:self];
+                self.selectModeIsOn = NO;
             }
 
         }
@@ -97,6 +98,7 @@
 
     if (forwardOrBackwardAngle > 10 || forwardOrBackwardAngle < -10)
     {
+        NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
         if (!self.selectModeHasBeenSwitched)
         {
             BOOL change = !self.selectModeIsOn;
@@ -105,9 +107,10 @@
         }
         if (self.selectModeIsOn)
         {
+            
             // Post this notification and immediately remove the observer, as we want this to happen only once
             [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]] forKey:@"atTop"]];
-            //NSLog(@"Attop is %d", [self floatIsPositive:forwardOrBackwardAngle]);
+            NSLog(@"Attop is %d", [self floatIsPositive:forwardOrBackwardAngle]);
             //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
         }
         if (!self.selectModeIsOn)
@@ -117,10 +120,13 @@
         }
         
     }
-    if (leftOrRightAngle < 10 && leftOrRightAngle > -10 && forwardOrBackwardAngle < 10 && forwardOrBackwardAngle > -10)
+    if (forwardOrBackwardAngle < 10 && forwardOrBackwardAngle > -10)
     {
         // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
         self.selectModeHasBeenSwitched = NO;
+    }
+    if (leftOrRightAngle < 10 && leftOrRightAngle > -10)
+    {
         self.scrollingSessionHasStarted = NO;
         [[NSNotificationCenter defaultCenter] postNotificationName:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self];
     }
