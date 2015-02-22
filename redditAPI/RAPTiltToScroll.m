@@ -31,7 +31,7 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self];
 }
 
--(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView
+-(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
 {
     //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error)
@@ -40,7 +40,7 @@
              
              CGFloat tiltAngleLeftOrRight = [self LeftOrRightAngleInDegreesUsingXGravity:motion.gravity.x YGravity:motion.gravity.y andZGravity:motion.gravity.z];
              CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x YGravity:motion.gravity.y andZGravity:motion.gravity.z];
-             [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight ForwardOrBackward:tiltAngleForwardorBackward inScrollView:(UIScrollView *)scrollView];
+             [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight ForwardOrBackward:tiltAngleForwardorBackward inScrollView:(UIScrollView *)scrollView inWebView:isInWebView];
          }];
          
      }];
@@ -59,24 +59,46 @@
     return number >= 0 ? YES : NO;
 }
 
--(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle inScrollView:(UIScrollView *)scrollView
+-(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle inScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
 {
     if (leftOrRightAngle > 10 || leftOrRightAngle < -10)
     {
-        //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
-        if (scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 && !self.selectModeIsOn)
+        NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
+        if (!isInWebView)
         {
-            CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
-            scrollView.contentOffset = offsetCGPoint;
-            //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
-            if (!self.scrollingSessionHasStarted)
+            if (scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 && !self.selectModeIsOn)
             {
-                // This should happen only ONCE per scrolling session- note when a scrollingsession began and when it ends
-                [self.delegate addObserverForAdjustToNearestRowNotification];
-                self.scrollingSessionHasStarted = YES;
+                CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
+                scrollView.contentOffset = offsetCGPoint;
+                //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
+                if (!self.scrollingSessionHasStarted)
+                {
+                    // This should happen only ONCE per scrolling session- note when a scrollingsession began and when it ends
+                    [self.delegate addObserverForAdjustToNearestRowNotification];
+                    self.scrollingSessionHasStarted = YES;
+                }
+                
             }
-
         }
+        else if (isInWebView)
+        {
+            if (leftOrRightAngle > 10 || leftOrRightAngle < -10)
+            {
+                NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
+                NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
+                if (scrollView.frame.size.height > scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 && !self.selectModeIsOn)
+                {
+                    CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
+                    scrollView.contentOffset = offsetCGPoint;
+                    //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
+                    if (!self.scrollingSessionHasStarted)
+                    {
+                        self.scrollingSessionHasStarted = YES;
+                    }
+                }
+            }
+        }
+        
         
         if (self.selectModeIsOn)
         {
@@ -91,11 +113,10 @@
                 [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueBackNotification object:self];
                 self.selectModeIsOn = NO;
             }
-
+            
         }
         //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
-
     if (forwardOrBackwardAngle > 10 || forwardOrBackwardAngle < -10)
     {
         NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
@@ -107,9 +128,9 @@
         }
         if (self.selectModeIsOn)
         {
-            
+            //NSDictionary *dictionaryWithBools = @{[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]]:@"atTop",[NSNumber numberWithBool:isInWebView]:@"inWebView"};
             // Post this notification and immediately remove the observer, as we want this to happen only once
-            [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]] forKey:@"atTop"]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObjects:@[[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]], [NSNumber numberWithBool:isInWebView]] forKeys:@[@"atTop",@"inWebView"]]];
             NSLog(@"Attop is %d", [self floatIsPositive:forwardOrBackwardAngle]);
             //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
         }
@@ -120,16 +141,15 @@
         }
         
     }
-    if (forwardOrBackwardAngle < 10 && forwardOrBackwardAngle > -10)
-    {
-        // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
-        self.selectModeHasBeenSwitched = NO;
-    }
-    if (leftOrRightAngle < 10 && leftOrRightAngle > -10)
-    {
-        self.scrollingSessionHasStarted = NO;
-        [[NSNotificationCenter defaultCenter] postNotificationName:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self];
-    }
+    
+    if (forwardOrBackwardAngle < 10 && forwardOrBackwardAngle > -10 && leftOrRightAngle < 10 && leftOrRightAngle > -10)
+        {
+            // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
+            self.selectModeHasBeenSwitched = NO;
+            self.scrollingSessionHasStarted = NO;
+            [[NSNotificationCenter defaultCenter] postNotificationName:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self];
+        }
+
 }
 
 -(void)segueSuccessful

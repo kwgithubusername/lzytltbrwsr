@@ -14,6 +14,7 @@
 @property (nonatomic) CGRect currentLocationRect;
 @property (nonatomic) int cellIndex;
 @property (nonatomic) int cellMax;
+@property (nonatomic) BOOL isStationary;
 
 -(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop;
 -(void)reset;

@@ -83,7 +83,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView];
+    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView inWebView:NO];
     [self addObserverForRectSelector];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
 }
@@ -140,16 +140,16 @@
     return MIN(statusBarSize.width, statusBarSize.height);
 }
 
-- (void)createRectSelectorAtTop:(BOOL)atTop
+- (void)createRectSelectorAtTop:(BOOL)atTop inWebView:(BOOL)isInWebView
 {
     if (!self.rectSelectorHasBeenMade)
     {
-        NSLog(@"let's make a rect selector");
-        NSLog(@"atTop in createRect method is %d", atTop);
+        //NSLog(@"let's make a rect selector");
+        //NSLog(@"atTop in createRect method is %d", atTop);
         
-        if (!atTop)
+        if (!atTop && !isInWebView)
         {
-            NSLog(@"atTop in ifstatement is %d", atTop);
+            //NSLog(@"atTop in ifstatement is %d", atTop);
             self.tableViewCellRect = CGRectMake(self.tableViewCellRect.origin.x, self.view.frame.size.height-self.tableViewCellRect.size.height, self.tableViewCellRect.size.width, self.tableViewCellRect.size.height);
         }
         else if (atTop)
@@ -158,6 +158,11 @@
         }
         
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop];
+        
+        if (isInWebView)
+        {
+            self.rectangleSelector.isStationary = YES;
+        }
 
         self.rectangleSelector.cellMax = (int)[[self.tableView visibleCells] count]-1;
         NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
@@ -194,7 +199,7 @@
     [[NSNotificationCenter defaultCenter] addObserverForName:RAPCreateRectSelectorNotification object:self.tiltToScroll queue:nil usingBlock:^(NSNotification *note)
      {
          [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
-         [self createRectSelectorAtTop:[[note.userInfo objectForKey:@"atTop"] boolValue]];
+         [self createRectSelectorAtTop:[[note.userInfo objectForKey:@"atTop"] boolValue] inWebView:[[note.userInfo objectForKey:@"inWebView"] boolValue]];
          NSLog(@"atTop notification is %d", [[note.userInfo objectForKey:@"atTop"] boolValue]);
      }];
 }

@@ -7,7 +7,6 @@
 //
 
 #import "RAPLinkViewController.h"
-
 @interface RAPLinkViewController ()
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (nonatomic) UIActivityIndicatorView *spinner;
@@ -34,7 +33,7 @@
 
 -(void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    [self.spinner stopAnimating];
+    
 }
 
 -(void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
@@ -46,6 +45,7 @@
 -(void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location
 {
     [self.webView loadData:[NSData dataWithContentsOfURL:location] MIMEType:downloadTask.response.MIMEType textEncodingName:downloadTask.response.textEncodingName baseURL:downloadTask.response.URL];
+    [self.spinner stopAnimating];
 }
 
 -(void)loadWebpage
@@ -60,7 +60,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
     [self loadWebpage];
     // Do any additional setup after loading the view.
 }

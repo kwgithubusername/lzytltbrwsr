@@ -6,8 +6,7 @@
 //  Copyright (c) 2015 Hi Range. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
-
-@interface RAPLinkViewController : UIViewController <NSURLSessionDownloadDelegate, UIWebViewDelegate>
+#import "RAPTiltToScrollViewController.h"
+@interface RAPLinkViewController : RAPTiltToScrollViewController <NSURLSessionDownloadDelegate, UIWebViewDelegate>
 @property (nonatomic) NSString *URLstring;
 @end

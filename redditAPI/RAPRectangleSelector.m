@@ -88,7 +88,15 @@
     {
         [self.changeColorTimer invalidate];
         self.changeColorTimer = nil;
-        [self moveRect];
+        
+        if (self.isStationary)
+        {
+            [self beginDecrementingAlpha];
+        }
+        else if (!self.isStationary)
+        {
+            [self moveRect];
+        }
     }
     else if (self.rectGreenCGFloat < 0.1 && self.cellIndex == self.cellMax)
     {

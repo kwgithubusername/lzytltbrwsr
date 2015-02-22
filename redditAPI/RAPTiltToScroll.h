@@ -17,6 +17,6 @@
 @interface RAPTiltToScroll : NSObject
 @property (nonatomic) id <TiltToScrollDelegate> delegate;
 -(void)segueSuccessful;
--(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView;
+-(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView;
 -(void)stopTiltToScroll;
 @end
