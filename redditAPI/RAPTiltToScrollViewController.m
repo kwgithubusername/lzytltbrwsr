@@ -21,6 +21,9 @@
 @property (nonatomic) BOOL rectSelectorHasBeenMade;
 @property (nonatomic) CGRect defaultCellRect;
 @property (nonatomic) UIActivityIndicatorView *spinner;
+@property (nonatomic) NSTimer *timerToPreventSegueingBackTooQuickly;
+@property (nonatomic) int timeViewHasBeenVisibleInt;
+
 @end
 
 @implementation RAPTiltToScrollViewController
@@ -44,9 +47,22 @@
 
 #pragma mark Segue
 
+-(void)timeViewHasBeenVisible
+{
+    if (self.timeViewHasBeenVisibleInt < 15)
+    {
+        self.timeViewHasBeenVisibleInt++;
+    }
+    else if (self.timeViewHasBeenVisibleInt >= 15)
+    {
+        [self.timerToPreventSegueingBackTooQuickly invalidate];
+    }
+    NSLog(@"Timeviewhasbeenvisible:%d", self.timeViewHasBeenVisibleInt);
+}
+
 -(void)segueBack
 {
-    if (self.navigationController.navigationBar.backItem)
+    if (self.navigationController.navigationBar.backItem && self.timeViewHasBeenVisibleInt >= 15)
     {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:self.tiltToScroll];
         [self.tiltToScroll segueSuccessful];
@@ -86,6 +102,8 @@
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView inWebView:NO];
     [self addObserverForRectSelector];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
+    self.timeViewHasBeenVisibleInt = 0;
+    self.timerToPreventSegueingBackTooQuickly = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timeViewHasBeenVisible) userInfo:nil repeats:YES];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -115,6 +133,8 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueNotification object:nil];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:nil];
+    
+    [self.timerToPreventSegueingBackTooQuickly invalidate];
 }
 
 
@@ -124,7 +144,7 @@
 {
     NSLog(@"User selected row");
     NSLog(@"Superclass: Originselected is %@", NSStringFromCGPoint(self.rectangleSelector.currentLocationRect.origin));
-    if (!self.spinner.isAnimating)
+    if (!self.spinner.isAnimating && self.timeViewHasBeenVisibleInt >= 15 && self.rectSelectorHasBeenMade)
     {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
         [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueNotification object:nil];

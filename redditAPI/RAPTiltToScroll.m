@@ -82,23 +82,17 @@
         }
         else if (isInWebView)
         {
-            if (leftOrRightAngle > 10 || leftOrRightAngle < -10)
+            if (scrollView.frame.size.height > scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 && !self.selectModeIsOn)
             {
-                NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
-                NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
-                if (scrollView.frame.size.height > scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 && !self.selectModeIsOn)
+                CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
+                scrollView.contentOffset = offsetCGPoint;
+                //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
+                if (!self.scrollingSessionHasStarted)
                 {
-                    CGPoint offsetCGPoint = CGPointMake(scrollView.contentOffset.x, scrollView.contentOffset.y + leftOrRightAngle/5);
-                    scrollView.contentOffset = offsetCGPoint;
-                    //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
-                    if (!self.scrollingSessionHasStarted)
-                    {
-                        self.scrollingSessionHasStarted = YES;
-                    }
+                    self.scrollingSessionHasStarted = YES;
                 }
             }
         }
-        
         
         if (self.selectModeIsOn)
         {
@@ -117,7 +111,7 @@
         }
         //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
-    if (forwardOrBackwardAngle > 10 || forwardOrBackwardAngle < -10)
+    if (forwardOrBackwardAngle > 10 || forwardOrBackwardAngle < -25)
     {
         NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
         if (!self.selectModeHasBeenSwitched)
@@ -142,7 +136,7 @@
         
     }
     
-    if (forwardOrBackwardAngle < 10 && forwardOrBackwardAngle > -10 && leftOrRightAngle < 10 && leftOrRightAngle > -10)
+    if (forwardOrBackwardAngle < 10 && forwardOrBackwardAngle > -25 && leftOrRightAngle < 10 && leftOrRightAngle > -10)
         {
             // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
             self.selectModeHasBeenSwitched = NO;
