@@ -18,12 +18,13 @@
 @end
 @implementation RAPRectangleSelector
 
--(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop
+-(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop withCellMax:(int)cellMax
 {
     if (self = [super initWithFrame:frame])
     {
         self.atTop = atTop;
         self.initialFrame = frame;
+        self.cellMax = cellMax;
         [self setup];
     }
     return self;
@@ -38,8 +39,20 @@
 {
     self.opaque = NO;
     self.backgroundColor = [UIColor clearColor];
-    self.cellIndex = 0;
+    [self resetCellIndex];
     [self beginDecrementingAlpha];
+}
+
+-(void)resetCellIndex
+{
+    if (self.atTop)
+    {
+        self.cellIndex = 0;
+    }
+    else if (!self.atTop)
+    {
+        self.cellIndex = self.cellMax;
+    }
 }
 
 -(void)reset
@@ -48,7 +61,7 @@
     self.changeColorTimer = nil;
     CGRect newFrame = self.initialFrame;
     self.frame = newFrame;
-    self.cellIndex = 0;
+    [self resetCellIndex];
     //NSLog(@"Newframe is %@", NSStringFromCGRect(self.frame));
     self.currentLocationRect = newFrame;
 }
@@ -84,24 +97,59 @@
     
     [self setNeedsDisplay];
     
-    if (self.rectGreenCGFloat < 0.1 && self.cellIndex < self.cellMax)
+    if (self.rectGreenCGFloat < 0.1)
     {
-        [self.changeColorTimer invalidate];
-        self.changeColorTimer = nil;
-        
-        if (self.isStationary)
+        if (self.atTop)
         {
-            [self beginDecrementingAlpha];
+            if (self.cellIndex < self.cellMax)
+            {
+                [self timerEnded];
+            }
+            else if (self.cellIndex == self.cellMax)
+            {
+                [self reset];
+                [self setup];
+            }
         }
-        else if (!self.isStationary)
+        else if (!self.atTop)
         {
-            [self moveRect];
+            if (self.cellIndex > 0)
+            {
+                [self timerEnded];
+            }
+            else if (self.cellIndex == 0)
+            {
+                [self reset];
+                [self setup];
+            }
         }
     }
-    else if (self.rectGreenCGFloat < 0.1 && self.cellIndex == self.cellMax)
+}
+
+-(void)timerEnded
+{
+    [self.changeColorTimer invalidate];
+    self.changeColorTimer = nil;
+    
+    if (self.isStationary)
     {
-        [self reset];
-        [self setup];
+        [self beginDecrementingAlpha];
+    }
+    else if (!self.isStationary)
+    {
+        [self moveRect];
+    }
+}
+
+-(void)incrementOrDecrementCellIndex
+{
+    if (self.atTop)
+    {
+        self.cellIndex++;
+    }
+    else if (!self.atTop)
+    {
+        self.cellIndex--;
     }
 }
 
@@ -110,7 +158,7 @@
     int direction = self.atTop ? 1 : -1;
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat*direction, self.frame.size.width, self.frame.size.height);
     self.frame = newFrame;
-    self.cellIndex++;
+    [self incrementOrDecrementCellIndex];
     NSLog(@"Cellindex is %d", self.cellIndex);
     self.currentLocationRect = newFrame;
     NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));

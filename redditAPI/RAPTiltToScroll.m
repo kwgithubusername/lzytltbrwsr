@@ -113,7 +113,7 @@
     }
     if (forwardOrBackwardAngle > 10 || forwardOrBackwardAngle < -25)
     {
-        NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
+        //NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
         if (!self.selectModeHasBeenSwitched)
         {
             BOOL change = !self.selectModeIsOn;
@@ -125,7 +125,7 @@
             //NSDictionary *dictionaryWithBools = @{[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]]:@"atTop",[NSNumber numberWithBool:isInWebView]:@"inWebView"};
             // Post this notification and immediately remove the observer, as we want this to happen only once
             [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObjects:@[[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]], [NSNumber numberWithBool:isInWebView]] forKeys:@[@"atTop",@"inWebView"]]];
-            NSLog(@"Attop is %d", [self floatIsPositive:forwardOrBackwardAngle]);
+            //NSLog(@"Attop is %d", [self floatIsPositive:forwardOrBackwardAngle]);
             //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
         }
         if (!self.selectModeIsOn)

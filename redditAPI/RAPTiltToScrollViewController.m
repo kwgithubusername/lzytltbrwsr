@@ -177,14 +177,13 @@
             self.tableViewCellRect = CGRectMake(self.defaultCellRect.origin.x, self.defaultCellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], self.defaultCellRect.size.width, self.defaultCellRect.size.height);
         }
         
-        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop];
+        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop withCellMax:[[self.tableView visibleCells] count]-1];
         
         if (isInWebView)
         {
             self.rectangleSelector.isStationary = YES;
         }
 
-        self.rectangleSelector.cellMax = (int)[[self.tableView visibleCells] count]-1;
         NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
         self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
         NSLog(@"CGIncrement is %f", self.rectangleSelector.incrementCGFloat);
@@ -220,7 +219,7 @@
      {
          [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPCreateRectSelectorNotification object:self.tiltToScroll];
          [self createRectSelectorAtTop:[[note.userInfo objectForKey:@"atTop"] boolValue] inWebView:[[note.userInfo objectForKey:@"inWebView"] boolValue]];
-         NSLog(@"atTop notification is %d", [[note.userInfo objectForKey:@"atTop"] boolValue]);
+         //NSLog(@"atTop notification is %d", [[note.userInfo objectForKey:@"atTop"] boolValue]);
      }];
 }
 

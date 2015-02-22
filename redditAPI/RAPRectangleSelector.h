@@ -16,6 +16,6 @@
 @property (nonatomic) int cellMax;
 @property (nonatomic) BOOL isStationary;
 
--(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop;
+-(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop withCellMax:(int)cellMax;
 -(void)reset;
 @end
