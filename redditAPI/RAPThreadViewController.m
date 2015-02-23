@@ -87,6 +87,7 @@
 {
     id data = [[self.resultsMutableArray firstObject][@"data"][@"children"] firstObject][@"data"];
     
+    self.navigationItem.title = [[NSString alloc] initWithFormat:@"%@:%@", data[@"subreddit"], data[@"title"]];
     topicCell.topicLabel.text = data[@"title"];
     topicCell.usernameLabel.text = data[@"author"];
     return topicCell;
@@ -149,7 +150,7 @@
     NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
                                       {
                                           NSMutableArray *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                                          //NSLog(@"Results are %@", jsonData);
+                                          NSLog(@"Results are %@", jsonData);
                                           //NSLog(@"JSONdata is %@", [jsonData firstObject][@"data"]);
                                           //NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData];
                                           //NSString *string = [[NSString alloc] initWithString:[jsonData firstObject][@"data"][@"selftext"] ];

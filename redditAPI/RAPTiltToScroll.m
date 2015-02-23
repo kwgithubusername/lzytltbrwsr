@@ -63,7 +63,7 @@
 {
     if (leftOrRightAngle > 10 || leftOrRightAngle < -10)
     {
-        NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
+        //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
         if (!isInWebView)
         {
             if (scrollView.contentOffset.y + leftOrRightAngle/5 >= -64 && !self.selectModeIsOn)

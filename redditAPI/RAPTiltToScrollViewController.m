@@ -57,7 +57,7 @@
     {
         [self.timerToPreventSegueingBackTooQuickly invalidate];
     }
-    NSLog(@"Timeviewhasbeenvisible:%d", self.timeViewHasBeenVisibleInt);
+    //NSLog(@"Timeviewhasbeenvisible:%d", self.timeViewHasBeenVisibleInt);
 }
 
 -(void)segueBack

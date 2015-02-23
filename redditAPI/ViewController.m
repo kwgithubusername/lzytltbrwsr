@@ -147,10 +147,12 @@
     if (!self.subRedditURLString)
     {
         [self loadRedditJSONWithAppendingString:@"/.json"];
+        self.navigationItem.title = @"frontpage";
     }
     else
     {
         [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"/r/%@/.json",self.subRedditURLString]];
+        self.navigationItem.title = [[NSString alloc] initWithFormat:@"%@",self.subRedditURLString];
     }
 }
 
@@ -172,7 +174,6 @@
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                                           NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
                                                              if (![jsonResults count])
