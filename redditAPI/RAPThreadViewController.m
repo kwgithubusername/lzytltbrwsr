@@ -44,7 +44,10 @@
     {
         [self performSegueWithIdentifier:@"linkSegue" sender:nil];
     }
-    //[self performSegueWithIdentifier:@"subredditSegue" sender:nil];
+    else if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
+    {
+        [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
+    }
 }
 
 #pragma mark Table View Methods
