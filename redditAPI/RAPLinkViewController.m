@@ -10,7 +10,7 @@
 @interface RAPLinkViewController ()
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (nonatomic) UIActivityIndicatorView *spinner;
-
+@property (nonatomic) BOOL isInWebView;
 @end
 
 @implementation RAPLinkViewController
@@ -61,6 +61,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     [self loadWebpage];
+    self.isInWebView = YES;
     // Do any additional setup after loading the view.
 }
 

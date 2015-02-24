@@ -23,6 +23,8 @@
 @property (nonatomic) UIActivityIndicatorView *spinner;
 @property (nonatomic) NSTimer *timerToPreventSegueingBackTooQuickly;
 @property (nonatomic) int timeViewHasBeenVisibleInt;
+@property (nonatomic) BOOL isInWebView;
+@property (nonatomic) UIWebView *webView;
 
 @end
 
@@ -89,6 +91,11 @@
 
 #pragma mark View methods
 
+-(UIScrollView *)appropriateScrollView
+{
+    return self.isInWebView ? self.webView.scrollView : self.tableView;
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -99,7 +106,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:self.tableView inWebView:NO];
+    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:[self appropriateScrollView] inWebView:self.isInWebView];
     [self addObserverForRectSelector];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
     self.timeViewHasBeenVisibleInt = 0;
