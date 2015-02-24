@@ -110,17 +110,11 @@
 {
     // Tilt detection must be separate for each VC due to overreactivity with segues
     
+    [super viewWillDisappear:animated];
+    
     [self.tiltToScroll stopTiltToScroll];
     
-    for (UIView *view in self.view.subviews)
-    {
-        if (view.tag == 999)
-        {
-            [view removeFromSuperview];
-        }
-    }
-    [self.rectangleSelector reset];
-    self.rectSelectorHasBeenMade = NO;
+    [self removeRectSelector];
 
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
     
@@ -148,10 +142,13 @@
     {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
         [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueNotification object:nil];
-        [self.tiltToScroll stopTiltToScroll];
-        [self removeRectSelector];
     }
+}
 
+-(void)stopTiltToScrollAndRemoveRectSelector
+{
+    [self.tiltToScroll stopTiltToScroll];
+    [self removeRectSelector];
 }
 
 -(float)statusBarHeight

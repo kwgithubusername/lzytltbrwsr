@@ -15,7 +15,8 @@
 #define RAPSegueNotification @"RAPSegueNotification"
 
 @interface RAPTiltToScrollViewController()
-- (void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
+-(void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
+-(void)stopTiltToScrollAndRemoveRectSelector;
 @end
 
 @interface RAPViewController ()
@@ -68,6 +69,8 @@
     {
         [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
     }
+    // A selected row from this page will always segue
+
 }
 
 -(void)segueBack

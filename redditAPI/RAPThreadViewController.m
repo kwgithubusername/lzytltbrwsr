@@ -15,7 +15,8 @@
 #define RAPSegueNotification @"RAPSegueNotification"
 
 @interface RAPTiltToScrollViewController()
-- (void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
+-(void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
+-(void)stopTiltToScrollAndRemoveRectSelector;
 @end
 
 @interface RAPThreadViewController ()
@@ -150,7 +151,7 @@
     NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
                                       {
                                           NSMutableArray *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                                          NSLog(@"Results are %@", jsonData);
+                                          //NSLog(@"Results are %@", jsonData);
                                           //NSLog(@"JSONdata is %@", [jsonData firstObject][@"data"]);
                                           //NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData];
                                           //NSString *string = [[NSString alloc] initWithString:[jsonData firstObject][@"data"][@"selftext"] ];

@@ -13,7 +13,8 @@
 #define RAPSegueNotification @"RAPSegueNotification"
 
 @interface RAPTiltToScrollViewController()
-- (void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
+-(void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
+-(void)stopTiltToScrollAndRemoveRectSelector;
 @end
 
 @interface RAPFavoritesViewController ()
@@ -57,7 +58,10 @@
 
 -(void)segueWhenSelectedRow
 {
-    [self performSegueWithIdentifier:@"subredditSegue" sender:nil];
+    if (super.rectangleSelector.cellIndex != super.rectangleSelector.cellMax && [self.tableView indexPathForSelectedRow].row != super.rectangleSelector.cellMax)
+    {
+        [self performSegueWithIdentifier:@"subredditSegue" sender:nil];
+    }
 }
 
 #pragma mark Adding subreddits
@@ -157,14 +161,22 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.favoritesMutableArray count];
+    return [self.favoritesMutableArray count]+1;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UITableViewCell *favoritesCell = [self.tableView dequeueReusableCellWithIdentifier:@"favoritesCell"];
-    favoritesCell.textLabel.text = [self.favoritesMutableArray objectAtIndex:indexPath.row];
     
+    if (indexPath.row == [self.favoritesMutableArray count])
+    {
+        favoritesCell.textLabel.text = @"";
+    }
+    else
+    {
+        favoritesCell.textLabel.text = [self.favoritesMutableArray objectAtIndex:indexPath.row];
+    }
+
     [super createTableViewCellRectWithCellRect:[tableView rectForRowAtIndexPath:indexPath]];
     
     return favoritesCell;
