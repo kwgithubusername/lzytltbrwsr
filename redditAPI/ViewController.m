@@ -13,6 +13,7 @@
 #import "RAPThreadViewController.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
+#define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
 
 @interface RAPTiltToScrollViewController()
 -(void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
@@ -143,6 +144,13 @@
     [super viewWillDisappear:animated];
 }
 
+#pragma mark Notify superclass to get rect selector shapes
+
+-(void)notifySuperclassToGetRectSelectorShapes
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:RAPGetRectSelectorShapesNotification object:self];
+}
+
 #pragma mark Load Reddit and NSURLsession
 
 - (void)loadReddit
@@ -186,6 +194,7 @@
                                                              [self.resultsMutableArray addObjectsFromArray:jsonResults];
                                                              [self.tableView reloadData];
                                                              [self.spinner stopAnimating];
+                                                             [self notifySuperclassToGetRectSelectorShapes];
                                                          });
                                       }];
     

@@ -14,6 +14,7 @@
 #define RAPRemoveRectSelectorNotification @"RAPRemoveRectSelectorNotification"
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPSegueBackNotification @"RAPSegueBackNotification"
+#define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
 
 @interface RAPTiltToScrollViewController ()
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
@@ -25,6 +26,8 @@
 @property (nonatomic) int timeViewHasBeenVisibleInt;
 @property (nonatomic) BOOL isInWebView;
 @property (nonatomic) UIWebView *webView;
+@property (nonatomic) NSMutableArray *cellRectSizeArray;
+@property (nonatomic) BOOL spinnerIsStopped;
 
 @end
 
@@ -82,6 +85,8 @@
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
     //NSLog(@"IndexPath is %d", indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
+    NSLog(@"startfill");
+    [self fillCellRectSizeArrayWithVisibleCells];
 }
 
 -(void)addObserverForAdjustToNearestRowNotification
@@ -99,6 +104,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillCellRectSizeArrayWithVisibleCells) name:RAPGetRectSelectorShapesNotification object:nil];
+    self.cellRectSizeArray = [[NSMutableArray alloc] init];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tiltToScroll.delegate = self;
 }
@@ -140,6 +147,19 @@
 
 
 #pragma mark Rectangle Selector methods
+
+-(void)fillCellRectSizeArrayWithVisibleCells
+{
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"getRectSelectorShapesNotification" object:nil];
+    
+    [self.cellRectSizeArray removeAllObjects];
+    
+    for (UITableViewCell *cell in [self.tableView visibleCells])
+    {
+        [self.cellRectSizeArray addObject:[NSValue valueWithCGRect:[self.tableView rectForRowAtIndexPath:[self.tableView indexPathForCell:cell]]]];
+    }
+    NSLog(@"added rects");
+}
 
 -(void)userSelectedRow
 {
@@ -226,6 +246,7 @@
          //NSLog(@"atTop notification is %d", [[note.userInfo objectForKey:@"atTop"] boolValue]);
      }];
 }
+
 
 /*
 #pragma mark - Navigation
