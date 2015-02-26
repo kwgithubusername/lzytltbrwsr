@@ -19,7 +19,6 @@
 @interface RAPTiltToScrollViewController ()
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
-@property (nonatomic) BOOL rectSelectorHasBeenMade;
 @property (nonatomic) CGRect defaultCellRect;
 @property (nonatomic) UIActivityIndicatorView *spinner;
 @property (nonatomic) NSTimer *timerToPreventSegueingBackTooQuickly;

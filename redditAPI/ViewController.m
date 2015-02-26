@@ -38,7 +38,7 @@
     if ([segue.identifier isEqualToString:@"threadSegue"])
     {
         NSIndexPath *indexPath;
-        if (!CGRectIsEmpty(super.rectangleSelector.frame))
+        if (![self.tableView indexPathForSelectedRow])
         {
             indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
             //NSLog(@"Indexpath.row is %d", indexPath.row);
@@ -46,6 +46,7 @@
         else // Otherwise, the user has tapped the row, so use the row that was tapped
         {
             indexPath = [self.tableView indexPathForSelectedRow];
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
         }
         
         RAPThreadViewController *threadViewController = segue.destinationViewController;

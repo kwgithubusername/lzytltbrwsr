@@ -12,4 +12,5 @@
 @interface RAPTiltToScrollViewController : UIViewController <UIScrollViewDelegate, TiltToScrollDelegate>
 @property (weak, nonatomic) UITableView *tableView;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
+@property (nonatomic) BOOL rectSelectorHasBeenMade;
 @end
