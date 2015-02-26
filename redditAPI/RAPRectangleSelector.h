@@ -16,6 +16,6 @@
 @property (nonatomic) BOOL isStationary;
 @property (nonatomic) NSMutableArray *rectsMutableArray;
 
--(id)initWithFramesMutableArray:(NSMutableArray *)mutableArray atTop:(BOOL)atTop withCellMax:(int)cellMax inWebView:(BOOL)isInWebView inInitialFrame:(CGRect)frame;
+-(id)initWithFramesMutableArray:(NSMutableArray *)mutableArray atTop:(BOOL)atTop withCellMax:(int)cellMax inWebView:(BOOL)isInWebView inInitialFrame:(CGRect)frame withToolbarRect:(CGRect)toolbarRect;
 -(void)reset;
 @end

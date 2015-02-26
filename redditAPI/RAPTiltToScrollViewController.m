@@ -204,9 +204,10 @@
             NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         }
         
-        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:self.cellRectSizeArray atTop:atTop withCellMax:[[self.tableView visibleCells] count]-1 inWebView:isInWebView inInitialFrame:self.tableViewCellRect];
-
+        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:self.cellRectSizeArray atTop:atTop withCellMax:[[self.tableView visibleCells] count]-1 inWebView:isInWebView inInitialFrame:self.tableViewCellRect withToolbarRect:self.navigationController.toolbar.frame];
+        NSLog(@"Toolbarframe is %@", NSStringFromCGRect(self.navigationController.toolbar.frame));
         NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
+        
         self.rectangleSelector.tag = 999;
         [self.view addSubview:self.rectangleSelector];
         [self.view bringSubviewToFront:self.rectangleSelector];

@@ -15,17 +15,19 @@
 @property (nonatomic) NSTimer *changeColorTimer;
 @property (nonatomic) CGRect initialFrame;
 @property (nonatomic) BOOL atTop;
+@property (nonatomic) CGRect toolBarRect;
 
 @end
 @implementation RAPRectangleSelector
 
--(id)initWithFramesMutableArray:(NSMutableArray *)mutableArray atTop:(BOOL)atTop withCellMax:(int)cellMax inWebView:(BOOL)isInWebView inInitialFrame:(CGRect)frame
+-(id)initWithFramesMutableArray:(NSMutableArray *)mutableArray atTop:(BOOL)atTop withCellMax:(int)cellMax inWebView:(BOOL)isInWebView inInitialFrame:(CGRect)frame withToolbarRect:(CGRect)toolbarRect
 {
     if (self = [super initWithFrame:frame])
     {
         self.rectsMutableArray = [[NSMutableArray alloc] initWithArray:mutableArray];
         self.atTop = atTop;
         self.initialFrame = frame;
+        self.toolBarRect = toolbarRect;
         
         if (isInWebView)
         {
@@ -60,6 +62,7 @@
     else if (!self.atTop)
     {
         self.cellIndex = self.cellMax;
+        self.initialFrame = self.toolBarRect;
     }
 }
 
@@ -163,11 +166,22 @@
 
 -(void)moveRect
 {
-    int direction = self.atTop ? 1 : -1;
     [self incrementOrDecrementCellIndex];
     NSLog(@"Cellindex is %d", self.cellIndex);
     CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
-    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height*direction, newCell.size.width, newCell.size.height);
+    
+    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height, newCell.size.width, newCell.size.height);
+    
+    if (!self.atTop)
+    {
+        newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y - newCell.size.height, newCell.size.width, newCell.size.height);
+    }
+    
+    if (self.cellIndex == self.cellMax)
+    {
+        newFrame = self.toolBarRect;
+    }
+    
     self.frame = newFrame;
     self.currentLocationRect = newFrame;
     NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
