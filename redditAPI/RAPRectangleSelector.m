@@ -22,21 +22,35 @@
 
 -(id)initWithFramesMutableArray:(NSMutableArray *)mutableArray atTop:(BOOL)atTop withCellMax:(int)cellMax inWebView:(BOOL)isInWebView inInitialFrame:(CGRect)frame withToolbarRect:(CGRect)toolbarRect
 {
-    if (self = [super initWithFrame:frame])
+    if (atTop)
     {
-        self.rectsMutableArray = [[NSMutableArray alloc] initWithArray:mutableArray];
-        self.atTop = atTop;
-        self.initialFrame = frame;
-        self.toolBarRect = toolbarRect;
-        
-        if (isInWebView)
+        if (self = [super initWithFrame:frame])
         {
-            self.isStationary = YES;
+            self.rectsMutableArray = [[NSMutableArray alloc] initWithArray:mutableArray];
+            self.atTop = atTop;
+            self.initialFrame = frame;
+            self.toolBarRect = toolbarRect;
         }
-        
-        self.cellMax = cellMax;
-        [self setup];
     }
+    
+    else if (!atTop)
+    {
+        if (self = [super initWithFrame:toolbarRect])
+        {
+            self.rectsMutableArray = [[NSMutableArray alloc] initWithArray:mutableArray];
+            self.atTop = atTop;
+            self.initialFrame = toolbarRect;
+            self.toolBarRect = toolbarRect;
+        }
+    }
+
+    if (isInWebView)
+    {
+        self.isStationary = YES;
+    }
+        
+    self.cellMax = cellMax;
+    [self setup];
     return self;
 }
 
@@ -174,7 +188,7 @@
     
     if (!self.atTop)
     {
-        newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y - newCell.size.height, newCell.size.width, newCell.size.height);
+        newFrame = CGRectMake(newCell.origin.x, newCell.origin.y+self.statusBarPlusNavigationBarHeight,newCell.size.width,newCell.size.height);
     }
     
     if (self.cellIndex == self.cellMax)
