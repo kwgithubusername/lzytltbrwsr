@@ -83,7 +83,7 @@
 {
     id data = [[self.resultsMutableArray firstObject][@"data"][@"children"] firstObject][@"data"];
     
-    self.navigationItem.title = [[NSString alloc] initWithFormat:@"%@:%@", data[@"subreddit"], data[@"title"]];
+    self.navigationItem.title = [[NSString alloc] initWithFormat:@"%@: %@", data[@"subreddit"], data[@"title"]];
     topicCell.topicLabel.text = data[@"title"];
     topicCell.usernameLabel.text = data[@"author"];
     return topicCell;

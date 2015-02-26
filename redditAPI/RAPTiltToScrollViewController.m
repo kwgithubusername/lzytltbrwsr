@@ -142,6 +142,8 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPGetRectSelectorShapesNotification object:nil];
+    
     [self.timerToPreventSegueingBackTooQuickly invalidate];
 }
 
@@ -150,7 +152,7 @@
 
 -(void)fillCellRectSizeArrayWithVisibleCells
 {
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:@"getRectSelectorShapesNotification" object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPGetRectSelectorShapesNotification object:nil];
     
     [self.cellRectSizeArray removeAllObjects];
     
@@ -190,17 +192,18 @@
     {
         //NSLog(@"let's make a rect selector");
         //NSLog(@"atTop in createRect method is %d", atTop);
-        CGRect tempRect = [[self.cellRectSizeArray objectAtIndex:0] CGRectValue];
         
         if (!atTop && !isInWebView)
         {
             // Bottom of screen
-            self.tableViewCellRect = CGRectMake(tempRect.origin.x, self.view.frame.size.height-tempRect.size.height, tempRect.size.width, tempRect.size.height);
+            CGRect tempRect = [[self.cellRectSizeArray lastObject] CGRectValue];
+            self.tableViewCellRect = CGRectMake(0, self.view.frame.size.height-tempRect.size.height, tempRect.size.width, tempRect.size.height);
         }
         else if (atTop)
         {
             // Top of screen
-            self.tableViewCellRect = CGRectMake(tempRect.origin.x, tempRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], tempRect.size.width, tempRect.size.height);
+            CGRect tempRect = [[self.cellRectSizeArray objectAtIndex:0] CGRectValue];
+            self.tableViewCellRect = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], tempRect.size.width, tempRect.size.height);
             NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         }
         

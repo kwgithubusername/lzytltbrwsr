@@ -226,7 +226,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="3FN-Ex-mTK">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="threadTopicCell" rowHeight="120" id="9kR-Rj-4xb" customClass="RAPThreadTopicTableViewCell">
@@ -333,7 +333,7 @@
                         <constraints>
                             <constraint firstItem="3FN-Ex-mTK" firstAttribute="top" secondItem="eKd-9R-BuD" secondAttribute="bottom" id="2OM-D9-4WP"/>
                             <constraint firstItem="3FN-Ex-mTK" firstAttribute="top" secondItem="eKd-9R-BuD" secondAttribute="bottom" constant="-64" id="9YW-FO-oLM"/>
-                            <constraint firstItem="lIN-Aj-ToR" firstAttribute="top" secondItem="3FN-Ex-mTK" secondAttribute="bottom" id="IPJ-uC-rkZ"/>
+                            <constraint firstItem="lIN-Aj-ToR" firstAttribute="top" secondItem="3FN-Ex-mTK" secondAttribute="bottom" constant="44" id="IPJ-uC-rkZ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="yKB-tX-SE6" secondAttribute="trailing" constant="-16" id="NLr-T5-1Jx"/>
                             <constraint firstAttribute="trailingMargin" secondItem="3FN-Ex-mTK" secondAttribute="trailing" constant="-16" id="c4s-hd-rcN"/>
                             <constraint firstItem="lIN-Aj-ToR" firstAttribute="top" secondItem="yKB-tX-SE6" secondAttribute="bottom" id="jd7-xZ-1Ot"/>

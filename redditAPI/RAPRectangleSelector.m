@@ -188,7 +188,16 @@
     
     if (!self.atTop)
     {
-        newFrame = CGRectMake(newCell.origin.x, newCell.origin.y+self.statusBarPlusNavigationBarHeight,newCell.size.width,newCell.size.height);
+//        if (CGRectIntersectsRect(self.toolBarRect, newCell) && self.cellIndex == self.cellMax - 1)
+//        {
+//            NSLog(@"intersection");
+//            newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y - (newCell.size.height-self.toolBarRect.size.height), newCell.size.width, newCell.size.height);
+//        }
+//        else
+//        {
+            newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y - newCell.size.height, newCell.size.width, newCell.size.height);
+//        }
+
     }
     
     if (self.cellIndex == self.cellMax)
