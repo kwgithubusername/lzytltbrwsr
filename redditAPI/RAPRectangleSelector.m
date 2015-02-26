@@ -164,11 +164,11 @@
 -(void)moveRect
 {
     int direction = self.atTop ? 1 : -1;
-    CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
-    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + newCell.size.height*direction, newCell.size.width, newCell.size.height);
-    self.frame = newFrame;
     [self incrementOrDecrementCellIndex];
     NSLog(@"Cellindex is %d", self.cellIndex);
+    CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
+    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height*direction, newCell.size.width, newCell.size.height);
+    self.frame = newFrame;
     self.currentLocationRect = newFrame;
     NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
     
