@@ -40,7 +40,7 @@
     if ([segue.identifier isEqualToString:@"subredditSegue"])
     {
         NSIndexPath *indexPath;
-        if (!CGRectIsEmpty(super.rectangleSelector.frame))
+        if (![self.tableView indexPathForSelectedRow])
         {
             indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
             NSLog(@"Indexpath.row is %d", indexPath.row);
@@ -48,6 +48,7 @@
         else // Otherwise, the user has tapped the row, so use the row that was tapped
         {
             indexPath = [self.tableView indexPathForSelectedRow];
+            [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
         }
         
         RAPViewController *subredditViewController = segue.destinationViewController;
@@ -132,7 +133,7 @@
                                       {
                                           NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
                                           NSSet *jsonResults = [[NSSet alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          NSLog(@"Subreddit is %@", jsonData);
+                                          //NSLog(@"Subreddit is %@", jsonData);
                                           
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {

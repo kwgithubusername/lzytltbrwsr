@@ -60,6 +60,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
     [self loadWebpage];
     self.isInWebView = YES;
     // Do any additional setup after loading the view.

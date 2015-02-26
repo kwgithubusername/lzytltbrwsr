@@ -70,6 +70,7 @@
     {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:self.tiltToScroll];
         [self.tiltToScroll segueSuccessful];
+        self.navigationController.navigationBar.alpha = 1;
         [self.navigationController popViewControllerAnimated:YES];
     }
 }
@@ -189,7 +190,7 @@
 {
     if (!self.rectSelectorHasBeenMade && [self.cellRectSizeArray count] > 0)
     {
-        //NSLog(@"let's make a rect selector");
+        NSLog(@"let's make a rect selector");
         //NSLog(@"atTop in createRect method is %d", atTop);
         
         if (!atTop && !isInWebView)
@@ -209,19 +210,26 @@
         CGRect toolbarRect = CGRectMake(self.navigationController.toolbar.frame.origin.x, self.navigationController.toolbar.frame.origin.y-self.navigationController.toolbar.frame.size.height, self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height);
         
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:self.cellRectSizeArray atTop:atTop withCellMax:[[self.tableView visibleCells] count]-1 inWebView:isInWebView inInitialFrame:self.tableViewCellRect withToolbarRect:toolbarRect];
-        NSLog(@"Toolbarframe is %@", NSStringFromCGRect(self.navigationController.toolbar.frame));
-        NSLog(@"bounds of screen is %@", NSStringFromCGRect(self.view.bounds));
-        NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
+        
+        //NSLog(@"Toolbarframe is %@", NSStringFromCGRect(self.navigationController.toolbar.frame));
+        //NSLog(@"bounds of screen is %@", NSStringFromCGRect(self.view.bounds));
+        //NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
         
         self.rectangleSelector.statusBarPlusNavigationBarHeight = self.navigationController.navigationBar.frame.size.height+[self statusBarHeight];
-        
+    }
+    
+    if (isInWebView)
+    {
+        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:nil atTop:atTop withCellMax:1 inWebView:isInWebView inInitialFrame:self.navigationController.navigationBar.frame withToolbarRect:CGRectZero];
+        self.navigationController.navigationBar.alpha = 0.5;
+    }
         self.rectangleSelector.tag = 999;
         [self.view addSubview:self.rectangleSelector];
         [self.view bringSubviewToFront:self.rectangleSelector];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
         self.rectSelectorHasBeenMade = YES;
-    }
+    
     
 }
 
