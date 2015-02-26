@@ -30,6 +30,9 @@
             self.atTop = atTop;
             self.initialFrame = frame;
             self.toolBarRect = toolbarRect;
+            self.cellMax = cellMax;
+            self.isStationary = isInWebView;
+            [self setup];
         }
     }
     
@@ -41,16 +44,11 @@
             self.atTop = atTop;
             self.initialFrame = toolbarRect;
             self.toolBarRect = toolbarRect;
+            self.cellMax = cellMax;
+            self.isStationary = isInWebView;
+            [self setup];
         }
     }
-
-    if (isInWebView)
-    {
-        self.isStationary = YES;
-    }
-        
-    self.cellMax = cellMax;
-    [self setup];
     return self;
 }
 
