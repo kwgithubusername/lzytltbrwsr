@@ -15,11 +15,6 @@
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
 
-@interface RAPTiltToScrollViewController()
--(void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
--(void)stopTiltToScrollAndRemoveRectSelector;
-@end
-
 @interface RAPViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -92,8 +87,6 @@
     RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
     cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
-    
-    [super createTableViewCellRectWithCellRect:[tableView rectForRowAtIndexPath:indexPath]];
     
     return cell;
 }

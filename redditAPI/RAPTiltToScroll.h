@@ -9,9 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol TiltToScrollDelegate <NSObject>
-
 -(void)addObserverForAdjustToNearestRowNotification;
-
 @end
 
 @interface RAPTiltToScroll : NSObject

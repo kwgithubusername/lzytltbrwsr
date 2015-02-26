@@ -13,11 +13,8 @@
 #import "RAPLinkViewController.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
+#define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
 
-@interface RAPTiltToScrollViewController()
--(void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
--(void)stopTiltToScrollAndRemoveRectSelector;
-@end
 
 @interface RAPThreadViewController ()
 @property (nonatomic) NSMutableArray *resultsMutableArray;
@@ -70,8 +67,6 @@
 {
     if (indexPath.row == 0)
     {
-        [super createTableViewCellRectWithCellRect:[tableView rectForRowAtIndexPath:indexPath]];
-        
         RAPThreadTopicTableViewCell *topicCell = [self.tableView dequeueReusableCellWithIdentifier:@"threadTopicCell"];
         
         return [self configureTopicCell:topicCell atIndexPath:indexPath];
@@ -138,6 +133,13 @@
     return size.height + 1.0f; // Add 1.0f for the cell separator height
 }
 
+#pragma mark Notify superclass to get rect selector shapes
+
+-(void)notifySuperclassToGetRectSelectorShapes
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:RAPGetRectSelectorShapesNotification object:self];
+}
+
 #pragma mark Load reddit method
 
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
@@ -161,6 +163,7 @@
                                                              [self.resultsMutableArray addObjectsFromArray:jsonData];
                                                              [self.tableView reloadData];
                                                              [self.spinner stopAnimating];
+                                                             [self notifySuperclassToGetRectSelectorShapes];
                                                          });
                                       }];
     

@@ -186,31 +186,27 @@
 
 - (void)createRectSelectorAtTop:(BOOL)atTop inWebView:(BOOL)isInWebView
 {
-    if (!self.rectSelectorHasBeenMade)
+    if (!self.rectSelectorHasBeenMade && [self.cellRectSizeArray count] > 0)
     {
         //NSLog(@"let's make a rect selector");
         //NSLog(@"atTop in createRect method is %d", atTop);
+        CGRect tempRect = [[self.cellRectSizeArray objectAtIndex:0] CGRectValue];
         
         if (!atTop && !isInWebView)
         {
-            //NSLog(@"atTop in ifstatement is %d", atTop);
-            self.tableViewCellRect = CGRectMake(self.tableViewCellRect.origin.x, self.view.frame.size.height-self.tableViewCellRect.size.height, self.tableViewCellRect.size.width, self.tableViewCellRect.size.height);
+            // Bottom of screen
+            self.tableViewCellRect = CGRectMake(tempRect.origin.x, self.view.frame.size.height-tempRect.size.height, tempRect.size.width, tempRect.size.height);
         }
         else if (atTop)
         {
-            self.tableViewCellRect = CGRectMake(self.defaultCellRect.origin.x, self.defaultCellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], self.defaultCellRect.size.width, self.defaultCellRect.size.height);
+            // Top of screen
+            self.tableViewCellRect = CGRectMake(tempRect.origin.x, tempRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], tempRect.size.width, tempRect.size.height);
+            NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         }
         
-        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFrame:self.tableViewCellRect atTop:atTop withCellMax:[[self.tableView visibleCells] count]-1];
-        
-        if (isInWebView)
-        {
-            self.rectangleSelector.isStationary = YES;
-        }
+        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:self.cellRectSizeArray atTop:atTop withCellMax:[[self.tableView visibleCells] count]-1 inWebView:isInWebView inInitialFrame:self.tableViewCellRect];
 
         NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
-        self.rectangleSelector.incrementCGFloat = self.tableViewCellRect.size.height;
-        NSLog(@"CGIncrement is %f", self.rectangleSelector.incrementCGFloat);
         self.rectangleSelector.tag = 999;
         [self.view addSubview:self.rectangleSelector];
         [self.view bringSubviewToFront:self.rectangleSelector];
@@ -231,6 +227,7 @@
         }
     }
     [self.rectangleSelector reset];
+    [self.rectangleSelector.rectsMutableArray removeAllObjects];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
     [self addObserverForRectSelector];

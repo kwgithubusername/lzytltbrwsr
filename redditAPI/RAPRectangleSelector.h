@@ -9,13 +9,13 @@
 #import <UIKit/UIKit.h>
 
 @interface RAPRectangleSelector : UIView
-@property (nonatomic) CGFloat incrementCGFloat;
 @property (nonatomic) BOOL userHasStoppedSelection;
 @property (nonatomic) CGRect currentLocationRect;
 @property (nonatomic) int cellIndex;
 @property (nonatomic) int cellMax;
 @property (nonatomic) BOOL isStationary;
+@property (nonatomic) NSMutableArray *rectsMutableArray;
 
--(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop withCellMax:(int)cellMax;
+-(id)initWithFramesMutableArray:(NSMutableArray *)mutableArray atTop:(BOOL)atTop withCellMax:(int)cellMax inWebView:(BOOL)isInWebView inInitialFrame:(CGRect)frame;
 -(void)reset;
 @end

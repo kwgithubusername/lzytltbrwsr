@@ -15,15 +15,23 @@
 @property (nonatomic) NSTimer *changeColorTimer;
 @property (nonatomic) CGRect initialFrame;
 @property (nonatomic) BOOL atTop;
+
 @end
 @implementation RAPRectangleSelector
 
--(id)initWithFrame:(CGRect)frame atTop:(BOOL)atTop withCellMax:(int)cellMax
+-(id)initWithFramesMutableArray:(NSMutableArray *)mutableArray atTop:(BOOL)atTop withCellMax:(int)cellMax inWebView:(BOOL)isInWebView inInitialFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame])
     {
+        self.rectsMutableArray = [[NSMutableArray alloc] initWithArray:mutableArray];
         self.atTop = atTop;
         self.initialFrame = frame;
+        
+        if (isInWebView)
+        {
+            self.isStationary = YES;
+        }
+        
         self.cellMax = cellMax;
         [self setup];
     }
@@ -156,7 +164,8 @@
 -(void)moveRect
 {
     int direction = self.atTop ? 1 : -1;
-    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.incrementCGFloat*direction, self.frame.size.width, self.frame.size.height);
+    CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
+    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + newCell.size.height*direction, newCell.size.width, newCell.size.height);
     self.frame = newFrame;
     [self incrementOrDecrementCellIndex];
     NSLog(@"Cellindex is %d", self.cellIndex);
