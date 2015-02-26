@@ -99,40 +99,6 @@
     return commentCell;
 }
 
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return indexPath.row == 0 ? [self heightForTopicCellAtIndexPath:indexPath]:[self heightForCommentCellAtIndexPath:indexPath];
-}
-
-- (CGFloat)heightForTopicCellAtIndexPath:(NSIndexPath *)indexPath {
-    static RAPThreadTopicTableViewCell *sizingCell = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"threadTopicCell"];
-    });
-    
-    [self configureTopicCell:sizingCell atIndexPath:indexPath];
-    return [self calculateHeightForConfiguredSizingCell:sizingCell];
-}
-
-- (CGFloat)heightForCommentCellAtIndexPath:(NSIndexPath *)indexPath {
-    static RAPThreadCommentTableViewCell *sizingCell = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sizingCell = [self.tableView dequeueReusableCellWithIdentifier:@"threadCommentCell"];
-    });
-    
-    [self configureCommentCell:sizingCell atIndexPath:indexPath];
-    return [self calculateHeightForConfiguredSizingCell:sizingCell];
-}
-
-- (CGFloat)calculateHeightForConfiguredSizingCell:(UITableViewCell *)sizingCell {
-    [sizingCell setNeedsLayout];
-    [sizingCell layoutIfNeeded];
-    
-    CGSize size = [sizingCell.contentView systemLayoutSizeFittingSize:UILayoutFittingCompressedSize];
-    return size.height + 1.0f; // Add 1.0f for the cell separator height
-}
-
 #pragma mark Notify superclass to get rect selector shapes
 
 -(void)notifySuperclassToGetRectSelectorShapes
@@ -164,6 +130,8 @@
                                                              [self.tableView reloadData];
                                                              [self.spinner stopAnimating];
                                                              [self notifySuperclassToGetRectSelectorShapes];
+                                                             self.tableView.rowHeight = UITableViewAutomaticDimension;
+                                                             self.tableView.estimatedRowHeight = 44;
                                                          });
                                       }];
     
