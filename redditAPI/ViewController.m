@@ -11,6 +11,7 @@
 #import "RAPapi.h"
 #import "RAPRedditLinks.h"
 #import "RAPThreadViewController.h"
+#import "RAPSubredditDataSource.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -21,6 +22,7 @@
 @property (nonatomic) NSMutableArray *resultsMutableArray;
 @property (nonatomic) RAPapi *api;
 @property (nonatomic) UIActivityIndicatorView *spinner;
+@property (nonatomic) RAPSubredditDataSource *dataSource;
 @end
 
 @implementation RAPViewController
@@ -77,34 +79,54 @@
 
 #pragma mark TableView Methods
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+-(void)setupDataSource
 {
-    return [self.resultsMutableArray count];
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
-    RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-    cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
-    cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
-//    cell.thumbnailImageView.image = [[UIImage alloc] i]
+    void (^configureCell)(RAPTableViewCell*, id) = ^(RAPTableViewCell *cell, id item) {
+        cell.label.text = [item[@"data"] objectForKey:@"title"];
+        cell.subLabel.text = [item[@"data"] objectForKey:@"subreddit"];
+    };
     
-    return cell;
-}
-
--(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // App will not register reaching the bottom of the tableview with tilt-to-scroll, so fetch more data when second-to-last row has been reached
-    
-    if (indexPath.row == [self.resultsMutableArray count]-2)
-    {
-        NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row+1]];
-        NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [redditEntry[@"data"] objectForKey:@"id"]];
+    void (^loadCell)(RAPTableViewCell*, id) = ^(RAPTableViewCell *cell, id item) {
+        NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [item[@"data"] objectForKey:@"id"]];
         [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]];
         NSLog(@"Appending json info %@",[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]);
-    }
+    };
+    
+    self.dataSource = [[RAPSubredditDataSource alloc] initWithItems:self.resultsMutableArray
+                                                    cellIdentifier:@"cell"
+                                                 configureCellBlock:configureCell
+                                                   loadingCellBlock:loadCell];
+    self.tableView.dataSource = self.dataSource;
 }
+
+//-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+//{
+//    return [self.resultsMutableArray count];
+//}
+//
+//-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
+//    RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
+//    cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
+//    cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
+////    cell.thumbnailImageView.image = [[UIImage alloc] i]
+//    
+//    return cell;
+//}
+//
+//-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+//{
+//    // App will not register reaching the bottom of the tableview with tilt-to-scroll, so fetch more data when second-to-last row has been reached
+//    
+//    if (indexPath.row == [self.resultsMutableArray count]-2)
+//    {
+//        NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row+1]];
+//        NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [redditEntry[@"data"] objectForKey:@"id"]];
+//        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]];
+//        NSLog(@"Appending json info %@",[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]);
+//    }
+//}
 
 #pragma mark View methods
 
@@ -187,6 +209,7 @@
                                                                  [self alertUserThatErrorOccurred];
                                                              }
                                                              [self.resultsMutableArray addObjectsFromArray:jsonResults];
+                                                             [self setupDataSource];
                                                              [self.tableView reloadData];
                                                              [self.spinner stopAnimating];
                                                              [self notifySuperclassToGetRectSelectorShapes];
