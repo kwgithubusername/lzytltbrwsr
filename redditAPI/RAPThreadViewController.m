@@ -46,6 +46,10 @@
     {
         [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
     }
+    else
+    {
+        
+    }
 }
 
 #pragma mark Table View Methods

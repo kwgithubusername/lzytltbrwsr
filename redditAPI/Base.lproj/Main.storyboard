@@ -116,29 +116,48 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="536"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" textLabel="86f-4f-iIy" detailTextLabel="62p-l4-U5Y" style="IBUITableViewCellStyleSubtitle" id="hSy-p7-JVd" customClass="RAPTableViewCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="hSy-p7-JVd" customClass="RAPTableViewCell">
                                         <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hSy-p7-JVd" id="ABc-JR-cav">
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="86f-4f-iIy">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZhX-dJ-EKX">
+                                                    <rect key="frame" x="60" y="8" width="532" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="Subtitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="62p-l4-U5Y">
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Subreddit" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ciY-Iv-GtJ">
+                                                    <rect key="frame" x="60" y="30" width="532" height="15"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UgO-fQ-UAk">
+                                                    <rect key="frame" x="8" y="0.0" width="44" height="44"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="44" id="5sb-O3-opt"/>
+                                                        <constraint firstAttribute="width" constant="44" id="6CV-6E-tuS"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="ciY-Iv-GtJ" firstAttribute="leading" secondItem="UgO-fQ-UAk" secondAttribute="trailing" constant="8" id="9cR-j0-HRP"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="ciY-Iv-GtJ" secondAttribute="bottom" constant="-10" id="CIX-Pm-mT2"/>
+                                                <constraint firstItem="ZhX-dJ-EKX" firstAttribute="top" secondItem="ABc-JR-cav" secondAttribute="topMargin" id="Ii3-IX-fdA"/>
+                                                <constraint firstItem="ZhX-dJ-EKX" firstAttribute="leading" secondItem="UgO-fQ-UAk" secondAttribute="trailing" constant="8" id="ZOy-gp-EM6"/>
+                                                <constraint firstItem="UgO-fQ-UAk" firstAttribute="leading" secondItem="ABc-JR-cav" secondAttribute="leadingMargin" id="cSR-90-49u"/>
+                                                <constraint firstItem="ciY-Iv-GtJ" firstAttribute="top" secondItem="ZhX-dJ-EKX" secondAttribute="bottom" constant="1" id="nXk-Vy-i0L"/>
+                                                <constraint firstAttribute="centerY" secondItem="UgO-fQ-UAk" secondAttribute="centerY" id="npq-Gq-wpw"/>
+                                                <constraint firstItem="ZhX-dJ-EKX" firstAttribute="trailing" secondItem="ABc-JR-cav" secondAttribute="trailingMargin" id="uin-u5-k8B"/>
+                                                <constraint firstItem="ciY-Iv-GtJ" firstAttribute="trailing" secondItem="ABc-JR-cav" secondAttribute="trailingMargin" id="vMr-cq-tgj"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="label" destination="86f-4f-iIy" id="1dN-C5-MnY"/>
-                                            <outlet property="subLabel" destination="62p-l4-U5Y" id="de2-Cs-I4d"/>
+                                            <outlet property="label" destination="ZhX-dJ-EKX" id="9oH-yo-d26"/>
+                                            <outlet property="subLabel" destination="ciY-Iv-GtJ" id="CY8-m7-GTi"/>
+                                            <outlet property="thumbnailImageView" destination="UgO-fQ-UAk" id="WnI-tZ-E7U"/>
                                             <segue destination="wBo-7h-fIs" kind="show" identifier="threadSegue" id="onA-tN-sLg"/>
                                         </connections>
                                     </tableViewCell>
@@ -178,7 +197,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-79" y="155"/>
+            <point key="canvasLocation" x="-79" y="131"/>
         </scene>
         <!--Link View Controller-->
         <scene sceneID="e6F-VC-uIU">
@@ -211,7 +230,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H7B-7p-DXV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1350" y="116"/>
+            <point key="canvasLocation" x="1418" y="-40"/>
         </scene>
         <!--Thread View Controller-->
         <scene sceneID="CGb-Pg-muh">
@@ -357,7 +376,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="7YB-UM-pDa"/>
+        <segue reference="8Xf-ET-DAz"/>
         <segue reference="WHS-fU-Osg"/>
     </inferredMetricsTieBreakers>
 </document>

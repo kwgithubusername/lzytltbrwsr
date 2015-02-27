@@ -88,6 +88,7 @@
     RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
     cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
     cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
+//    cell.thumbnailImageView.image = [[UIImage alloc] i]
     
     return cell;
 }
