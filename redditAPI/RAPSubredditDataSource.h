@@ -11,7 +11,7 @@
 typedef void (^TableViewCellConfigureBlock)(id cell, id item);
 typedef void (^TableViewCellLoadingBlock)(id cell, id item);
 
-@interface RAPSubredditDataSource : NSObject <UITableViewDataSource>
+@interface RAPSubredditDataSource : NSObject <UITableViewDataSource, UITableViewDelegate>
 
 - (id)initWithItems:(NSArray *)anItems
      cellIdentifier:(NSString *)aCellIdentifier

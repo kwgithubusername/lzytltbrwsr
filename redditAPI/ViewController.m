@@ -97,6 +97,7 @@
                                                  configureCellBlock:configureCell
                                                    loadingCellBlock:loadCell];
     self.tableView.dataSource = self.dataSource;
+    self.tableView.delegate = self.dataSource;
 }
 
 //-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
