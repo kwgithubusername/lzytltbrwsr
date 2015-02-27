@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "RAPTiltToScrollViewController.h"
-@interface RAPFavoritesViewController : RAPTiltToScrollViewController <UITableViewDataSource, UITableViewDelegate, UIAlertViewDelegate>
+@interface RAPFavoritesViewController : RAPTiltToScrollViewController <UIAlertViewDelegate>
 
 @end

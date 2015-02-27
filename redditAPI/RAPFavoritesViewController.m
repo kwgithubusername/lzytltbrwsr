@@ -9,6 +9,7 @@
 #import "RAPFavoritesViewController.h"
 #import "ViewController.h"
 #import "RAPRectangleSelector.h"
+#import "RAPFavoritesDataSource.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 
@@ -23,6 +24,7 @@
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
+@property (nonatomic) RAPFavoritesDataSource *dataSource;
 @end
 
 @implementation RAPFavoritesViewController
@@ -160,42 +162,17 @@
 
 #pragma mark Table View Methods
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (void)setupDataSource
 {
-    return [self.favoritesMutableArray count]+1;
-}
-
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    UITableViewCell *favoritesCell = [self.tableView dequeueReusableCellWithIdentifier:@"favoritesCell"];
-    
-    if (indexPath.row == [self.favoritesMutableArray count])
-    {
-        favoritesCell.textLabel.text = @"";
-    }
-    else
-    {
-        favoritesCell.textLabel.text = [self.favoritesMutableArray objectAtIndex:indexPath.row];
-    }
-
-    [super createTableViewCellRectWithCellRect:[tableView rectForRowAtIndexPath:indexPath]];
-    
-    return favoritesCell;
-}
-
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    return YES;
-}
-
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete)
-    {
+    void (^deleteCell)(NSIndexPath*) = ^(NSIndexPath *indexPath) {
         [self.favoritesMutableArray removeObjectAtIndex:indexPath.row];
         [self updateFavorites];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }
+    };
+    
+    self.dataSource = [[RAPFavoritesDataSource alloc] initWithItems:self.favoritesMutableArray cellIdentifier:@"favoritesCell" deleteCellBlock:deleteCell];
+    
+    self.tableView.dataSource = self.dataSource;
+    self.tableView.delegate = self.dataSource;
 }
 
 #pragma mark Favorites methods
@@ -221,7 +198,9 @@
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultFavorites];
     
     self.favoritesMutableArray = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] valueForKey:@"favorites"]];
-    // Do any additional setup after loading the view.
+    
+    [self setupDataSource];
+    // Dou any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated

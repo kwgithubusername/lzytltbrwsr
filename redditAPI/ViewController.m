@@ -100,35 +100,6 @@
     self.tableView.delegate = self.dataSource;
 }
 
-//-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
-//{
-//    return [self.resultsMutableArray count];
-//}
-//
-//-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
-//    RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
-//    cell.label.text = [redditEntry[@"data"] objectForKey:@"title"];
-//    cell.subLabel.text = [redditEntry[@"data"] objectForKey:@"subreddit"];
-////    cell.thumbnailImageView.image = [[UIImage alloc] i]
-//    
-//    return cell;
-//}
-//
-//-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
-//{
-//    // App will not register reaching the bottom of the tableview with tilt-to-scroll, so fetch more data when second-to-last row has been reached
-//    
-//    if (indexPath.row == [self.resultsMutableArray count]-2)
-//    {
-//        NSDictionary *redditEntry = [[NSDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row+1]];
-//        NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [redditEntry[@"data"] objectForKey:@"id"]];
-//        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]];
-//        NSLog(@"Appending json info %@",[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]);
-//    }
-//}
-
 #pragma mark View methods
 
 - (void)viewDidLoad

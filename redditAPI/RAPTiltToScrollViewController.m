@@ -38,17 +38,6 @@
     return _tiltToScroll;
 }
 
--(void)createTableViewCellRectWithCellRect:(CGRect)cellRect
-{
-    // Need to get the frame we will use for the rect selector
-    if (CGRectIsEmpty(self.tableViewCellRect))
-    {
-        self.defaultCellRect = cellRect;
-        self.tableViewCellRect = CGRectMake(cellRect.origin.x, cellRect.origin.y+self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], cellRect.size.width, cellRect.size.height);
-        [self addObserverForRectSelector];
-    }
-}
-
 #pragma mark Segue
 
 -(void)timeViewHasBeenVisible

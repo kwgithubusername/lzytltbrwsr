@@ -14,6 +14,7 @@
 		9E9D75E81A828187005CEB64 /* RAPThreadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75E71A828187005CEB64 /* RAPThreadViewController.m */; };
 		9ECF7DA11A9FDA22009A3DC2 /* RAPCommentTreeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF7DA01A9FDA22009A3DC2 /* RAPCommentTreeViewController.m */; };
 		9ECF7DA41AA005BC009A3DC2 /* RAPSubredditDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF7DA31AA005BC009A3DC2 /* RAPSubredditDataSource.m */; };
+		9ECF7DA71AA01A56009A3DC2 /* RAPFavoritesDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF7DA61AA01A56009A3DC2 /* RAPFavoritesDataSource.m */; };
 		9ECF83271A66096E00E7D9C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF83261A66096E00E7D9C7 /* main.m */; };
 		9ECF832A1A66096E00E7D9C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF83291A66096E00E7D9C7 /* AppDelegate.m */; };
 		9ECF832D1A66096E00E7D9C7 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECF832C1A66096E00E7D9C7 /* ViewController.m */; };
@@ -55,6 +56,8 @@
 		9ECF7DA01A9FDA22009A3DC2 /* RAPCommentTreeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPCommentTreeViewController.m; sourceTree = "<group>"; };
 		9ECF7DA21AA005BC009A3DC2 /* RAPSubredditDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPSubredditDataSource.h; sourceTree = "<group>"; };
 		9ECF7DA31AA005BC009A3DC2 /* RAPSubredditDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPSubredditDataSource.m; sourceTree = "<group>"; };
+		9ECF7DA51AA01A56009A3DC2 /* RAPFavoritesDataSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPFavoritesDataSource.h; sourceTree = "<group>"; };
+		9ECF7DA61AA01A56009A3DC2 /* RAPFavoritesDataSource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPFavoritesDataSource.m; sourceTree = "<group>"; };
 		9ECF83211A66096E00E7D9C7 /* redditAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = redditAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9ECF83251A66096E00E7D9C7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9ECF83261A66096E00E7D9C7 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -131,6 +134,8 @@
 				9ECF7DA31AA005BC009A3DC2 /* RAPSubredditDataSource.m */,
 				9E9D75E31A81C447005CEB64 /* RAPFavoritesViewController.h */,
 				9E9D75E41A81C447005CEB64 /* RAPFavoritesViewController.m */,
+				9ECF7DA51AA01A56009A3DC2 /* RAPFavoritesDataSource.h */,
+				9ECF7DA61AA01A56009A3DC2 /* RAPFavoritesDataSource.m */,
 				9E9D75E61A828187005CEB64 /* RAPThreadViewController.h */,
 				9E9D75E71A828187005CEB64 /* RAPThreadViewController.m */,
 				9ECF7D9F1A9FDA22009A3DC2 /* RAPCommentTreeViewController.h */,
@@ -294,6 +299,7 @@
 				9ECF83271A66096E00E7D9C7 /* main.m in Sources */,
 				9ECF7DA11A9FDA22009A3DC2 /* RAPCommentTreeViewController.m in Sources */,
 				9ECF7DA41AA005BC009A3DC2 /* RAPSubredditDataSource.m in Sources */,
+				9ECF7DA71AA01A56009A3DC2 /* RAPFavoritesDataSource.m in Sources */,
 				9E9D75D81A804BA0005CEB64 /* RAPSelectorView.m in Sources */,
 				9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */,
 				9ED7E13C1A8FB3D900020696 /* RAPTiltToScrollViewController.m in Sources */,
