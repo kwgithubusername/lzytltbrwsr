@@ -12,6 +12,7 @@
 #import "RAPRedditLinks.h"
 #import "RAPThreadViewController.h"
 #import "RAPSubredditDataSource.h"
+#import "RAPSubredditWebServices.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -20,18 +21,12 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *resultsMutableArray;
-@property (nonatomic) RAPapi *api;
 @property (nonatomic) UIActivityIndicatorView *spinner;
 @property (nonatomic) RAPSubredditDataSource *dataSource;
+@property (nonatomic) RAPSubredditWebServices *webServices;
 @end
 
 @implementation RAPViewController
-
--(RAPapi *)api
-{
-    if (!_api) _api = [[RAPapi alloc] init];
-    return _api;
-}
 
 #pragma mark Segue methods
 
@@ -165,30 +160,21 @@
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
     [self startSpinner];
-    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", appendString]];
-    NSLog(@"URL is %@", url);
-    NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
     
-    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-                                      {
-                                          NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                                          NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-                                          dispatch_async(dispatch_get_main_queue(), ^
-                                                         {
-                                                             if (![jsonResults count])
-                                                             {
-                                                                 [self alertUserThatErrorOccurred];
-                                                             }
-                                                             [self.resultsMutableArray addObjectsFromArray:jsonResults];
-                                                             [self setupDataSource];
-                                                             [self.tableView reloadData];
-                                                             [self.spinner stopAnimating];
-                                                             [self notifySuperclassToGetRectSelectorShapes];
-                                                         });
-                                      }];
+    void (^setupHandlerBlock)(NSArray *) = ^(NSArray *jsonResults)
+    {
+        if (![jsonResults count])
+        {
+            [self alertUserThatErrorOccurred];
+        }
+        [self.resultsMutableArray addObjectsFromArray:jsonResults];
+        [self setupDataSource];
+        [self.tableView reloadData];
+        [self.spinner stopAnimating];
+        [self notifySuperclassToGetRectSelectorShapes];
+    };
     
-    [dataTask resume];
+    self.webServices = [[RAPSubredditWebServices alloc] initWithSubredditString:appendString withHandlerBlock:setupHandlerBlock];
 }
 
 - (void)didReceiveMemoryWarning {
