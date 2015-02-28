@@ -12,6 +12,7 @@
 #import "RAPRectangleSelector.h"
 #import "RAPLinkViewController.h"
 #import "RAPThreadDataSource.h"
+#import "RAPSubredditWebServices.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -22,6 +23,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) UIActivityIndicatorView *spinner;
 @property (nonatomic) RAPThreadDataSource *dataSource;
+@property (nonatomic) RAPSubredditWebServices *webServices;
 @end
 
 @implementation RAPThreadViewController
@@ -88,32 +90,19 @@
 - (void)loadRedditJSONWithAppendingString:(NSString *)appendString
 {
     [self startSpinner];
-    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", appendString]];
-    //NSLog(@"URL is %@", url);
-    NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
     
-    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-                                      {
-                                          NSMutableArray *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                                          //NSLog(@"Results are %@", jsonData);
-                                          //NSLog(@"JSONdata is %@", [jsonData firstObject][@"data"]);
-                                          //NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData];
-                                          //NSString *string = [[NSString alloc] initWithString:[jsonData firstObject][@"data"][@"selftext"] ];
-                                          //NSLog(@"string is %@", string);
-                                          dispatch_async(dispatch_get_main_queue(), ^
-                                                         {
-                                                             [self.resultsMutableArray addObjectsFromArray:jsonData];
-                                                             [self setupDataSource];
-                                                             [self.tableView reloadData];
-                                                             [self.spinner stopAnimating];
-                                                             [self notifySuperclassToGetRectSelectorShapes];
-                                                             self.tableView.rowHeight = UITableViewAutomaticDimension;
-                                                             self.tableView.estimatedRowHeight = 44;
-                                                         });
-                                      }];
+    void (^setupHandlerBlock)(id) = ^(NSArray *jsonData)
+    {
+        [self.resultsMutableArray addObjectsFromArray:jsonData];
+        [self setupDataSource];
+        [self.tableView reloadData];
+        [self.spinner stopAnimating];
+        [self notifySuperclassToGetRectSelectorShapes];
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+        self.tableView.estimatedRowHeight = 44;
+    };
     
-    [dataTask resume];
+    self.webServices = [[RAPSubredditWebServices alloc] initWithSubredditString:appendString withHandlerBlock:setupHandlerBlock];
 }
 
 #pragma mark View Methods

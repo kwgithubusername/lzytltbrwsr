@@ -161,8 +161,9 @@
 {
     [self startSpinner];
     
-    void (^setupHandlerBlock)(NSArray *) = ^(NSArray *jsonResults)
+    void (^setupHandlerBlock)(id) = ^(NSDictionary *jsonData)
     {
+        NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
         if (![jsonResults count])
         {
             [self alertUserThatErrorOccurred];

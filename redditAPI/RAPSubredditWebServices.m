@@ -37,11 +37,11 @@
     
     NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
                                       {
-                                          NSMutableDictionary *jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                                          NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
+                                          id jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+                                          
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
-                                                             self.aHandlerBlock(jsonResults);
+                                                             self.aHandlerBlock(jsonData);
                                                          });
                                       }];
     

@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void (^DoThingsAfterLoadingSubredditBlock)(NSArray *array);
+typedef void (^DoThingsAfterLoadingSubredditBlock)(id jsonData);
 
 @interface RAPSubredditWebServices : NSObject
 
