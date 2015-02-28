@@ -11,6 +11,7 @@
 #import "RAPThreadCommentTableViewCell.h"
 #import "RAPRectangleSelector.h"
 #import "RAPLinkViewController.h"
+#import "RAPThreadDataSource.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -20,6 +21,7 @@
 @property (nonatomic) NSMutableArray *resultsMutableArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) UIActivityIndicatorView *spinner;
+@property (nonatomic) RAPThreadDataSource *dataSource;
 @end
 
 @implementation RAPThreadViewController
@@ -54,54 +56,25 @@
 
 #pragma mark Table View Methods
 
--(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+- (void)setupDataSource
 {
-    if ([self.resultsMutableArray count])
-    {
-        // Object at index 0 is the thread topic, so count the number of cells and add 1
-        return [[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] count] + 1;
-    }
-    else
-    {
-        return 0;
-    }
+    void (^topicCell)(RAPThreadTopicTableViewCell *, id) = ^(RAPThreadTopicTableViewCell *topicCell, id item) {
+        self.navigationItem.title = [[NSString alloc] initWithFormat:@"%@: %@", item[@"subreddit"], item[@"title"]];
+        topicCell.topicLabel.text = item[@"title"];
+        topicCell.usernameLabel.text = item[@"author"];
+    };
+    
+    void (^commentCell)(RAPThreadCommentTableViewCell *, id) = ^(RAPThreadCommentTableViewCell *commentCell, id item) {
+        commentCell.commentLabel.text = item[@"body"];
+        commentCell.usernameLabel.text = item[@"author"];
+    };
+    
+    self.dataSource = [[RAPThreadDataSource alloc] initWithItems:self.resultsMutableArray cellIdentifier:@"" topicCellBlock:topicCell commentCellBlock:commentCell];
+    
+    self.tableView.dataSource = self.dataSource;
+    self.tableView.delegate = self.dataSource;
 }
 
--(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.row == 0)
-    {
-        RAPThreadTopicTableViewCell *topicCell = [self.tableView dequeueReusableCellWithIdentifier:@"threadTopicCell"];
-        
-        return [self configureTopicCell:topicCell atIndexPath:indexPath];
-    }
-    else
-    {
-        RAPThreadCommentTableViewCell *commentCell = [self.tableView dequeueReusableCellWithIdentifier:@"threadCommentCell"];
-        return [self configureCommentCell:commentCell atIndexPath:indexPath];
-    }
-    
-}
-
--(RAPThreadTopicTableViewCell *)configureTopicCell:(RAPThreadTopicTableViewCell *)topicCell atIndexPath:(NSIndexPath *)indexPath
-{
-    id data = [[self.resultsMutableArray firstObject][@"data"][@"children"] firstObject][@"data"];
-    
-    self.navigationItem.title = [[NSString alloc] initWithFormat:@"%@: %@", data[@"subreddit"], data[@"title"]];
-    topicCell.topicLabel.text = data[@"title"];
-    topicCell.usernameLabel.text = data[@"author"];
-    return topicCell;
-}
-
--(RAPThreadCommentTableViewCell *)configureCommentCell:(RAPThreadCommentTableViewCell *)commentCell atIndexPath:(NSIndexPath *)indexPath
-{
-    id data = [[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(indexPath.row-1)][@"data"];
-    
-    commentCell.commentLabel.text = data[@"body"];
-    commentCell.usernameLabel.text = data[@"author"];
-    
-    return commentCell;
-}
 
 #pragma mark Notify superclass to get rect selector shapes
 
@@ -131,6 +104,7 @@
                                           dispatch_async(dispatch_get_main_queue(), ^
                                                          {
                                                              [self.resultsMutableArray addObjectsFromArray:jsonData];
+                                                             [self setupDataSource];
                                                              [self.tableView reloadData];
                                                              [self.spinner stopAnimating];
                                                              [self notifySuperclassToGetRectSelectorShapes];
