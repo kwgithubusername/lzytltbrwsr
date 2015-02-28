@@ -93,7 +93,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(fillCellRectSizeArrayWithVisibleCells) name:RAPGetRectSelectorShapesNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPGetRectSelectorShapesNotification object:nil];
     self.cellRectSizeArray = [[NSMutableArray alloc] init];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tiltToScroll.delegate = self;

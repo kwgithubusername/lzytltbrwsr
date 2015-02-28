@@ -180,6 +180,7 @@
 {
     [self incrementOrDecrementCellIndex];
     NSLog(@"Cellindex is %d", self.cellIndex);
+#warning Exception thrown in favorites at cellmax
     CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
     
     CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height, newCell.size.width, newCell.size.height);
