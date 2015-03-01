@@ -50,9 +50,9 @@
     {
         [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
     }
-    else
+    else if ([[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex-1)][@"data"][@"replies"] count] > 0)
     {
-        
+        [self performSegueWithIdentifier:@"commentSegue" sender:nil];
     }
 }
 

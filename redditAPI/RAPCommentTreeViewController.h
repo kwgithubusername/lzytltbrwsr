@@ -10,4 +10,7 @@
 
 @interface RAPCommentTreeViewController : RAPTiltToScrollViewController
 
+@property (nonatomic) NSString *threadNameFromNavigationBarString;
+@property (nonatomic) NSDictionary *commentDataDictionary;
+
 @end
