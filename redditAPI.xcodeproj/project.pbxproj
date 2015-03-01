@@ -30,6 +30,7 @@
 		9ED7E13C1A8FB3D900020696 /* RAPTiltToScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */; };
 		9EE5AEE61A86B11700F25DB7 /* RAPRectangleSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */; };
 		9EFBDF691AA25A6D00FDDEB3 /* RAPSubredditWebServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFBDF681AA25A6D00FDDEB3 /* RAPSubredditWebServices.m */; };
+		9EFBDF6B1AA27D3200FDDEB3 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EFBDF6A1AA27D3200FDDEB3 /* iAd.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPRectangleSelector.m; sourceTree = "<group>"; };
 		9EFBDF671AA25A6C00FDDEB3 /* RAPSubredditWebServices.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPSubredditWebServices.h; sourceTree = "<group>"; };
 		9EFBDF681AA25A6D00FDDEB3 /* RAPSubredditWebServices.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPSubredditWebServices.m; sourceTree = "<group>"; };
+		9EFBDF6A1AA27D3200FDDEB3 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9EFBDF6B1AA27D3200FDDEB3 /* iAd.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +115,7 @@
 		9ECF83181A66096D00E7D9C7 = {
 			isa = PBXGroup;
 			children = (
+				9EFBDF6A1AA27D3200FDDEB3 /* iAd.framework */,
 				9ECF83231A66096E00E7D9C7 /* redditAPI */,
 				9ECF833D1A66096E00E7D9C7 /* redditAPITests */,
 				9ECF83221A66096E00E7D9C7 /* Products */,

@@ -17,6 +17,12 @@
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
 
 @interface RAPTiltToScrollViewController ()
+
+{
+    BOOL _bannerIsVisible;
+    ADBannerView *_adBanner;
+}
+
 @property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) CGRect defaultCellRect;
@@ -74,7 +80,7 @@
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
     //NSLog(@"IndexPath is %d", indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    NSLog(@"startfill");
+    //NSLog(@"startfill");
     [self fillCellRectSizeArrayWithVisibleCells];
 }
 
@@ -94,6 +100,11 @@
 {
     [super viewDidLoad];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPGetRectSelectorShapesNotification object:nil];
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(deviceOrientationDidChange)
+     name:UIDeviceOrientationDidChangeNotification
+     object:nil];
     self.cellRectSizeArray = [[NSMutableArray alloc] init];
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tiltToScroll.delegate = self;
@@ -107,6 +118,28 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
     self.timeViewHasBeenVisibleInt = 0;
     self.timerToPreventSegueingBackTooQuickly = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timeViewHasBeenVisible) userInfo:nil repeats:YES];
+}
+
+-(void)deviceOrientationDidChange
+{
+//    for (UIView *view in self.view.subviews)
+//    {
+//        if (view.tag == 100)
+//        {
+//            [view removeFromSuperview];
+//        }
+//    }
+//    [self createAdBanner];
+}
+
+-(void)viewDidLayoutSubviews
+{
+//    [super viewDidLayoutSubviews];
+//    
+//    if (!_bannerIsVisible)
+//    {
+//        [self createAdBanner];
+//    }
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -133,6 +166,8 @@
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPGetRectSelectorShapesNotification object:nil];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+    
     [self.timerToPreventSegueingBackTooQuickly invalidate];
 }
 
@@ -149,7 +184,7 @@
     {
         [self.cellRectSizeArray addObject:[NSValue valueWithCGRect:[self.tableView rectForRowAtIndexPath:[self.tableView indexPathForCell:cell]]]];
     }
-    NSLog(@"added rects");
+    //NSLog(@"added rects");
 }
 
 -(void)userSelectedRow
@@ -205,6 +240,8 @@
         //NSLog(@"Cellmax is %d", self.rectangleSelector.cellMax);
         
         self.rectangleSelector.statusBarPlusNavigationBarHeight = self.navigationController.navigationBar.frame.size.height+[self statusBarHeight];
+        self.rectangleSelector.currentContentOffset = self.tableView.contentOffset.y;
+        NSLog(@"contentoffset for rect is %f", self.tableView.contentOffset.y);
     }
     
     if (isInWebView)
@@ -249,6 +286,56 @@
      }];
 }
 
+#pragma mark Ad banner
+
+-(void)createAdBanner
+{
+    NSLog(@"CREATING AD");
+    _adBanner = [[ADBannerView alloc] initWithFrame:CGRectMake(0,0, 320, 50)];
+    NSLog(@"Width:%f, height:%f", self.view.frame.size.width, self.view.frame.size.height);
+    _adBanner.center = CGPointMake(self.view.frame.size.width/2, self.view.frame.size.height+_adBanner.frame.size.height/2);
+    _adBanner.delegate = self;
+}
+
+- (void)bannerViewDidLoadAd:(ADBannerView *)banner
+{
+    if (!_bannerIsVisible)
+    {
+        // If banner isn't part of view hierarchy, add it
+        if (_adBanner.superview == nil)
+        {
+            [self.view addSubview:_adBanner];
+            _adBanner.tag = 100;
+            [self.view bringSubviewToFront:_adBanner];
+            NSLog(@"brought ad to front");
+        }
+        
+        [UIView beginAnimations:@"animateAdBannerOn" context:NULL];
+        
+        // Assumes the banner view is just off the bottom of the screen.
+        banner.frame = CGRectOffset(banner.frame, 0, -banner.frame.size.height);
+        
+        [UIView commitAnimations];
+        
+        _bannerIsVisible = YES;
+    }
+}
+
+- (void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error
+{
+    NSLog(@"Failed to retrieve ad");
+    if (_bannerIsVisible)
+    {
+        [UIView beginAnimations:@"animateAdBannerOff" context:NULL];
+        
+        // Assumes the banner view is placed at the bottom of the screen.
+        banner.frame = CGRectOffset(banner.frame, 0, -banner.frame.size.height);
+        
+        [UIView commitAnimations];
+        
+        _bannerIsVisible = NO;
+    }
+}
 
 /*
 #pragma mark - Navigation

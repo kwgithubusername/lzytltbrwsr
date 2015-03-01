@@ -182,22 +182,8 @@
     NSLog(@"Cellindex is %d", self.cellIndex);
 #warning Exception thrown in favorites at cellmax
     CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
-    
-    CGRect newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height, newCell.size.width, newCell.size.height);
-    
-    if (!self.atTop)
-    {
-//        if (CGRectIntersectsRect(self.toolBarRect, newCell) && self.cellIndex == self.cellMax - 1)
-//        {
-//            NSLog(@"intersection");
-//            newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y - (newCell.size.height-self.toolBarRect.size.height), newCell.size.width, newCell.size.height);
-//        }
-//        else
-//        {
-            newFrame = CGRectMake(self.frame.origin.x, self.frame.origin.y - newCell.size.height, newCell.size.width, newCell.size.height);
-//        }
-
-    }
+    // track how far down you are in tableview, and reduce statusbarplusheight by that number
+    CGRect newFrame = CGRectMake(newCell.origin.x, newCell.origin.y+self.statusBarPlusNavigationBarHeight-self.currentContentOffset, newCell.size.width, newCell.size.height);
     
     if (self.cellIndex == self.cellMax)
     {
@@ -206,7 +192,7 @@
     
     self.frame = newFrame;
     self.currentLocationRect = newFrame;
-    NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
+    //NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
     
     [self beginDecrementingAlpha];
 }

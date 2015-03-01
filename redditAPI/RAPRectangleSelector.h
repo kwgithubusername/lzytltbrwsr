@@ -16,6 +16,7 @@
 @property (nonatomic) BOOL isStationary;
 @property (nonatomic) NSMutableArray *rectsMutableArray;
 @property (nonatomic) CGFloat statusBarPlusNavigationBarHeight;
+@property (nonatomic) int currentContentOffset;
 
 -(id)initWithFramesMutableArray:(NSMutableArray *)mutableArray atTop:(BOOL)atTop withCellMax:(int)cellMax inWebView:(BOOL)isInWebView inInitialFrame:(CGRect)frame withToolbarRect:(CGRect)toolbarRect;
 -(void)reset;
