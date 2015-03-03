@@ -7,7 +7,7 @@
 //
 
 #import "RAPSubredditWebServices.h"
-
+#import <AFNetworking.h>
 @interface RAPSubredditWebServices ()
 
 @property (nonatomic) NSString *subredditString;
@@ -31,21 +31,26 @@
 -(void)loadSubreddit
 {
     NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", self.subredditString]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
     NSLog(@"URL is %@", url);
-    NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
+    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    operation.responseSerializer = [AFJSONResponseSerializer serializer];
     
-    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
-                                      {
-                                          id jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
-                                          
-                                          dispatch_async(dispatch_get_main_queue(), ^
-                                                         {
-                                                             self.aHandlerBlock(jsonData);
-                                                         });
-                                      }];
+    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        self.aHandlerBlock(responseObject);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Data"
+                                                            message:[error localizedDescription]
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Ok"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+    }];
     
-    [dataTask resume];
+    [operation start];
 
 }
 
