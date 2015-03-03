@@ -9,6 +9,7 @@
 #import "RAPCommentTreeViewController.h"
 
 @interface RAPCommentTreeViewController ()
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
 
 @end
 

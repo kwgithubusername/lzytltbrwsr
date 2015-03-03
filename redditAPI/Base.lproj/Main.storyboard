@@ -19,7 +19,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xa7-Me-tB3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-752" y="123"/>
+            <point key="canvasLocation" x="-918" y="177"/>
         </scene>
         <!--Favorites View Controller-->
         <scene sceneID="OEb-Hg-cJi">
@@ -94,7 +94,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="h2u-pa-7or" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-84" y="-564"/>
+            <point key="canvasLocation" x="450" y="1062"/>
         </scene>
         <!--Title-->
         <scene sceneID="tne-QT-ifu">
@@ -189,7 +189,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-79" y="131"/>
+            <point key="canvasLocation" x="-75" y="116"/>
         </scene>
         <!--Link View Controller-->
         <scene sceneID="e6F-VC-uIU">
@@ -223,6 +223,57 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="H7B-7p-DXV" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1418" y="-40"/>
+        </scene>
+        <!--Comment Tree View Controller-->
+        <scene sceneID="Nyc-aC-2Nw">
+            <objects>
+                <viewController id="nLg-p8-7Pp" customClass="RAPCommentTreeViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="lAP-a7-uEh"/>
+                        <viewControllerLayoutGuide type="bottom" id="3T9-aR-JNF"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="bAT-gb-qiV">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="gES-KK-QX0">
+                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="6FD-MT-x85">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6FD-MT-x85" id="aB0-b9-rEg">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t2R-eH-JSj">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem title="Favorites" id="0fY-vx-yvd"/>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="t2R-eH-JSj" secondAttribute="trailing" constant="-16" id="3xO-tG-xT7"/>
+                            <constraint firstItem="t2R-eH-JSj" firstAttribute="leading" secondItem="bAT-gb-qiV" secondAttribute="leadingMargin" constant="-16" id="8G9-my-2Vu"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="gES-KK-QX0" secondAttribute="trailing" constant="-16" id="CSQ-vy-a2P"/>
+                            <constraint firstItem="gES-KK-QX0" firstAttribute="top" secondItem="lAP-a7-uEh" secondAttribute="bottom" id="HUy-nq-wrN"/>
+                            <constraint firstItem="gES-KK-QX0" firstAttribute="leading" secondItem="bAT-gb-qiV" secondAttribute="leadingMargin" constant="-16" id="fdX-po-f1j"/>
+                            <constraint firstItem="3T9-aR-JNF" firstAttribute="top" secondItem="gES-KK-QX0" secondAttribute="bottom" constant="44" id="rUR-xG-ogf"/>
+                            <constraint firstItem="3T9-aR-JNF" firstAttribute="top" secondItem="t2R-eH-JSj" secondAttribute="bottom" id="za1-eU-3gZ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="gES-KK-QX0" id="Yem-nG-Llk"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="c04-HV-aFd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1412" y="636"/>
         </scene>
         <!--Thread View Controller-->
         <scene sceneID="CGb-Pg-muh">
@@ -318,6 +369,7 @@
                                         <connections>
                                             <outlet property="commentLabel" destination="rXb-9r-u4e" id="bcp-aU-Tlf"/>
                                             <outlet property="usernameLabel" destination="JYo-NJ-z4u" id="91e-bl-Vs4"/>
+                                            <segue destination="nLg-p8-7Pp" kind="show" identifier="commentSegue" id="16P-mm-Evm"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

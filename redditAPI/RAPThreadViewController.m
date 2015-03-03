@@ -13,6 +13,7 @@
 #import "RAPLinkViewController.h"
 #import "RAPThreadDataSource.h"
 #import "RAPSubredditWebServices.h"
+#import "RAPCommentTreeViewController.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -37,6 +38,12 @@
         RAPLinkViewController *linkViewController = segue.destinationViewController;
         id data = [[self.resultsMutableArray firstObject][@"data"][@"children"] firstObject][@"data"];
         linkViewController.URLstring = data[@"url"];
+    }
+    else if ([segue.identifier isEqualToString:@"commentSegue"])
+    {
+        RAPCommentTreeViewController *commentTreeViewController = segue.destinationViewController;
+        commentTreeViewController.navigationController.title = self.navigationController.title;
+        commentTreeViewController.commentDataDictionary = [[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex-1)][@"data"];
     }
 }
 
