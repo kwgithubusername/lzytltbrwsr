@@ -13,6 +13,7 @@
 #import "RAPThreadViewController.h"
 #import "RAPSubredditDataSource.h"
 #import "RAPSubredditWebServices.h"
+#import <UIImageView+AFNetworking.h>
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -76,9 +77,29 @@
 
 -(void)setupDataSource
 {
+    
     void (^configureCell)(RAPTableViewCell*, id) = ^(RAPTableViewCell *cell, id item) {
         cell.label.text = [item[@"data"] objectForKey:@"title"];
         cell.subLabel.text = [item[@"data"] objectForKey:@"subreddit"];
+//Method 1
+//        UIImage *placeholderImage = [[UIImage alloc] init];
+//        [cell.thumbnailImageView setImageWithURLRequest:[NSURLRequest requestWithURL:[NSURL URLWithString:[item[@"data"] objectForKey:@"thumbnail"]]]
+//                              placeholderImage:placeholderImage
+//                                       success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+//                                           
+//                                           NSLog(@"block success");
+//                                           cell.thumbnailImageView.image = image;
+//                                           
+//                                       }
+//                                       failure:nil];
+//Method 2
+//        void (^imageHandler)(UIImage *) = ^(UIImage *image) {
+//            cell.thumbnailImageView.image = image;
+//            NSLog(@"image set");
+//        };
+//        
+//        self.webServices.anImageHandlerBlock = imageHandler;
+        [self.webServices loadImageIntoCell:cell withURLString:[item[@"data"] objectForKey:@"thumbnail"]];
     };
     
     void (^loadCell)(RAPTableViewCell*, id) = ^(RAPTableViewCell *cell, id item) {
@@ -164,10 +185,6 @@
     void (^setupHandlerBlock)(id) = ^(NSDictionary *jsonData)
     {
         NSArray *jsonResults = [[NSArray alloc] initWithArray:[jsonData[@"data"] objectForKey:@"children"]];
-        if (![jsonResults count])
-        {
-            [self alertUserThatErrorOccurred];
-        }
         [self.resultsMutableArray addObjectsFromArray:jsonResults];
         [self setupDataSource];
         [self.tableView reloadData];

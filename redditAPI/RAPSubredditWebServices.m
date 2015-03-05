@@ -7,17 +7,18 @@
 //
 
 #import "RAPSubredditWebServices.h"
-#import <AFNetworking.h>
+
 @interface RAPSubredditWebServices ()
 
 @property (nonatomic) NSString *subredditString;
 @property (nonatomic, copy) DoThingsAfterLoadingSubredditBlock aHandlerBlock;
+@property (nonatomic) UIImageView *imageView;
 
 @end
 
 @implementation RAPSubredditWebServices
 
--(id)initWithSubredditString:(NSString *)subredditString withHandlerBlock:(DoThingsAfterLoadingSubredditBlock)aHandlerBlock
+-(id)initWithSubredditString:(NSString *)subredditString withHandlerBlock:(DoThingsAfterLoadingSubredditBlock)aHandlerBlock;
 {
     if (self = [super init])
     {
@@ -52,6 +53,26 @@
     
     [operation start];
 
+}
+
+-(void)loadImageIntoCell:(RAPTableViewCell *)cell withURLString:(NSString *)URLString
+{
+    NSLog(@"thumbnail url is %@", URLString);
+    NSURL *url = [NSURL URLWithString:URLString];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    UIImage *placeholderImage = [[UIImage alloc] init];
+    
+    [cell.thumbnailImageView setImageWithURLRequest:request
+                          placeholderImage:placeholderImage
+                                   success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
+                                       
+                                       NSLog(@"setImageWithURLRequest executed");
+                                       cell.thumbnailImageView.image = image;
+                                       //cell.imageView.image = image;
+                                       
+                                   }
+                              failure:nil];
+    //return self.imageView.image;
 }
 
 @end
