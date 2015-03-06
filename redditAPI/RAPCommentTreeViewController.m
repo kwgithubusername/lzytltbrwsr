@@ -7,16 +7,33 @@
 //
 
 #import "RAPCommentTreeViewController.h"
+#import "RAPCommentDataSource.h"
+#import "RAPThreadCommentTableViewCell.h"
 
 @interface RAPCommentTreeViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (nonatomic) RAPCommentDataSource *dataSource;
 
 @end
 
 @implementation RAPCommentTreeViewController
 
+-(void)setupDataSource
+{
+    void (^commentCell)(RAPThreadCommentTableViewCell *, id) = ^(RAPThreadCommentTableViewCell *commentCell, id item) {
+        commentCell.commentLabel.text = item[@"body"];
+        commentCell.usernameLabel.text = item[@"author"];
+    };
+    
+    self.dataSource = [[RAPCommentDataSource alloc] initWithItems:self.commentDataDictionary cellIdentifier:@"commentCell" commentCellBlock:commentCell];
+    self.tableView.dataSource = self.dataSource;
+    [self.tableView reloadData];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    [self setupDataSource];
     // Do any additional setup after loading the view.
 }
 

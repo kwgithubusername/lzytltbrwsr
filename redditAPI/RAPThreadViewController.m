@@ -43,7 +43,7 @@
     {
         RAPCommentTreeViewController *commentTreeViewController = segue.destinationViewController;
         commentTreeViewController.navigationController.title = self.navigationController.title;
-        commentTreeViewController.commentDataDictionary = [[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex-1)][@"data"];
+        commentTreeViewController.commentDataDictionary = [[NSDictionary alloc] initWithDictionary:[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex-1)][@"data"]];
     }
 }
 

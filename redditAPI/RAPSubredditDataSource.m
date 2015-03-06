@@ -11,7 +11,7 @@
 
 @interface RAPSubredditDataSource()
 
-@property (nonatomic, strong) NSArray *items;
+@property (nonatomic) NSArray *items;
 @property (nonatomic, copy) NSString *cellIdentifier;
 @property (nonatomic, copy) TableViewCellConfigureBlock configureCellBlock;
 @property (nonatomic, copy) TableViewCellLoadingBlock loadCellBlock;
