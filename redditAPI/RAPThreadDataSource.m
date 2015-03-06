@@ -45,7 +45,8 @@
     if ([self.items count])
     {
         // Object at index 0 is the thread topic, so count the number of cells and add 1
-        return [[self.items objectAtIndex:1][@"data"][@"children"] count] + 1;
+        // The last row needs to be blank as it is counted as selecting the favorites toolbar, so add another cell
+        return [[self.items objectAtIndex:1][@"data"][@"children"] count] + 2;
     }
     else
     {
@@ -60,6 +61,13 @@
         RAPThreadTopicTableViewCell *topicCell = [tableView dequeueReusableCellWithIdentifier:@"threadTopicCell"];
         
         return [self configureTopicCell:topicCell atIndexPath:indexPath];
+    }
+    else if (indexPath.row == [self.items count]+1)
+    {
+        RAPThreadCommentTableViewCell *blankCell = [tableView dequeueReusableCellWithIdentifier:@"threadCommentCell"];
+        blankCell.usernameLabel.text = @"";
+        blankCell.commentLabel.text = @"";
+        return blankCell;
     }
     else
     {
