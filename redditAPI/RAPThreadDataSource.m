@@ -42,8 +42,9 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([self.items count])
+    if ([[self.items objectAtIndex:1][@"data"][@"children"] count])
     {
+        NSLog(@"self.items count is %d, add 1 to get the indexpathrow for the blank cell", [self.items count]);
         // Object at index 0 is the thread topic, so count the number of cells and add 1
         // The last row needs to be blank as it is counted as selecting the favorites toolbar, so add another cell
         return [[self.items objectAtIndex:1][@"data"][@"children"] count] + 2;
@@ -62,7 +63,7 @@
         
         return [self configureTopicCell:topicCell atIndexPath:indexPath];
     }
-    else if (indexPath.row == [self.items count]+1)
+    else if (indexPath.row == [[self.items objectAtIndex:1][@"data"][@"children"] count]+1)
     {
         RAPThreadCommentTableViewCell *blankCell = [tableView dequeueReusableCellWithIdentifier:@"threadCommentCell"];
         blankCell.usernameLabel.text = @"";

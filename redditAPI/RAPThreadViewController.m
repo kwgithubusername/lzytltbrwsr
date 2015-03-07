@@ -33,6 +33,18 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    NSIndexPath *indexPath;
+    if (![self.tableView indexPathForSelectedRow])
+    {
+        indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
+        //NSLog(@"Indexpath.row is %d", indexPath.row);
+    }
+    else // Otherwise, the user has tapped the row, so use the row that was tapped
+    {
+        indexPath = [self.tableView indexPathForSelectedRow];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+    }
+    
     if ([segue.identifier isEqualToString:@"linkSegue"])
     {
         RAPLinkViewController *linkViewController = segue.destinationViewController;

@@ -60,11 +60,6 @@
 
 -(NSInteger)getNumberOfRepliesFromDictionary:(NSDictionary *)itemsDictionary
 {
-//    while replies count is greater than zero,
-//        for each child
-//            commentNumber++;
-//            set replies to child's replies
-    //NSLog(@"repliesobject is %@", NSStringFromClass([repliesObject class]));
 
     int index = 0;
     
@@ -97,46 +92,5 @@
     }
     return index;
 }
-
-//-(NSInteger)getNumberOfRepliesFromDictionary:(NSDictionary *)itemsDictionary withStartingRowIndex:(int)index;
-//{
-//    id repliesChildren = itemsDictionary[@"replies"][@"data"][@"children"];
-//    
-//    for (int i = 0; i < [repliesChildren count]; i++)
-//    {
-//        if ([[repliesChildren objectAtIndex:i][@"data"][@"replies"] count] > 0)
-//        {
-//            for (int j = 0; j < [[repliesChildren objectAtIndex:i][@"data"][@"replies"][@"data"][@"children"] count]; j++)
-//            {
-//                if ([[[repliesChildren objectAtIndex:i][@"data"][@"replies"][@"data"][@"children"] objectAtIndex:j][@"data"][@"replies"] count] > 0)
-//                {
-//                    until "replies" = 0
-//                }
-//            }
-//        }
-//    }
-//    NSLog(@"numberofrows:%d", index);
-//    return index;
-//}
-
-//-(int)recursiveFunctionForReplies:(NSDictionary *)repliesDictionary
-//{
-//    if ([repliesDictionary count] == 0)
-//    {
-//        return 0;
-//    }
-//    else
-//    {
-//        return [self recursiveFunctionForReplies:repliesDictionary];
-//    }
-//}
-//
-//-(int)recursiveFunctionforChildren:(NSArray *)childrenArray
-//{
-//    for (int i = 0; i < [childrenArray count]; i++)
-//    {
-//        childrenArray[i][@"data"][@"replies"]
-//    }
-//}
 
 @end
