@@ -74,50 +74,37 @@
     for (int i = 0; i < [repliesChildrenArray count]; i++)
     {
         id repliesChildrenReplies = [repliesChildrenArray objectAtIndex:i][@"data"][@"replies"];
-//        
-//        // If we got the wrong "data", back up one index
-//        if ([[repliesChildrenArray objectAtIndex:i][@"data"] objectForKey:@"count"] && ![[repliesChildrenArray objectAtIndex:i][@"data"] objectForKey:@"body"])
-//        {
-//            repliesChildrenReplies = [repliesChildrenReplies objectAtIndex:i-1][@"data"][@"replies"];
-//        }
-//        index++;
-//        
-//        //NSLog(@"repliesobjectreplies is %@", repliesChildrenReplies);
-//        
-//        if ([repliesChildrenReplies respondsToSelector:@selector(count)])
-//        {
-//            if ([repliesChildrenReplies count] > 0)
-//            {
-//                NSLog(@"responded to count");
-//                index += [self getNumberOfRepliesFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]];
-//                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]]];
-//                
-//                // If we got the wrong "data", back up one index
-//                if ([self.dataDictionary objectForKey:@"count"] && ![self.dataDictionary objectForKey:@"body"])
-//                {
-//                    self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i-1][@"data"]]];
-//                }
-//            }
-//        }
-//        else if ([repliesChildrenReplies respondsToSelector:@selector(length)])
-//        {
-//            if ([repliesChildrenReplies length] > 0)
-//            {
-//                NSLog(@"responded to length");
-//                index += [self getNumberOfRepliesFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]];
-//                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]]];
-//                
-//                // If we got the wrong "data", back up one index
-//                if ([self.dataDictionary objectForKey:@"count"] && ![self.dataDictionary objectForKey:@"body"])
-//                {
-//                    self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i-1][@"data"]]];
-//                }
-//            }
-//        }
-//        else
-//        {
+        
+        index++;
+        
+        //NSLog(@"repliesobjectreplies is %@", repliesChildrenReplies);
+        
+        if ([repliesChildrenReplies respondsToSelector:@selector(count)])
+        {
+            if ([repliesChildrenReplies count] > 0)
+            {
+                NSLog(@"responded to count");
+                index += [self getNumberOfRepliesFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]];
+                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]]];
+                
+                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self retrieveDataWithPreviousIndex:self.dataDictionary fromCurrentIndex:i usingArray:repliesChildrenArray]];
+            }
+        }
+        else if ([repliesChildrenReplies respondsToSelector:@selector(length)])
+        {
+            if ([repliesChildrenReplies length] > 0)
+            {
+                NSLog(@"responded to length");
+                index += [self getNumberOfRepliesFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]];
+                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]]];
+                
+                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self retrieveDataWithPreviousIndex:self.dataDictionary fromCurrentIndex:i usingArray:repliesChildrenArray]];
+            }
+        }
+        else
+        {
             self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self retrieveDataWithPreviousIndex:[repliesChildrenArray objectAtIndex:i][@"data"] fromCurrentIndex:i usingArray:repliesChildrenArray]];
-//        }
+        }
 
     }
     NSLog(@"datadict is %@", self.dataDictionary);
