@@ -240,12 +240,38 @@
                                 <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentCell" id="6FD-MT-x85" customClass="RAPThreadCommentTableViewCell">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6FD-MT-x85" id="aB0-b9-rEg">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="commentCell" rowHeight="114" id="6wz-HE-vfF" customClass="RAPThreadCommentTableViewCell">
+                                        <rect key="frame" x="0.0" y="243" width="600" height="114"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="6wz-HE-vfF" id="7PG-d8-2hu">
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IUT-d0-1Rd">
+                                                    <rect key="frame" x="8" y="8" width="79" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment" lineBreakMode="tailTruncation" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1He-pb-5UC">
+                                                    <rect key="frame" x="8" y="40" width="584" height="76"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="IUT-d0-1Rd" firstAttribute="leading" secondItem="7PG-d8-2hu" secondAttribute="leadingMargin" id="2aI-VB-AgJ"/>
+                                                <constraint firstItem="1He-pb-5UC" firstAttribute="top" secondItem="7PG-d8-2hu" secondAttribute="topMargin" constant="32" id="84m-aE-WhU"/>
+                                                <constraint firstItem="1He-pb-5UC" firstAttribute="trailing" secondItem="7PG-d8-2hu" secondAttribute="trailingMargin" id="O2b-PT-Wvc"/>
+                                                <constraint firstItem="1He-pb-5UC" firstAttribute="leading" secondItem="7PG-d8-2hu" secondAttribute="leadingMargin" id="bvq-pv-fwo"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="1He-pb-5UC" secondAttribute="bottom" constant="-11" id="nQi-ds-xsL"/>
+                                                <constraint firstItem="IUT-d0-1Rd" firstAttribute="top" secondItem="7PG-d8-2hu" secondAttribute="topMargin" id="tSh-LR-GR2"/>
+                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="commentLabel" destination="1He-pb-5UC" id="o7c-I3-qju"/>
+                                            <outlet property="usernameLabel" destination="IUT-d0-1Rd" id="6nn-eF-Nrp"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -416,7 +442,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="8Xf-ET-DAz"/>
         <segue reference="WHS-fU-Osg"/>
+        <segue reference="7YB-UM-pDa"/>
     </inferredMetricsTieBreakers>
 </document>

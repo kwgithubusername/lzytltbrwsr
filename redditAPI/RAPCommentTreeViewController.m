@@ -10,6 +10,8 @@
 #import "RAPCommentDataSource.h"
 #import "RAPThreadCommentTableViewCell.h"
 
+#define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
+
 @interface RAPCommentTreeViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) RAPCommentDataSource *dataSource;
@@ -26,30 +28,40 @@
     };
     
     self.dataSource = [[RAPCommentDataSource alloc] initWithItems:self.commentDataDictionary cellIdentifier:@"commentCell" commentCellBlock:commentCell];
+    
     self.tableView.dataSource = self.dataSource;
-    [self.tableView reloadData];
+    self.tableView.delegate = self.dataSource;
+}
+
+-(void)notifySuperclassToGetRectSelectorShapes
+{
+    [[NSNotificationCenter defaultCenter] postNotificationName:RAPGetRectSelectorShapesNotification object:self];
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self setupDataSource];
+    [self.tableView reloadData];
+    self.tableView.estimatedRowHeight = 44;
+    self.tableView.rowHeight = UITableViewAutomaticDimension;
     // Do any additional setup after loading the view.
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
 }
-*/
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [self.tableView reloadSections:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, self.tableView.numberOfSections)] withRowAnimation:UITableViewRowAnimationNone];
+    [self notifySuperclassToGetRectSelectorShapes];
+}
 
 @end

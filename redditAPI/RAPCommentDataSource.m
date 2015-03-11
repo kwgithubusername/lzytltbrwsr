@@ -30,16 +30,14 @@
     return self;
 }
 
-- (id)itemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return 0;
-}
-
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    int numberOfRows = 1+[self getNumberOfRepliesFromDictionary:self.itemsDictionary];
-    NSLog(@"number of rows is %d", numberOfRows);
-    return numberOfRows;
+    return 3;
+    // Add one for the head comment
+    // Add one for the favorites toolbar
+//    int numberOfRows = 2+[self getNumberOfRepliesFromDictionary:self.itemsDictionary];
+//    NSLog(@"number of rows is %d", numberOfRows);
+//    return numberOfRows;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -51,12 +49,17 @@
         id item = self.itemsDictionary;
         self.commentCellBlock(cell, item);
     }
+    else if (indexPath.row == [self tableView:tableView numberOfRowsInSection:0]-1)
+    {
+        cell.usernameLabel.text = @"";
+        cell.commentLabel.text = @"";
+    }
     else
     {
         NSDictionary *dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:self.itemsDictionary[@"replies"][@"data"]]];
         NSLog(@"dataDict body is %@ for indexpath.row %d", dataDictionary[@"body"], indexPath.row);
+        self.commentCellBlock(cell, dataDictionary);
     }
-
     return cell;
 }
 
