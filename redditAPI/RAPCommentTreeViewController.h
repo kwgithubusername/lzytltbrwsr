@@ -11,5 +11,6 @@
 @interface RAPCommentTreeViewController : RAPTiltToScrollViewController
 
 @property (nonatomic) NSDictionary *commentDataDictionary;
+@property (nonatomic) NSString *URLString;
 
 @end

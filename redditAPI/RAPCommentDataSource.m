@@ -32,12 +32,12 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 3;
+    // return 3;
     // Add one for the head comment
     // Add one for the favorites toolbar
-//    int numberOfRows = 2+[self getNumberOfRepliesFromDictionary:self.itemsDictionary];
-//    NSLog(@"number of rows is %d", numberOfRows);
-//    return numberOfRows;
+    int numberOfRows = 2+[self getNumberOfRepliesFromDictionary:self.itemsDictionary];
+    NSLog(@"number of rows is %d", numberOfRows);
+    return numberOfRows;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -63,9 +63,55 @@
     return cell;
 }
 
+-(NSDictionary *)retrieveCommentsFromDictionary:(NSDictionary *)itemsDictionary
+{
+    __block int index = 0;
+    __block NSMutableArray *commentsMutableArray = [[NSMutableArray alloc] init];
+    NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary * bindings)
+    {
+        if([[evaluatedObject[@"data"][@"replies"] allKeys] containsObject:@"data"])
+        {
+            index++;
+            [commentsMutableArray addObject:evaluatedObject[@"data"][@"replies"][@"data"][@"body"]];
+            //recursion needs to occur here
+            return YES;
+        }
+        else
+        {
+            return NO;
+        }
+    }];
+    
+    NSArray *repliesChildrenArray = itemsDictionary[@"children"];
+    
+    for (int i = 0; i < [repliesChildrenArray count]; i++)
+    {
+        // FilteredArray will return child comments with replies
+        //NSArray *filteredArray = [[repliesChildrenArray objectAtIndex:i] filteredArrayUsingPredicate:predicate];
+    }
+    return nil;
+}
+
+/*
+[
+ {+}
+ {-
+    data:{
+            children:[
+                        {   -----BELOW IS WHERE COMMENTDATADICTIONARY STARTS-----
+                            data:{
+                                    body  <-- THIS BODY IS THE PARENT COMMENT
+                                    replies:{   BELOW IS WHERE ITEMSDICTIONARY STARTS
+                                                data:{  BELOW IS WHERE REPLIESCHILDRENARRAY STARTS
+                                                        children:[
+                                                                    { OBJECTATINDEX:i
+                                                                        data:{
+                                                                                body
+                                                                                replies:{
+*/
+
 -(NSDictionary *)getCommentsFromDictionary:(NSDictionary *)itemsDictionary
 {
-    int index = 0;
     // Count number of replies to parent.
     // increment number of replies as each time "data" is crossed
     // If indexPath.row at any point is > number of replies to that body, i.e., if replies count == 0, go to next child
@@ -74,44 +120,25 @@
     
     //NSLog(@"replieschildrenarray %@", repliesChildrenArray);
     
+    id dictionaryToReturn;
+    
     for (int i = 0; i < [repliesChildrenArray count]; i++)
     {
-        id repliesChildrenReplies = [repliesChildrenArray objectAtIndex:i][@"data"][@"replies"];
-        
-        index++;
-        
         //NSLog(@"repliesobjectreplies is %@", repliesChildrenReplies);
         
-        if ([repliesChildrenReplies respondsToSelector:@selector(count)])
+        if ([[repliesChildrenArray objectAtIndex:i][@"data"][@"replies"] respondsToSelector:@selector(count)])
         {
-            if ([repliesChildrenReplies count] > 0)
-            {
-                NSLog(@"responded to count");
-                index += [self getNumberOfRepliesFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]];
-                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]]];
+            NSDictionary *tempDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]]];
                 
-                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self retrieveDataWithPreviousIndex:self.dataDictionary fromCurrentIndex:i usingArray:repliesChildrenArray]];
-            }
-        }
-        else if ([repliesChildrenReplies respondsToSelector:@selector(length)])
-        {
-            if ([repliesChildrenReplies length] > 0)
-            {
-                NSLog(@"responded to length");
-                index += [self getNumberOfRepliesFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]];
-                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]]];
-                
-                self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self retrieveDataWithPreviousIndex:self.dataDictionary fromCurrentIndex:i usingArray:repliesChildrenArray]];
-            }
+            dictionaryToReturn = [[NSDictionary alloc] initWithDictionary:[self retrieveDataWithPreviousIndex:tempDictionary fromCurrentIndex:i usingArray:repliesChildrenArray]];
         }
         else
         {
-            self.dataDictionary = [[NSDictionary alloc] initWithDictionary:[self retrieveDataWithPreviousIndex:[repliesChildrenArray objectAtIndex:i][@"data"] fromCurrentIndex:i usingArray:repliesChildrenArray]];
+            dictionaryToReturn = [[NSDictionary alloc] initWithDictionary:[self retrieveDataWithPreviousIndex:[repliesChildrenArray objectAtIndex:i][@"data"] fromCurrentIndex:i usingArray:repliesChildrenArray]];
         }
-
     }
-    NSLog(@"datadict is %@", self.dataDictionary);
-    return self.dataDictionary;
+    NSLog(@"datadict is %@", dictionaryToReturn);
+    return dictionaryToReturn;
 }
 
 -(NSDictionary *)retrieveDataWithPreviousIndex:(NSDictionary *)data fromCurrentIndex:(int)index usingArray:(NSArray *)array
