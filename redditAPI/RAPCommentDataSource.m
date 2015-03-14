@@ -56,9 +56,11 @@
     }
     else
     {
-        NSDictionary *dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:self.itemsDictionary[@"replies"][@"data"]]];
-        NSLog(@"dataDict body is %@ for indexpath.row %d", dataDictionary[@"body"], indexPath.row);
-        self.commentCellBlock(cell, dataDictionary);
+        cell.usernameLabel.text = @"";
+        cell.commentLabel.text = @"";
+//        NSDictionary *dataDictionary = [[NSDictionary alloc] initWithDictionary:[self getCommentsFromDictionary:self.itemsDictionary[@"replies"][@"data"]]];
+//        NSLog(@"dataDict body is %@ for indexpath.row %d", dataDictionary[@"body"], indexPath.row);
+//        self.commentCellBlock(cell, dataDictionary);
     }
     return cell;
 }
@@ -66,13 +68,12 @@
 -(NSDictionary *)retrieveCommentsFromDictionary:(NSDictionary *)itemsDictionary
 {
     __block int index = 0;
-    __block NSMutableArray *commentsMutableArray = [[NSMutableArray alloc] init];
+    //__block NSMutableArray *commentsMutableArray = [[NSMutableArray alloc] init];
     NSPredicate *predicate = [NSPredicate predicateWithBlock:^BOOL(id evaluatedObject, NSDictionary * bindings)
     {
-        if([[evaluatedObject[@"data"][@"replies"] allKeys] containsObject:@"data"])
+        if([evaluatedObject[@"data"][@"replies"] respondsToSelector:@selector(count)])
         {
             index++;
-            [commentsMutableArray addObject:evaluatedObject[@"data"][@"replies"][@"data"][@"body"]];
             //recursion needs to occur here
             return YES;
         }
@@ -87,7 +88,7 @@
     for (int i = 0; i < [repliesChildrenArray count]; i++)
     {
         // FilteredArray will return child comments with replies
-        //NSArray *filteredArray = [[repliesChildrenArray objectAtIndex:i] filteredArrayUsingPredicate:predicate];
+        NSArray *filteredArray = [[repliesChildrenArray objectAtIndex:i] filteredArrayUsingPredicate:predicate];
     }
     return nil;
 }

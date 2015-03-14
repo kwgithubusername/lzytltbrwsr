@@ -8,6 +8,9 @@
 
 #import "RAPSubredditWebServices.h"
 
+#define CLIENT_ID @"lDpwq6nbxkYXLw"
+#define CLIENT_SECRET @""
+
 @interface RAPSubredditWebServices ()
 
 @property (nonatomic) NSString *subredditString;
@@ -24,9 +27,40 @@
     {
         self.subredditString = subredditString;
         self.aHandlerBlock = aHandlerBlock;
-        [self loadSubreddit];
+        [self startOAuth2Request];
+        //[self loadSubreddit];
     }
     return self;
+}
+
+-(void)startOAuth2Request
+{
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    [request setURL:[NSURL URLWithString:@"https://ssl.reddit.com/api/v1/access_token"]];
+    [request setHTTPMethod:@"POST"];
+    
+    NSString* uuid = [[NSUUID UUID] UUIDString];
+    
+    NSString* postString = [[NSString alloc] initWithFormat:@"grant_type=https://oauth.reddit.com/grants/installed_client&device_id=%@",uuid];
+    //NSString* grantType2 = @"https://oauth.reddit.com/grants/installed_client";
+    NSLog(@"grant_type:%@", postString);
+    
+    [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
+    
+    NSString *plainString = [[NSString alloc] initWithFormat:@"%@:%@", CLIENT_ID, CLIENT_SECRET];
+    
+    NSData *plainData = [plainString dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *base64String = [plainData base64EncodedStringWithOptions:0];
+    
+    NSString *authValue = [NSString stringWithFormat:@"Basic %@", base64String];
+    
+    [request setValue:authValue forHTTPHeaderField:@"Authorization"];
+    
+    NSURLResponse *requestResponse;
+    NSData *requestHandler = [NSURLConnection sendSynchronousRequest:request returningResponse:&requestResponse error:nil];
+    
+    NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
+    NSLog(@"requestReply: %@", requestReply);
 }
 
 -(void)loadSubreddit

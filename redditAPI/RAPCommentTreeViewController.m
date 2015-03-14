@@ -41,7 +41,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    [self setupDataSource];
+    //[self startOAuth2Request];
+    //[self setupDataSource];
     [self.tableView reloadData];
     self.tableView.estimatedRowHeight = 44;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
