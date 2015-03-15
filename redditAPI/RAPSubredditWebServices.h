@@ -19,7 +19,5 @@ typedef void (^DoThingsAfterLoadingImagesBlock)(UIImage *image);
 -(id)initWithSubredditString:(NSString *)subredditString withHandlerBlock:(DoThingsAfterLoadingSubredditBlock)aHandlerBlock;
 -(void)loadImageIntoCell:(RAPTableViewCell *)cell withURLString:(NSString *)URLString;
 -(void)obtainAccessToken;
--(void)requestCommentDataForID36Article:(NSString *)articleString;
--(void)loadSubreddit;
-
+-(void)requestDataForSubreddit;
 @end

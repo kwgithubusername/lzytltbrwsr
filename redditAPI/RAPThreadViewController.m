@@ -123,7 +123,7 @@
     };
     
     self.webServices = [[RAPSubredditWebServices alloc] initWithSubredditString:appendString withHandlerBlock:setupHandlerBlock];
-    [self.webServices requestCommentDataForID36Article:self.IDURLString];
+    [self.webServices requestDataForSubreddit];
 }
 
 #pragma mark View Methods

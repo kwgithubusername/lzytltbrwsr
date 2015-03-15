@@ -77,11 +77,11 @@
     [[NSUserDefaults standardUserDefaults] setObject:accessTokenString forKey:@"accessToken"];
 }
 
--(void)requestCommentDataForID36Article:(NSString *)articleString
+-(void)requestDataForSubreddit
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     
-    NSString *URLString = [[NSString alloc] initWithFormat:@"https://oauth.reddit.com/r/%@/comments/%@", self.subredditString, articleString];
+    NSString *URLString = [[NSString alloc] initWithFormat:@"https://oauth.reddit.com/%@", self.subredditString];
     NSLog(@"URLString: %@", URLString);
     [request setURL:[NSURL URLWithString:URLString]];
     [request setHTTPMethod:@"GET"];

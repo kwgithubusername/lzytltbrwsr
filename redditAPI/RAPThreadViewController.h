@@ -10,7 +10,6 @@
 #import "RAPTiltToScrollViewController.h"
 @interface RAPThreadViewController : RAPTiltToScrollViewController
 
-@property (nonatomic) NSString *IDURLString;
 @property (nonatomic) NSString *subredditString;
 
 @end

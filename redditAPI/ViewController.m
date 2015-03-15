@@ -49,10 +49,8 @@
         RAPThreadViewController *threadViewController = segue.destinationViewController;
         NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
         NSString *subredditString = [redditEntry[@"data"] objectForKey:@"subreddit"];
-        threadViewController.subredditString = subredditString;
-        
         NSString *IDURLString = [redditEntry[@"data"] objectForKey:@"id"];
-        threadViewController.IDURLString = IDURLString;
+        threadViewController.subredditString = [[NSString alloc] initWithFormat:@"r/%@/comments/%@", subredditString, IDURLString];
     }
 }
 
@@ -146,12 +144,12 @@
 {
     if (!self.subRedditURLString)
     {
-        [self loadRedditJSONWithAppendingString:@"/.json"];
+        [self loadRedditJSONWithAppendingString:@""];
         self.navigationItem.title = @"frontpage";
     }
     else
     {
-        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"/r/%@/.json",self.subRedditURLString]];
+        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:@"/r/%@",self.subRedditURLString]];
         self.navigationItem.title = [[NSString alloc] initWithFormat:@"%@",self.subRedditURLString];
     }
 }
@@ -177,7 +175,7 @@
     };
     
     self.webServices = [[RAPSubredditWebServices alloc] initWithSubredditString:appendString withHandlerBlock:setupHandlerBlock];
-    [self.webServices loadSubreddit];
+    [self.webServices requestDataForSubreddit];
 }
 
 - (void)didReceiveMemoryWarning {
