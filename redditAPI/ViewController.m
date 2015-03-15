@@ -48,8 +48,11 @@
         
         RAPThreadViewController *threadViewController = segue.destinationViewController;
         NSMutableDictionary *redditEntry = [[NSMutableDictionary alloc] initWithDictionary:self.resultsMutableArray[indexPath.row]];
-        NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@.json", [redditEntry[@"data"] objectForKey:@"permalink"]];
-        threadViewController.permalinkURLString = linkIDString;
+        NSString *subredditString = [redditEntry[@"data"] objectForKey:@"subreddit"];
+        threadViewController.subredditString = subredditString;
+        
+        NSString *IDURLString = [redditEntry[@"data"] objectForKey:@"id"];
+        threadViewController.IDURLString = IDURLString;
     }
 }
 
@@ -174,6 +177,7 @@
     };
     
     self.webServices = [[RAPSubredditWebServices alloc] initWithSubredditString:appendString withHandlerBlock:setupHandlerBlock];
+    [self.webServices loadSubreddit];
 }
 
 - (void)didReceiveMemoryWarning {

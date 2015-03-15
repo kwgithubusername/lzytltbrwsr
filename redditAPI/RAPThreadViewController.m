@@ -55,7 +55,7 @@
     {
         RAPCommentTreeViewController *commentTreeViewController = segue.destinationViewController;
         commentTreeViewController.navigationController.title = self.navigationController.title;
-        commentTreeViewController.commentDataDictionary = [[NSDictionary alloc] initWithDictionary:[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex-1)][@"data"]];
+        //commentTreeViewController.commentDataDictionary = [[NSDictionary alloc] initWithDictionary:[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex-1)][@"data"]];
     }
 }
 
@@ -123,6 +123,7 @@
     };
     
     self.webServices = [[RAPSubredditWebServices alloc] initWithSubredditString:appendString withHandlerBlock:setupHandlerBlock];
+    [self.webServices requestCommentDataForID36Article:self.IDURLString];
 }
 
 #pragma mark View Methods
@@ -141,9 +142,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    NSLog(@"permalinkis = %@", self.permalinkURLString);
+    //NSLog(@"permalinkis = %@", self.IDURLString);
     self.resultsMutableArray = [[NSMutableArray alloc] init];
-    [self loadRedditJSONWithAppendingString:self.permalinkURLString];
+    [self loadRedditJSONWithAppendingString:self.subredditString];
     
     // Do any additional setup after loading the view.
 }

@@ -43,10 +43,15 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     //[self startOAuth2Request];
     //[self setupDataSource];
-    [self.tableView reloadData];
+    //[self.tableView reloadData];
     self.tableView.estimatedRowHeight = 44;
     self.tableView.rowHeight = UITableViewAutomaticDimension;
     // Do any additional setup after loading the view.
+}
+
+- (void)requestData
+{
+    [[NSUserDefaults standardUserDefaults] objectForKey:@"accessToken"];
 }
 
 - (void)viewWillAppear:(BOOL)animated

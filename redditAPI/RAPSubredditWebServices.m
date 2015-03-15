@@ -16,6 +16,7 @@
 @property (nonatomic) NSString *subredditString;
 @property (nonatomic, copy) DoThingsAfterLoadingSubredditBlock aHandlerBlock;
 @property (nonatomic) UIImageView *imageView;
+@property (nonatomic) NSTimer *accessTokenTimer;
 
 @end
 
@@ -27,13 +28,15 @@
     {
         self.subredditString = subredditString;
         self.aHandlerBlock = aHandlerBlock;
-        [self startOAuth2Request];
-        //[self loadSubreddit];
+        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"accessToken"] length] < 1)
+        {
+            [self obtainAccessToken];
+        }
     }
     return self;
 }
 
--(void)startOAuth2Request
+-(void)obtainAccessToken
 {
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:@"https://ssl.reddit.com/api/v1/access_token"]];
@@ -42,7 +45,6 @@
     NSString* uuid = [[NSUUID UUID] UUIDString];
     
     NSString* postString = [[NSString alloc] initWithFormat:@"grant_type=https://oauth.reddit.com/grants/installed_client&device_id=%@",uuid];
-    //NSString* grantType2 = @"https://oauth.reddit.com/grants/installed_client";
     NSLog(@"grant_type:%@", postString);
     
     [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
@@ -59,8 +61,42 @@
     NSURLResponse *requestResponse;
     NSData *requestHandler = [NSURLConnection sendSynchronousRequest:request returningResponse:&requestResponse error:nil];
     
-    NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
-    NSLog(@"requestReply: %@", requestReply);
+    NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
+    //NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
+    NSLog(@"requestReply: %@", requestReplyDictionary);
+
+    //NSLog(@"expiresinclass is %@", [requestReplyDictionary[@"expires_in"] class]);
+    self.accessTokenTimer = [NSTimer scheduledTimerWithTimeInterval:[requestReplyDictionary[@"expires_in"] doubleValue] target:self selector:@selector(obtainAccessToken) userInfo:nil repeats:YES];
+    
+    [self storeOauth2Token:requestReplyDictionary];
+}
+
+-(void)storeOauth2Token:(NSDictionary *)dictionary
+{
+    NSString *accessTokenString = dictionary[@"access_token"];
+    [[NSUserDefaults standardUserDefaults] setObject:accessTokenString forKey:@"accessToken"];
+}
+
+-(void)requestCommentDataForID36Article:(NSString *)articleString
+{
+    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+    
+    NSString *URLString = [[NSString alloc] initWithFormat:@"https://oauth.reddit.com/r/%@/comments/%@", self.subredditString, articleString];
+    NSLog(@"URLString: %@", URLString);
+    [request setURL:[NSURL URLWithString:URLString]];
+    [request setHTTPMethod:@"GET"];
+    
+    NSString *bearerTokenString = [[NSString alloc] initWithFormat:@"bearer %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"accessToken"]];
+    
+    [request setValue:bearerTokenString forHTTPHeaderField:@"Authorization"];
+    
+    NSURLResponse *requestResponse;
+    NSData *requestHandler = [NSURLConnection sendSynchronousRequest:request returningResponse:&requestResponse error:nil];
+    
+    NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
+    //NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
+    NSLog(@"CommentDataReply: %@", requestReplyDictionary);
+    self.aHandlerBlock(requestReplyDictionary);
 }
 
 -(void)loadSubreddit
@@ -91,7 +127,7 @@
 
 -(void)loadImageIntoCell:(RAPTableViewCell *)cell withURLString:(NSString *)URLString
 {
-    NSLog(@"thumbnail url is %@", URLString);
+    //NSLog(@"thumbnail url is %@", URLString);
     NSURL *url = [NSURL URLWithString:URLString];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     UIImage *placeholderImage = [[UIImage alloc] init];
@@ -100,7 +136,7 @@
                           placeholderImage:placeholderImage
                                    success:^(NSURLRequest *request, NSHTTPURLResponse *response, UIImage *image) {
                                        
-                                       NSLog(@"setImageWithURLRequest executed");
+                                       //NSLog(@"setImageWithURLRequest executed");
                                        cell.thumbnailImageView.image = image;
                                        //cell.imageView.image = image;
                                        
