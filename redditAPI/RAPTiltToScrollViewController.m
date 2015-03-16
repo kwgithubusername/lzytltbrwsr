@@ -44,6 +44,21 @@
     return _tiltToScroll;
 }
 
+#pragma mark Calibration
+
+- (IBAction)calibrateTiltButtonTapped:(UIBarButtonItem *)sender
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Hold device at a comfortable angle" message:@"Tilt mechanism will auto-calibrate in 3 seconds" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
+    [alertView show];
+    [self performSelector:@selector(dismissAlertView:) withObject:alertView afterDelay:3];
+}
+
+-(void)dismissAlertView:(UIAlertView *)alertView
+{
+    self.tiltToScroll.calibrationActivated = YES;
+    [alertView dismissWithClickedButtonIndex:0 animated:YES];
+}
+
 #pragma mark Segue
 
 -(void)timeViewHasBeenVisible

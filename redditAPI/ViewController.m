@@ -29,16 +29,6 @@
 @implementation RAPSubredditViewController
 
 #pragma mark Segue methods
-- (IBAction)calibrateTiltButtonTapped:(UIBarButtonItem *)sender
-{
-    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Hold device at a comfortable angle" message:@"Tilt mechanism will auto-calibrate in 3 seconds" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
-    [alertView show];
-    [self performSelector:@selector(dismissAlertView:) withObject:alertView afterDelay:3];
-}
-
--(void)dismissAlertView:(UIAlertView *)alertView{
-    [alertView dismissWithClickedButtonIndex:0 animated:YES];
-}
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {

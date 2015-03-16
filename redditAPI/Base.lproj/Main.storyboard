@@ -170,7 +170,7 @@
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="74Z-UR-IgD"/>
                                     <barButtonItem title="Calibrate" id="9QZ-sw-QSP">
                                         <connections>
-                                            <action selector="calibrateTiltButtonTapped:" destination="BYZ-38-t0r" id="yZb-HS-KIJ"/>
+                                            <action selector="calibrateTiltButtonTapped:" destination="BYZ-38-t0r" id="EMa-Vv-V6w"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>

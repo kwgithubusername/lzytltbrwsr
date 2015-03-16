@@ -15,6 +15,7 @@
 #define RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification @"RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification"
 #define RAPRemoveRectSelectorNotification @"RAPRemoveRectSelectorNotification"
 #define RAPSegueBackNotification @"RAPSegueBackNotification"
+#define RAPCalibrateNotification @"RAPCalibrateNotification"
 
 @interface RAPTiltToScroll ()
 @property (nonatomic) CMMotionManager *motionManager;
@@ -22,9 +23,20 @@
 @property BOOL selectModeIsOn;
 @property BOOL selectModeHasBeenSwitched;
 @property BOOL scrollingSessionHasStarted;
+@property (nonatomic) float calibratedAngle;
 @end
 
 @implementation RAPTiltToScroll
+
+-(instancetype)init
+{
+    self = [super init];
+    if (self)
+    {
+        self.calibratedAngle = 0;
+    }
+    return self;
+}
 
 -(void)postCreateRectSelectorNotification
 {
@@ -38,9 +50,22 @@
      {
          [[NSOperationQueue mainQueue] addOperationWithBlock:^{
              
-             CGFloat tiltAngleLeftOrRight = [self LeftOrRightAngleInDegreesUsingXGravity:motion.gravity.x YGravity:motion.gravity.y andZGravity:motion.gravity.z];
-             CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x YGravity:motion.gravity.y andZGravity:motion.gravity.z];
-             [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight ForwardOrBackward:tiltAngleForwardorBackward inScrollView:(UIScrollView *)scrollView inWebView:isInWebView];
+             CGFloat tiltAngleLeftOrRight = [self LeftOrRightAngleInDegreesUsingXGravity:motion.gravity.x
+                                                                                YGravity:motion.gravity.y
+                                                                             andZGravity:motion.gravity.z];
+             CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x
+                                                                                            YGravity:motion.gravity.y
+                                                                                         andZGravity:motion.gravity.z];
+             if (self.calibrationActivated)
+             {
+                 self.calibratedAngle = tiltAngleForwardorBackward;
+                 self.calibrationActivated = NO;
+             }
+             
+             [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight
+                                                 ForwardOrBackward:tiltAngleForwardorBackward
+                                                      inScrollView:(UIScrollView *)scrollView
+                                                         inWebView:isInWebView];
          }];
          
      }];
@@ -50,7 +75,6 @@
 {
     [self.motionManager stopDeviceMotionUpdates];
 }
-
 
 #pragma mark Scrolling
 
@@ -111,7 +135,7 @@
         }
         //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
-    if (forwardOrBackwardAngle > 10 || forwardOrBackwardAngle < -25)
+    if (forwardOrBackwardAngle > 0 || forwardOrBackwardAngle < -30)
     {
         //NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
         if (!self.selectModeHasBeenSwitched)
@@ -136,7 +160,7 @@
         
     }
     
-    if (forwardOrBackwardAngle < 10 && forwardOrBackwardAngle > -25 && leftOrRightAngle < 10 && leftOrRightAngle > -10)
+    if (forwardOrBackwardAngle < 0 && forwardOrBackwardAngle > -30 && leftOrRightAngle < 10 && leftOrRightAngle > -10)
         {
             // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
             self.selectModeHasBeenSwitched = NO;

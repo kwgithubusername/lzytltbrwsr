@@ -65,7 +65,7 @@
     
     NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
     //NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
-    NSLog(@"requestReply: %@", requestReplyDictionary);
+    //NSLog(@"requestReply: %@", requestReplyDictionary);
 
     //NSLog(@"expiresinclass is %@", [requestReplyDictionary[@"expires_in"] class]);
     self.accessTokenTimer = [NSTimer scheduledTimerWithTimeInterval:[requestReplyDictionary[@"expires_in"] doubleValue] target:self selector:@selector(obtainAccessToken) userInfo:nil repeats:YES];
@@ -97,7 +97,7 @@
     
     NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
     //NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
-    NSLog(@"CommentDataReply: %@", requestReplyDictionary);
+    //NSLog(@"CommentDataReply: %@", requestReplyDictionary);
     self.aHandlerBlock(requestReplyDictionary);
 }
 
