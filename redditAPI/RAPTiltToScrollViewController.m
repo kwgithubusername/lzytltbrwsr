@@ -63,11 +63,11 @@
 
 -(void)timeViewHasBeenVisible
 {
-    if (self.timeViewHasBeenVisibleInt < 15)
+    if (self.timeViewHasBeenVisibleInt < 25)
     {
         self.timeViewHasBeenVisibleInt++;
     }
-    else if (self.timeViewHasBeenVisibleInt >= 15)
+    else if (self.timeViewHasBeenVisibleInt >= 25)
     {
         [self.timerToPreventSegueingBackTooQuickly invalidate];
     }
@@ -76,7 +76,7 @@
 
 -(void)segueBack
 {
-    if (self.navigationController.navigationBar.backItem && self.timeViewHasBeenVisibleInt >= 15)
+    if (self.navigationController.navigationBar.backItem && self.timeViewHasBeenVisibleInt >= 25)
     {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:self.tiltToScroll];
         [self.tiltToScroll segueSuccessful];
@@ -132,7 +132,7 @@
     [self addObserverForRectSelector];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
     self.timeViewHasBeenVisibleInt = 0;
-    self.timerToPreventSegueingBackTooQuickly = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(timeViewHasBeenVisible) userInfo:nil repeats:YES];
+    self.timerToPreventSegueingBackTooQuickly = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(timeViewHasBeenVisible) userInfo:nil repeats:YES];
 }
 
 -(void)deviceOrientationDidChange
@@ -227,12 +227,12 @@
 
 - (void)createRectSelectorAtTop:(BOOL)atTop inWebView:(BOOL)isInWebView
 {
-    if (!self.rectSelectorHasBeenMade && [self.cellRectSizeArray count] > 0)
+    if (!self.rectSelectorHasBeenMade && [self.cellRectSizeArray count] > 0 && !isInWebView && self.timeViewHasBeenVisibleInt >= 5)
     {
         NSLog(@"let's make a rect selector");
         //NSLog(@"atTop in createRect method is %d", atTop);
         
-        if (!atTop && !isInWebView)
+        if (!atTop)
         {
             // Bottom of screen
             CGRect tempRect = [[self.cellRectSizeArray lastObject] CGRectValue];
@@ -259,21 +259,30 @@
         self.rectangleSelector.statusBarPlusNavigationBarHeight = self.navigationController.navigationBar.frame.size.height+[self statusBarHeight];
         self.rectangleSelector.currentContentOffset = self.tableView.contentOffset.y;
         NSLog(@"contentoffset for rect is %f", self.tableView.contentOffset.y);
-    }
-    
-    if (isInWebView)
-    {
-        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:nil atTop:atTop withCellMax:1 inWebView:isInWebView inInitialFrame:self.navigationController.navigationBar.frame withToolbarRect:CGRectZero];
-        self.navigationController.navigationBar.alpha = 0.5;
-    }
         self.rectangleSelector.tag = 999;
+        
+        //Boilerplate
         [self.view addSubview:self.rectangleSelector];
         [self.view bringSubviewToFront:self.rectangleSelector];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
         self.rectSelectorHasBeenMade = YES;
+    }
     
-    
+    else if (isInWebView)
+    {
+        NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
+        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:nil atTop:atTop withCellMax:1 inWebView:isInWebView inInitialFrame:self.navigationController.navigationBar.frame withToolbarRect:CGRectZero];
+        self.navigationController.navigationBar.alpha = 0.5;
+        self.rectangleSelector.tag = 999;
+        
+        //Boilerplate
+        [self.view addSubview:self.rectangleSelector];
+        [self.view bringSubviewToFront:self.rectangleSelector];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
+        self.rectSelectorHasBeenMade = YES;
+    }
 }
 
 - (void)removeRectSelector
