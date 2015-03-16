@@ -17,7 +17,7 @@
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
 
-@interface RAPViewController ()
+@interface RAPSubredditViewController ()
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) NSMutableArray *resultsMutableArray;
@@ -26,7 +26,7 @@
 @property (nonatomic) RAPSubredditWebServices *webServices;
 @end
 
-@implementation RAPViewController
+@implementation RAPSubredditViewController
 
 #pragma mark Segue methods
 
@@ -77,7 +77,7 @@
 
 -(void)setupDataSource
 {
-    __weak RAPViewController *weakSelf = self;
+    __weak RAPSubredditViewController *weakSelf = self;
     
     void (^configureCell)(RAPTableViewCell*, id) = ^(RAPTableViewCell *cell, id item) {
         cell.label.text = [item[@"data"] objectForKey:@"title"];

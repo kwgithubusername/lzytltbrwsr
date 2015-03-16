@@ -233,7 +233,9 @@
         
         CGRect toolbarRect = CGRectMake(self.navigationController.toolbar.frame.origin.x, self.navigationController.toolbar.frame.origin.y-self.navigationController.toolbar.frame.size.height, self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height);
         
-        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:self.cellRectSizeArray atTop:atTop withCellMax:[[self.tableView visibleCells] count]-1 inWebView:isInWebView inInitialFrame:self.tableViewCellRect withToolbarRect:toolbarRect];
+        int cellMax = (int)[[self.tableView visibleCells] count]-1;
+        
+        self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:self.cellRectSizeArray atTop:atTop withCellMax:cellMax inWebView:isInWebView inInitialFrame:self.tableViewCellRect withToolbarRect:toolbarRect];
         
         //NSLog(@"Toolbarframe is %@", NSStringFromCGRect(self.navigationController.toolbar.frame));
         //NSLog(@"bounds of screen is %@", NSStringFromCGRect(self.view.bounds));

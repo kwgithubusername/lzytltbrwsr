@@ -45,7 +45,7 @@
         if (![self.tableView indexPathForSelectedRow])
         {
             indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
-            NSLog(@"Indexpath.row is %d", indexPath.row);
+            //NSLog(@"Indexpath.row i%ld%d"(long), indexPath.row);
         }
         else // Otherwise, the user has tapped the row, so use the row that was tapped
         {
@@ -53,7 +53,7 @@
             [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
         }
         
-        RAPViewController *subredditViewController = segue.destinationViewController;
+        RAPSubredditViewController *subredditViewController = segue.destinationViewController;
         NSString *subredditString = self.favoritesMutableArray[indexPath.row];
         subredditViewController.subRedditURLString = subredditString;
     }

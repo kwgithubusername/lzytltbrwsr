@@ -35,7 +35,7 @@
     // return 3;
     // Add one for the head comment
     // Add one for the favorites toolbar
-    int numberOfRows = 2+[self getNumberOfRepliesFromDictionary:self.itemsDictionary];
+    int numberOfRows = (int)(2+[self getNumberOfRepliesFromDictionary:self.itemsDictionary]);
     NSLog(@"number of rows is %d", numberOfRows);
     return numberOfRows;
 }
