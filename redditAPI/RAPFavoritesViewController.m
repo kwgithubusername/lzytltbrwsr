@@ -164,9 +164,11 @@
 
 - (void)setupDataSource
 {
+    __weak RAPFavoritesViewController *weakSelf = self;
+    
     void (^deleteCell)(NSIndexPath*) = ^(NSIndexPath *indexPath) {
-        [self.favoritesMutableArray removeObjectAtIndex:indexPath.row];
-        [self updateFavorites];
+        [weakSelf.favoritesMutableArray removeObjectAtIndex:indexPath.row];
+        [weakSelf updateFavorites];
     };
     
     self.dataSource = [[RAPFavoritesDataSource alloc] initWithItems:self.favoritesMutableArray cellIdentifier:@"favoritesCell" deleteCellBlock:deleteCell];

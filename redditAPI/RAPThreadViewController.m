@@ -79,8 +79,10 @@
 
 - (void)setupDataSource
 {
+    __weak RAPThreadViewController *weakSelf = self;
+    
     void (^topicCell)(RAPThreadTopicTableViewCell *, id) = ^(RAPThreadTopicTableViewCell *topicCell, id item) {
-        self.navigationItem.title = [[NSString alloc] initWithFormat:@"%@: %@", item[@"subreddit"], item[@"title"]];
+        weakSelf.navigationItem.title = [[NSString alloc] initWithFormat:@"%@: %@", item[@"subreddit"], item[@"title"]];
         topicCell.topicLabel.text = item[@"title"];
         topicCell.usernameLabel.text = item[@"author"];
     };

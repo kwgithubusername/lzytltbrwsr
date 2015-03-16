@@ -77,16 +77,17 @@
 
 -(void)setupDataSource
 {
+    __weak RAPViewController *weakSelf = self;
     
     void (^configureCell)(RAPTableViewCell*, id) = ^(RAPTableViewCell *cell, id item) {
         cell.label.text = [item[@"data"] objectForKey:@"title"];
         cell.subLabel.text = [item[@"data"] objectForKey:@"subreddit"];
-        [self.webServices loadImageIntoCell:cell withURLString:[item[@"data"] objectForKey:@"thumbnail"]];
+        [weakSelf.webServices loadImageIntoCell:cell withURLString:[item[@"data"] objectForKey:@"thumbnail"]];
     };
     
     void (^loadCell)(RAPTableViewCell*, id) = ^(RAPTableViewCell *cell, id item) {
         NSString *linkIDString = [[NSString alloc] initWithFormat:@"%@", [item[@"data"] objectForKey:@"id"]];
-        [self loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]];
+        [weakSelf loadRedditJSONWithAppendingString:[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]];
         NSLog(@"Appending json info %@",[[NSString alloc] initWithFormat:RAPRedditLimit_10_typePrefix_Link_, linkIDString]);
     };
     
