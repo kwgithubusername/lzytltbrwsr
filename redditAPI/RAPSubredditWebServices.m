@@ -38,6 +38,8 @@
 
 -(void)obtainAccessToken
 {
+    [self.accessTokenTimer invalidate];
+    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:@"https://ssl.reddit.com/api/v1/access_token"]];
     [request setHTTPMethod:@"POST"];

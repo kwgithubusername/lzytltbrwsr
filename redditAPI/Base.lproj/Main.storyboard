@@ -167,6 +167,12 @@
                                             <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="8Xf-ET-DAz"/>
                                         </connections>
                                     </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="74Z-UR-IgD"/>
+                                    <barButtonItem title="Calibrate" id="9QZ-sw-QSP">
+                                        <connections>
+                                            <action selector="calibrateTiltButtonTapped:" destination="BYZ-38-t0r" id="yZb-HS-KIJ"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
