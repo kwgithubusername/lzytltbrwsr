@@ -50,12 +50,13 @@
 {
     UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Hold device at a comfortable angle" message:@"Tilt mechanism will auto-calibrate in 3 seconds" delegate:self cancelButtonTitle:nil otherButtonTitles: nil];
     [alertView show];
+    self.tiltToScroll.isCalibrating = YES;
     [self performSelector:@selector(dismissAlertView:) withObject:alertView afterDelay:3];
 }
 
 -(void)dismissAlertView:(UIAlertView *)alertView
 {
-    self.tiltToScroll.calibrationActivated = YES;
+    self.tiltToScroll.hasCalibrated = YES;
     [alertView dismissWithClickedButtonIndex:0 animated:YES];
 }
 
@@ -95,12 +96,14 @@
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
     //NSLog(@"IndexPath is %d", indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    //NSLog(@"startfill");
+    NSLog(@"startfill");
     [self fillCellRectSizeArrayWithVisibleCells];
 }
 
 -(void)addObserverForAdjustToNearestRowNotification
 {
+    NSLog(@"observerforadjusttonearestrowadded");
+    // delegate method- must be called when scrolling session has started
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
 }
 
@@ -269,7 +272,7 @@
         self.rectSelectorHasBeenMade = YES;
     }
     
-    else if (isInWebView)
+    else if (isInWebView && self.timeViewHasBeenVisibleInt >= 5)
     {
         NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:nil atTop:atTop withCellMax:1 inWebView:isInWebView inInitialFrame:self.navigationController.navigationBar.frame withToolbarRect:CGRectZero];

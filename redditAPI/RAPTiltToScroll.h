@@ -14,7 +14,8 @@
 
 @interface RAPTiltToScroll : NSObject
 @property (nonatomic) id <TiltToScrollDelegate> delegate;
-@property (nonatomic) BOOL calibrationActivated;
+@property (nonatomic) BOOL isCalibrating;
+@property (nonatomic) BOOL hasCalibrated;
 -(instancetype)init;
 -(void)segueSuccessful;
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView;

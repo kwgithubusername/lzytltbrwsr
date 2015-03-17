@@ -20,9 +20,9 @@
 @interface RAPTiltToScroll ()
 @property (nonatomic) CMMotionManager *motionManager;
 @property (nonatomic) CGFloat lastContentOffset;
-@property BOOL selectModeIsOn;
-@property BOOL selectModeHasBeenSwitched;
-@property BOOL scrollingSessionHasStarted;
+@property (nonatomic) BOOL selectModeIsOn;
+@property (nonatomic) BOOL selectModeHasBeenSwitched;
+@property (nonatomic) BOOL scrollingSessionHasStarted;
 @property (nonatomic) float calibratedAngle;
 @end
 
@@ -43,6 +43,11 @@
     [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self];
 }
 
+-(void)setScrollingSessionHasStarted:(BOOL)scrollingSessionHasStarted
+{
+    //NSLog(@"scrollingsessionstarted is being set to %d", scrollingSessionHasStarted);
+    _scrollingSessionHasStarted = scrollingSessionHasStarted;
+}
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
 {
     //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
@@ -56,16 +61,33 @@
              CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x
                                                                                             YGravity:motion.gravity.y
                                                                                          andZGravity:motion.gravity.z];
-             if (self.calibrationActivated)
+             NSLog(@"forwardorbackward is %f", tiltAngleForwardorBackward);
+             
+             if (self.isCalibrating)
              {
-                 self.calibratedAngle = tiltAngleForwardorBackward;
-                 self.calibrationActivated = NO;
+                 //remove rects
+                 //turn selectmode off
+                 self.selectModeIsOn = NO;
+                 self.selectModeHasBeenSwitched = NO;
+                 self.scrollingSessionHasStarted = NO;
+                 [[NSNotificationCenter defaultCenter] postNotificationName:RAPRemoveRectSelectorNotification object:self];
+                 
+                 if (self.hasCalibrated)
+                 {
+                     self.calibratedAngle = tiltAngleForwardorBackward;
+                     NSLog(@"calibratedangle is %f", self.calibratedAngle);
+                     self.isCalibrating = NO;
+                     self.hasCalibrated = NO;
+                 }
              }
              
-             [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight
-                                                 ForwardOrBackward:tiltAngleForwardorBackward
-                                                      inScrollView:(UIScrollView *)scrollView
-                                                         inWebView:isInWebView];
+             if (!self.isCalibrating)
+             {
+                 [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight
+                                                     ForwardOrBackward:tiltAngleForwardorBackward
+                                                          inScrollView:(UIScrollView *)scrollView
+                                                             inWebView:isInWebView];
+             }
          }];
          
      }];
@@ -81,6 +103,11 @@
 -(BOOL)floatIsPositive:(CGFloat)number
 {
     return number >= 0 ? YES : NO;
+}
+
+-(BOOL)angleIsForward:(CGFloat)angle
+{
+    return angle >= (0 + self.calibratedAngle) ? YES : NO;
 }
 
 -(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle inScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
@@ -99,6 +126,7 @@
                 {
                     // This should happen only ONCE per scrolling session- note when a scrollingsession began and when it ends
                     [self.delegate addObserverForAdjustToNearestRowNotification];
+                    NSLog(@"delegate called");
                     self.scrollingSessionHasStarted = YES;
                 }
                 
@@ -135,10 +163,10 @@
         }
         //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
-    if (forwardOrBackwardAngle > 0 || forwardOrBackwardAngle < -30)
+    if (forwardOrBackwardAngle > 10 + self.calibratedAngle || forwardOrBackwardAngle < -30 + self.calibratedAngle)
     {
         //NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
-        if (!self.selectModeHasBeenSwitched)
+        if (!self.selectModeHasBeenSwitched) // selectModeHasBeenSwitched is needed to differentiate between neutral state and selecting state. selectModeIsOn is used to toggle between creating the rect selector and removing it.
         {
             BOOL change = !self.selectModeIsOn;
             self.selectModeIsOn = change;
@@ -148,7 +176,7 @@
         {
             //NSDictionary *dictionaryWithBools = @{[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]]:@"atTop",[NSNumber numberWithBool:isInWebView]:@"inWebView"};
             // Post this notification and immediately remove the observer, as we want this to happen only once
-            [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObjects:@[[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]], [NSNumber numberWithBool:isInWebView]] forKeys:@[@"atTop",@"inWebView"]]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObjects:@[[NSNumber numberWithBool:[self angleIsForward:forwardOrBackwardAngle]], [NSNumber numberWithBool:isInWebView]] forKeys:@[@"atTop",@"inWebView"]]];
             //NSLog(@"Attop is %d", [self floatIsPositive:forwardOrBackwardAngle]);
             //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
         }
@@ -160,7 +188,7 @@
         
     }
     
-    if (forwardOrBackwardAngle < 0 && forwardOrBackwardAngle > -30 && leftOrRightAngle < 10 && leftOrRightAngle > -10)
+    if (forwardOrBackwardAngle < 10 + self.calibratedAngle && forwardOrBackwardAngle > -30 + self.calibratedAngle && leftOrRightAngle < 10 && leftOrRightAngle > -10)
         {
             // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
             self.selectModeHasBeenSwitched = NO;
