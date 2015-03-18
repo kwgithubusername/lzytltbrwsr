@@ -45,6 +45,10 @@
     {
         _calibratedAngle = -30;
     }
+    else if (calibratedAngle > 30)
+    {
+        _calibratedAngle = 30;
+    }
     else
     {
         _calibratedAngle = calibratedAngle;
