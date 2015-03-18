@@ -33,9 +33,22 @@
     self = [super init];
     if (self)
     {
-        self.calibratedAngle = 0;
+        self.calibratedAngle = [[[NSUserDefaults standardUserDefaults] objectForKey:@"calibratedAngle"] floatValue];
+        NSLog(@"calibratedangle is %f", self.calibratedAngle);
     }
     return self;
+}
+
+-(void)setCalibratedAngle:(float)calibratedAngle
+{
+    if (calibratedAngle < -30)
+    {
+        _calibratedAngle = -30;
+    }
+    else
+    {
+        _calibratedAngle = calibratedAngle;
+    }
 }
 
 -(void)postCreateRectSelectorNotification
@@ -75,13 +88,14 @@
                  if (self.hasCalibrated)
                  {
                      self.calibratedAngle = tiltAngleForwardorBackward;
+                     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:self.calibratedAngle] forKey:@"calibratedAngle"];
                      NSLog(@"calibratedangle is %f", self.calibratedAngle);
                      self.isCalibrating = NO;
                      self.hasCalibrated = NO;
                  }
              }
              
-             if (!self.isCalibrating)
+             if (!self.isCalibrating && tiltAngleLeftOrRight != 90.0 && tiltAngleForwardorBackward != 90.0)
              {
                  [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight
                                                      ForwardOrBackward:tiltAngleForwardorBackward
@@ -107,7 +121,8 @@
 
 -(BOOL)angleIsForward:(CGFloat)angle
 {
-    return angle >= (0 + self.calibratedAngle) ? YES : NO;
+    NSLog(@"calibratedangle is %f", self.calibratedAngle);
+    return angle > (20 + self.calibratedAngle) ? YES : NO;
 }
 
 -(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle inScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
@@ -163,7 +178,7 @@
         }
         //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
-    if (forwardOrBackwardAngle > 10 + self.calibratedAngle || forwardOrBackwardAngle < -30 + self.calibratedAngle)
+    if (forwardOrBackwardAngle > 20 + self.calibratedAngle || forwardOrBackwardAngle < -20 + self.calibratedAngle)
     {
         //NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
         if (!self.selectModeHasBeenSwitched) // selectModeHasBeenSwitched is needed to differentiate between neutral state and selecting state. selectModeIsOn is used to toggle between creating the rect selector and removing it.
@@ -188,7 +203,7 @@
         
     }
     
-    if (forwardOrBackwardAngle < 10 + self.calibratedAngle && forwardOrBackwardAngle > -30 + self.calibratedAngle && leftOrRightAngle < 10 && leftOrRightAngle > -10)
+    if (forwardOrBackwardAngle < 20 + self.calibratedAngle && forwardOrBackwardAngle > -20 + self.calibratedAngle && leftOrRightAngle < 10 && leftOrRightAngle > -10)
         {
             // Prevent each millisecond of having device tilted turn select mode on/off repeatedly
             self.selectModeHasBeenSwitched = NO;
