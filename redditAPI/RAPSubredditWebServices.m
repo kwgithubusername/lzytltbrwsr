@@ -61,6 +61,7 @@
     [request setValue:authValue forHTTPHeaderField:@"Authorization"];
     
     NSURLResponse *requestResponse;
+    
     NSData *requestHandler = [NSURLConnection sendSynchronousRequest:request returningResponse:&requestResponse error:nil];
     
     NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
@@ -92,38 +93,70 @@
     
     [request setValue:bearerTokenString forHTTPHeaderField:@"Authorization"];
     
-    NSURLResponse *requestResponse;
-    NSData *requestHandler = [NSURLConnection sendSynchronousRequest:request returningResponse:&requestResponse error:nil];
+    NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
     
-    NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
-    //NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
-    //NSLog(@"CommentDataReply: %@", requestReplyDictionary);
-    self.aHandlerBlock(requestReplyDictionary);
+    NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+    {
+        NSString *requestReply = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSASCIIStringEncoding];
+        NSLog(@"CommentDataReply: %@", requestReply);
+        id jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+            dispatch_async(dispatch_get_main_queue(), ^
+        {
+            self.aHandlerBlock(jsonData);
+        });
+    }];
+    
+    [dataTask resume];
 }
 
 -(void)loadSubreddit
 {
-    NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", self.subredditString]];
-    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-    NSLog(@"URL is %@", url);
-    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
-    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+
+// NSURLSESSION
     
-    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
-        
-        self.aHandlerBlock(responseObject);
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        
-        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Data"
-                                                            message:[error localizedDescription]
-                                                           delegate:nil
-                                                  cancelButtonTitle:@"Ok"
-                                                  otherButtonTitles:nil];
-        [alertView show];
-    }];
+//  NSURL *url = [NSURL URLWithString:[[NSString alloc] initWithFormat:@"http://www.reddit.com%@", self.subredditString]];
+// NSURLRequest *request = [NSURLRequest requestWithURL:url];
+//    NSLog(@"URL is %@", url);
+//    
+//    NSURLSessionConfiguration *sessionconfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+//    NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionconfig];
+//    
+//    NSURLSessionDataTask *dataTask = [session dataTaskWithURL:url completionHandler:^(NSData *data, NSURLResponse *response, NSError *error)
+//                                      {
+//                                          id jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+//                                          
+//                                          dispatch_async(dispatch_get_main_queue(), ^
+//                                                         {
+//                                                             self.aHandlerBlock(jsonData);
+//                                                         });
+//                                      }];
+//    
+//    [dataTask resume];
     
-    [operation start];
+    
+// AFNETWORKING
+    
+//    dispatch_queue_t backgroundQueue = dispatch_queue_create("com.name.bgqueue", NULL);
+//    AFHTTPRequestOperation *operation = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+//    operation.responseSerializer = [AFJSONResponseSerializer serializer];
+//    operation.completionQueue = backgroundQueue;
+//    
+//    [operation setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+//        
+//        self.aHandlerBlock(responseObject);
+//        
+//    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+//        
+//        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error Retrieving Data"
+//                                                            message:[error localizedDescription]
+//                                                           delegate:nil
+//                                                  cancelButtonTitle:@"Ok"
+//                                                  otherButtonTitles:nil];
+//        [alertView show];
+//    }];
+//    
+//    [operation start];
 
 }
 
