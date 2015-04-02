@@ -10,6 +10,8 @@
 #import "RAPThreadTopicTableViewCell.h"
 #import "RAPThreadCommentTableViewCell.h"
 
+#define RAPFinalRowLoadedNotification @"RAPFinalRowLoadedNotification"
+
 @interface RAPThreadDataSource()
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, copy) NSString *cellIdentifier;
@@ -94,6 +96,16 @@
     self.commentCellBlock(commentCell, data);
     
     return commentCell;
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    // If the last row is loaded, notify the tiltToScrollVC to count how many cells are currently visible
+    if (indexPath.row == (int)[[self.items objectAtIndex:1][@"data"][@"children"] count] + 1)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:RAPFinalRowLoadedNotification object:nil];
+    }
 }
 
 

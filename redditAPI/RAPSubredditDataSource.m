@@ -9,6 +9,9 @@
 #import "RAPSubredditDataSource.h"
 #import "RAPTableViewCell.h"
 
+#define RAPFinalRowLoadedNotification @"RAPFinalRowLoadedNotification"
+
+
 @interface RAPSubredditDataSource()
 
 @property (nonatomic) NSArray *items;
@@ -77,5 +80,12 @@ loadingCellBlock:(TableViewCellLoadingBlock)aLoadingCellBlock
         id item = [self itemAtIndexPathPlusOne:indexPath];
         self.loadCellBlock(cell, item);
     }
+    
+    // If the last row is loaded, notify the tiltToScrollVC to count how many cells are currently visible
+    if (indexPath.row == (int)self.items.count-1)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:RAPFinalRowLoadedNotification object:nil];
+    }
 }
+
 @end

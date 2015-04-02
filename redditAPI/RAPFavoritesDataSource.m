@@ -8,6 +8,8 @@
 
 #import "RAPFavoritesDataSource.h"
 
+#define RAPFinalRowLoadedNotification @"RAPFinalRowLoadedNotification"
+
 @interface RAPFavoritesDataSource()
 @property (nonatomic, strong) NSMutableArray *items;
 @property (nonatomic, copy) NSString *cellIdentifier;
@@ -78,6 +80,16 @@
         [self.items removeObjectAtIndex:indexPath.row];
         self.deleteCellBlock(indexPath);
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
+-(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    
+    // If the last row is loaded, notify the tiltToScrollVC to count how many cells are currently visible
+    if (indexPath.row == (int)self.items.count)
+    {
+        [[NSNotificationCenter defaultCenter] postNotificationName:RAPFinalRowLoadedNotification object:nil];
     }
 }
 
