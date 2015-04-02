@@ -114,6 +114,9 @@
 -(void)stopTiltToScroll
 {
     [self.motionManager stopDeviceMotionUpdates];
+    self.selectModeIsOn = NO;
+    self.selectModeHasBeenSwitched = NO;
+    self.scrollingSessionHasStarted = NO;
 }
 
 #pragma mark Scrolling

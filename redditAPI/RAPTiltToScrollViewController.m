@@ -148,6 +148,8 @@
     
     [self removeRectSelector];
     
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPFinalRowLoadedNotification object:nil];
+    
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
