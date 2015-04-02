@@ -180,7 +180,6 @@
 {
     [self incrementOrDecrementCellIndex];
     NSLog(@"Cellindex is %d", self.cellIndex);
-#warning Exception thrown in favorites at cellmax
     CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
     // track how far down you are in tableview, and reduce statusbarplusheight by that number
     CGRect newFrame = CGRectMake(newCell.origin.x, newCell.origin.y+self.statusBarPlusNavigationBarHeight-self.currentContentOffset, newCell.size.width, newCell.size.height);
@@ -190,7 +189,14 @@
         newFrame = self.toolBarRect;
     }
     
-    self.frame = newFrame;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.1];
+        [UIView setAnimationCurve:UIViewAnimationCurveLinear];
+        self.frame = newFrame;
+        [UIView commitAnimations];
+    });
+
     self.currentLocationRect = newFrame;
     //NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
     
