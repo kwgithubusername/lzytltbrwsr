@@ -12,7 +12,7 @@ typedef void (^TableViewCellCommentBlock)(id cell, id item);
 
 @interface RAPCommentDataSource : NSObject <UITableViewDataSource, UITableViewDelegate>
 
-- (id)initWithItems:(NSDictionary *)anItems
+- (id)initWithItems:(NSArray *)anItems
      cellIdentifier:(NSString *)aCellIdentifier
    commentCellBlock:(TableViewCellCommentBlock)aCommentCellBlock;
 

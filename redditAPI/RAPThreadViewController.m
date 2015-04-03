@@ -53,15 +53,17 @@
     }
     else if ([segue.identifier isEqualToString:@"commentSegue"])
     {
+        int appropriateIndex = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0 ? super.rectangleSelector.cellIndex-1 : super.rectangleSelector.cellIndex;
+        
         RAPCommentTreeViewController *commentTreeViewController = segue.destinationViewController;
         commentTreeViewController.navigationController.title = self.navigationController.title;
-        //commentTreeViewController.commentDataDictionary = [[NSDictionary alloc] initWithDictionary:[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex-1)][@"data"]];
+        commentTreeViewController.commentDataDictionary = [[NSDictionary alloc] initWithDictionary:[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(appropriateIndex)][@"data"]];
     }
 }
 
 -(void)segueWhenSelectedRow
 {
-    if (super.rectangleSelector.cellIndex == 0)
+    if (super.rectangleSelector.cellIndex == 0 && [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0)
     {
         [self performSegueWithIdentifier:@"linkSegue" sender:nil];
     }
@@ -69,7 +71,7 @@
     {
         [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
     }
-    else if ([[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex-1)][@"data"][@"replies"] count] > 0)
+    else if ([[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex)][@"data"][@"replies"] count] > 0)
     {
         [self performSegueWithIdentifier:@"commentSegue" sender:nil];
     }
