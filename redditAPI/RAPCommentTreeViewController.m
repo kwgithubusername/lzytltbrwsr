@@ -45,8 +45,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self.mutableArrayOfCommentDataDictionaries addObject:self.commentDataDictionary];
     [self getComments];
-    self.tableView.estimatedRowHeight = 44;
-    self.tableView.rowHeight = UITableViewAutomaticDimension;
     // Do any additional setup after loading the view.
 }
 
@@ -61,11 +59,12 @@
         dispatch_async(dispatch_get_main_queue(), ^{
             [self setupDataSource];
             [self.tableView reloadData];
+            self.tableView.estimatedRowHeight = 44;
+            self.tableView.rowHeight = UITableViewAutomaticDimension;
+            [self notifySuperclassToGetRectSelectorShapes];
         });
         
     });
-    
-
 }
 
 -(void)getCommentsFromDictionary:(NSDictionary *)itemsDictionary
@@ -85,7 +84,7 @@
         
         if ([[repliesChildrenArray objectAtIndex:i][@"data"][@"replies"] respondsToSelector:@selector(count)])
         {
-            [self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"]];
+            [self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"][@"replies"][@"data"]];
         }
     }
     NSLog(@"commentdata count is %lu", (unsigned long)[self.mutableArrayOfCommentDataDictionaries count]);
@@ -109,10 +108,6 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self.tableView reloadData];
-    });
-    [self notifySuperclassToGetRectSelectorShapes];
 }
 
 @end
