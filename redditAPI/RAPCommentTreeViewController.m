@@ -23,12 +23,12 @@
 
 -(void)setupDataSource
 {
-    void (^commentCell)(RAPThreadCommentTableViewCell *, id) = ^(RAPThreadCommentTableViewCell *commentCell, id item) {
+    void (^commentCellBlock)(RAPThreadCommentTableViewCell *, id) = ^(RAPThreadCommentTableViewCell *commentCell, id item) {
         commentCell.commentLabel.text = item[@"body"];
         commentCell.usernameLabel.text = item[@"author"];
     };
     
-    self.dataSource = [[RAPCommentDataSource alloc] initWithItems:self.mutableArrayOfCommentDataDictionaries cellIdentifier:@"commentCell" commentCellBlock:commentCell];
+    self.dataSource = [[RAPCommentDataSource alloc] initWithItems:self.mutableArrayOfCommentDataDictionaries cellIdentifier:@"commentCell" commentCellBlock:commentCellBlock];
     
     self.tableView.dataSource = self.dataSource;
     self.tableView.delegate = self.dataSource;
@@ -53,7 +53,7 @@
     // Get a background thread to run on
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         
-        [self getCommentsFromDictionary:self.commentDataDictionary[@"replies"][@"data"]];
+        [self getCommentsFromDictionary:self.commentDataDictionary[@"replies"][@"data"] withDepthIndex:0];
 
         // update UI on the main thread
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -67,24 +67,32 @@
     });
 }
 
--(void)getCommentsFromDictionary:(NSDictionary *)itemsDictionary
+-(void)getCommentsFromDictionary:(NSDictionary *)itemsDictionary withDepthIndex:(int)depthIndex
 {
     // Count number of replies to parent.
     // increment number of replies as each time "data" is crossed
     // If indexPath.row at any point is > number of replies to that body, i.e., if replies count == 0, go to next child
     
+    // Each comment has to have a depth.
+    
+    depthIndex++;
+    
     NSArray *repliesChildrenArray = itemsDictionary[@"children"];
     
-    for (int i = 0; i < [repliesChildrenArray count]; i++)
+    int repliesChildrenArrayCount = (int)[repliesChildrenArray count];
+    
+    for (int index = 0; index < repliesChildrenArrayCount; index++)
     {
-        if ([repliesChildrenArray objectAtIndex:i][@"data"][@"body"])
+        if ([repliesChildrenArray objectAtIndex:index][@"data"][@"body"])
         {
-            [self.mutableArrayOfCommentDataDictionaries addObject:[repliesChildrenArray objectAtIndex:i][@"data"]];
+            NSMutableDictionary *commentData = [[NSMutableDictionary alloc] initWithDictionary:[repliesChildrenArray objectAtIndex:index][@"data"]];
+            [commentData setValue:[NSNumber numberWithInt:depthIndex] forKey:@"depth"];
+            [self.mutableArrayOfCommentDataDictionaries addObject:commentData];
         };
         
-        if ([[repliesChildrenArray objectAtIndex:i][@"data"][@"replies"] respondsToSelector:@selector(count)])
+        if ([[repliesChildrenArray objectAtIndex:index][@"data"][@"replies"] respondsToSelector:@selector(count)])
         {
-            [self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:i][@"data"][@"replies"][@"data"]];
+            [self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:index][@"data"][@"replies"][@"data"] withDepthIndex:depthIndex];
         }
     }
     NSLog(@"commentdata count is %lu", (unsigned long)[self.mutableArrayOfCommentDataDictionaries count]);
