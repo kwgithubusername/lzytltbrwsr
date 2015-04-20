@@ -7,6 +7,11 @@
 //
 
 #import "RAPLinkViewController.h"
+
+@interface RAPTiltToScrollViewController()
+-(void)adjustTableView;
+@end
+
 @interface RAPLinkViewController ()
 @property (weak, nonatomic) IBOutlet UIWebView *webView;
 @property (nonatomic) UIActivityIndicatorView *spinner;
@@ -60,9 +65,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    self.isInWebView = YES;
+    [self adjustTableView];
     self.automaticallyAdjustsScrollViewInsets = NO;
     [self loadWebpage];
-    self.isInWebView = YES;
     // Do any additional setup after loading the view.
 }
 

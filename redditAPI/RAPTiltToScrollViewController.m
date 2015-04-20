@@ -94,6 +94,10 @@
 -(void)adjustTableView
 {
     // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
+    if (!self.tiltToScroll.hasStarted)
+    {
+        [self startTiltToScroll];
+    }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:nil];
     
@@ -102,11 +106,6 @@
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     NSLog(@"startfill");
     [self fillCellRectSizeArrayWithVisibleCells];
-    
-    if (!self.tiltToScroll.hasStarted)
-    {
-        [self startTiltToScroll];
-    }
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(countFinalRowsThatAreVisible) name:RAPFinalRowLoadedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];

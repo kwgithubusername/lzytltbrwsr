@@ -44,6 +44,7 @@
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
+    // index 1 beyond bounds for empty array
     if ([[self.items objectAtIndex:1][@"data"][@"children"] count])
     {
         //NSLog(@"self.items count is %lu, add 1 to get the indexpathrow for the blank cell", (unsigned long)[self.items count]);
