@@ -67,6 +67,8 @@
 }
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
 {
+    self.selectModeIsOn = NO;
+
     self.hasStarted = YES;
     //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error)
@@ -79,7 +81,7 @@
              CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x
                                                                                             YGravity:motion.gravity.y
                                                                                          andZGravity:motion.gravity.z];
-             //NSLog(@"forwardorbackward is %f", tiltAngleForwardorBackward);
+             NSLog(@"forwardorbackward is %f", tiltAngleForwardorBackward);
              
              if (self.isCalibrating)
              {
@@ -136,6 +138,12 @@
 
 -(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle inScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
 {
+    if (forwardOrBackwardAngle < -80 || forwardOrBackwardAngle > 200)
+    {
+        // invalid angles!
+        return;
+    }
+    
     if ((forwardOrBackwardAngle < 20 + self.calibratedAngle || forwardOrBackwardAngle > -20 + self.calibratedAngle) && (leftOrRightAngle > 10 || leftOrRightAngle < -10))
     {
         //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
@@ -189,7 +197,7 @@
     }
     if ((forwardOrBackwardAngle > 20 + self.calibratedAngle || forwardOrBackwardAngle < -20 + self.calibratedAngle) && (leftOrRightAngle < 10 || leftOrRightAngle > -10))
     {
-        //NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
+        NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
         if (!self.selectModeHasBeenSwitched) // selectModeHasBeenSwitched is needed to differentiate between neutral state and selecting state. selectModeIsOn is used to toggle between creating the rect selector and removing it.
         {
             BOOL change = !self.selectModeIsOn;
@@ -200,7 +208,7 @@
         {
             // For some reason when separating into a dictionary to put in the notification, the following code does not allow the rect selector to start from the bottom: NSDictionary *dictionaryWithBools = @{[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]]:@"atTop",[NSNumber numberWithBool:isInWebView]:@"inWebView"};
             // Post this notification and immediately remove the observer, as we want this to happen only once
-            [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObjects:@[[NSNumber numberWithBool:[self angleIsForward:forwardOrBackwardAngle]], [NSNumber numberWithBool:isInWebView]] forKeys:@[@"atTop",@"inWebView"]]];
+            [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObjects:@[[NSNumber numberWithBool:[self angleIsForward:forwardOrBackwardAngle]], [NSNumber numberWithBool:isInWebView], [NSNumber numberWithFloat:forwardOrBackwardAngle]] forKeys:@[@"atTop",@"inWebView",@"angle"]]];
             //NSLog(@"Attop is %d", [self floatIsPositive:forwardOrBackwardAngle]);
             //NSLog(@"Tilted %f degrees forward", forwardOrBackwardAngle);
         }
