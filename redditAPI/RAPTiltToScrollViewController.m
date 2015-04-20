@@ -96,7 +96,7 @@
     // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
     if (!self.tiltToScroll.hasStarted)
     {
-        [self startTiltToScroll];
+        [self performSelector:@selector(startTiltToScroll) withObject:nil afterDelay:1];
     }
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:nil];
@@ -146,7 +146,7 @@
     // If the user segued back from a page, restart tiltToScroll
     if (!self.tiltToScroll.hasStarted)
     {
-        [self performSelector:@selector(startTiltToScroll) withObject:nil afterDelay:0.5];
+        [self performSelector:@selector(startTiltToScroll) withObject:nil afterDelay:1];
     }
     
     // All subclasses will post this notification as soon as the tableView is loaded (e.g., in the completionHandler)
