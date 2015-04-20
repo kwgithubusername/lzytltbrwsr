@@ -95,12 +95,21 @@
 {
     // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
     
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:nil];
+    
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
     NSLog(@"IndexPath is %ld", (long)indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     NSLog(@"startfill");
     [self fillCellRectSizeArrayWithVisibleCells];
+    
+    if (!self.tiltToScroll.hasStarted)
+    {
+        [self startTiltToScroll];
+    }
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(countFinalRowsThatAreVisible) name:RAPFinalRowLoadedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
 }
 
 -(void)addObserverForAdjustToNearestRowNotification
@@ -113,6 +122,7 @@
 -(void)startTiltToScroll
 {
     [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:[self appropriateScrollView] inWebView:self.isInWebView];
+    self.tiltToScroll.delegate = self;
 }
 
 #pragma mark View methods
@@ -125,20 +135,25 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPGetRectSelectorShapesNotification object:nil];
     self.cellRectSizeArray = [[NSMutableArray alloc] init];
     self.cellRectSizeArrayWithLastRowVisible = [[NSMutableArray alloc] init];
     self.automaticallyAdjustsScrollViewInsets = NO;
-    self.tiltToScroll.delegate = self;
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self performSelector:@selector(startTiltToScroll) withObject:nil afterDelay:0.5];
-    [self addObserverForRectSelector];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(countFinalRowsThatAreVisible) name:RAPFinalRowLoadedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
+    
+    // If the user segued back from a page, restart tiltToScroll
+    if (!self.tiltToScroll.hasStarted)
+    {
+        [self performSelector:@selector(startTiltToScroll) withObject:nil afterDelay:0.5];
+    }
+    
+    // All subclasses will post this notification as soon as the tableView is loaded (e.g., in the completionHandler)
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPGetRectSelectorShapesNotification object:nil];
+
     self.timeViewHasBeenVisibleInt = 0;
     self.timerToPreventSegueingBackTooQuickly = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(timeViewHasBeenVisible) userInfo:nil repeats:YES];
 }
@@ -149,9 +164,7 @@
     
     [super viewWillDisappear:animated];
     
-    [self.tiltToScroll stopTiltToScroll];
-    
-    [self removeRectSelector];
+    [self stopTiltToScrollAndRemoveRectSelector];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPFinalRowLoadedNotification object:nil];
     
@@ -207,6 +220,7 @@
         [self.cellRectSizeArray addObjectsFromArray:self.cellRectSizeArrayWithLastRowVisible];
     }
     
+    [self addObserverForRectSelector];
     //NSLog(@"added rects");
 }
 

@@ -16,6 +16,7 @@
 @property (nonatomic) id <TiltToScrollDelegate> delegate;
 @property (nonatomic) BOOL isCalibrating;
 @property (nonatomic) BOOL hasCalibrated;
+@property (nonatomic) BOOL hasStarted;
 -(instancetype)init;
 -(void)segueSuccessful;
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView;

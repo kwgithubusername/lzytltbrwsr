@@ -67,6 +67,7 @@
 }
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
 {
+    self.hasStarted = YES;
     //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     [self.motionManager startDeviceMotionUpdatesUsingReferenceFrame:CMAttitudeReferenceFrameXArbitraryZVertical toQueue:[NSOperationQueue mainQueue] withHandler:^(CMDeviceMotion *motion, NSError *error)
      {
@@ -117,6 +118,7 @@
     self.selectModeIsOn = NO;
     self.selectModeHasBeenSwitched = NO;
     self.scrollingSessionHasStarted = NO;
+    self.hasStarted = NO;
 }
 
 #pragma mark Scrolling

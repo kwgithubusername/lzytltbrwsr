@@ -12,28 +12,21 @@
 #import "RAPFavoritesDataSource.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
+#define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
 
 @interface RAPTiltToScrollViewController()
--(void)createTableViewCellRectWithCellRect:(CGRect)cellRect;
--(void)stopTiltToScrollAndRemoveRectSelector;
+-(void)adjustTableView;
 @end
 
 @interface RAPFavoritesViewController ()
 @property (nonatomic) NSMutableArray *favoritesMutableArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic) RAPTiltToScroll *tiltToScroll;
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
 @property (nonatomic) RAPFavoritesDataSource *dataSource;
 @end
 
 @implementation RAPFavoritesViewController
-
--(RAPTiltToScroll *)tiltToScroll
-{
-    if (!_tiltToScroll) _tiltToScroll = [[RAPTiltToScroll alloc] init];
-    return _tiltToScroll;
-}
 
 #pragma mark Segue methods
 
@@ -202,6 +195,10 @@
     self.favoritesMutableArray = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] valueForKey:@"favorites"]];
     
     [self setupDataSource];
+    
+    // No notification will be used here due to the fact that no data needs to be loaded from the internet
+    
+    [self adjustTableView];
     // Dou any additional setup after loading the view.
 }
 
