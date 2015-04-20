@@ -163,8 +163,6 @@
 			children = (
 				9ECF83281A66096E00E7D9C7 /* AppDelegate.h */,
 				9ECF83291A66096E00E7D9C7 /* AppDelegate.m */,
-				9ED7E13A1A8FB3D900020696 /* RAPTiltToScrollViewController.h */,
-				9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */,
 				9ECF832B1A66096E00E7D9C7 /* ViewController.h */,
 				9ECF832C1A66096E00E7D9C7 /* ViewController.m */,
 				9ECF834A1A660B8200E7D9C7 /* RAPTableViewCell.h */,
@@ -190,6 +188,8 @@
 				9EE5AEE41A86B11700F25DB7 /* RAPRectangleSelector.h */,
 				9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */,
 				9E9D75DF1A81B941005CEB64 /* RAPRedditLinks.h */,
+				9ED7E13A1A8FB3D900020696 /* RAPTiltToScrollViewController.h */,
+				9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */,
 				9E9D75DC1A819C55005CEB64 /* RAPTiltToScroll.h */,
 				9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */,
 				9E9D75D61A804BA0005CEB64 /* RAPSelectorView.h */,

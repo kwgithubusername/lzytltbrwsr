@@ -34,7 +34,7 @@
     if (self)
     {
         self.calibratedAngle = [[[NSUserDefaults standardUserDefaults] objectForKey:@"calibratedAngle"] floatValue];
-        NSLog(@"calibratedangle is %f", self.calibratedAngle);
+        //NSLog(@"calibratedangle is %f", self.calibratedAngle);
     }
     return self;
 }
@@ -93,7 +93,7 @@
                  {
                      self.calibratedAngle = tiltAngleForwardorBackward;
                      [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:self.calibratedAngle] forKey:@"calibratedAngle"];
-                     NSLog(@"calibratedangle is %f", self.calibratedAngle);
+                     //NSLog(@"calibratedangle is %f", self.calibratedAngle);
                      self.isCalibrating = NO;
                      self.hasCalibrated = NO;
                  }
@@ -128,13 +128,13 @@
 
 -(BOOL)angleIsForward:(CGFloat)angle
 {
-    NSLog(@"calibratedangle is %f", self.calibratedAngle);
+    //NSLog(@"calibratedangle is %f", self.calibratedAngle);
     return angle > (20 + self.calibratedAngle) ? YES : NO;
 }
 
 -(void)scrollTableViewWithIntensityOfAnglesLeftOrRight:(CGFloat)leftOrRightAngle ForwardOrBackward:(CGFloat)forwardOrBackwardAngle inScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView
 {
-    if (leftOrRightAngle > 10 || leftOrRightAngle < -10)
+    if ((forwardOrBackwardAngle < 20 + self.calibratedAngle || forwardOrBackwardAngle > -20 + self.calibratedAngle) && (leftOrRightAngle > 10 || leftOrRightAngle < -10))
     {
         //NSLog(@"Tilted %f degrees clockwise", leftOrRightAngle);
         if (!isInWebView)
@@ -148,7 +148,7 @@
                 {
                     // This should happen only ONCE per scrolling session- note when a scrollingsession began and when it ends
                     [self.delegate addObserverForAdjustToNearestRowNotification];
-                    NSLog(@"delegate called");
+                    NSLog(@"delegate method addObserverForAdjustToNearestRowNotification called");
                     self.scrollingSessionHasStarted = YES;
                 }
                 
@@ -185,7 +185,7 @@
         }
         //NSLog(@"Contentoffset.y is %f", scrollView.contentOffset.y);
     }
-    if (forwardOrBackwardAngle > 20 + self.calibratedAngle || forwardOrBackwardAngle < -20 + self.calibratedAngle)
+    if ((forwardOrBackwardAngle > 20 + self.calibratedAngle || forwardOrBackwardAngle < -20 + self.calibratedAngle) && (leftOrRightAngle < 10 || leftOrRightAngle > -10))
     {
         //NSLog(@"Tilted %f degrees", forwardOrBackwardAngle);
         if (!self.selectModeHasBeenSwitched) // selectModeHasBeenSwitched is needed to differentiate between neutral state and selecting state. selectModeIsOn is used to toggle between creating the rect selector and removing it.
@@ -196,7 +196,7 @@
         }
         if (self.selectModeIsOn)
         {
-            //NSDictionary *dictionaryWithBools = @{[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]]:@"atTop",[NSNumber numberWithBool:isInWebView]:@"inWebView"};
+            // For some reason when separating into a dictionary to put in the notification, the following code does not allow the rect selector to start from the bottom: NSDictionary *dictionaryWithBools = @{[NSNumber numberWithBool:[self floatIsPositive:forwardOrBackwardAngle]]:@"atTop",[NSNumber numberWithBool:isInWebView]:@"inWebView"};
             // Post this notification and immediately remove the observer, as we want this to happen only once
             [[NSNotificationCenter defaultCenter] postNotificationName:RAPCreateRectSelectorNotification object:self userInfo:[NSDictionary dictionaryWithObjects:@[[NSNumber numberWithBool:[self angleIsForward:forwardOrBackwardAngle]], [NSNumber numberWithBool:isInWebView]] forKeys:@[@"atTop",@"inWebView"]]];
             //NSLog(@"Attop is %d", [self floatIsPositive:forwardOrBackwardAngle]);

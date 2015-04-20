@@ -63,8 +63,15 @@
 
 -(NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSDictionary *item = self.itemsArray[indexPath.row];
-    return [item[@"depth"] intValue];
+    if (indexPath.row == [self tableView:tableView numberOfRowsInSection:0]-1)
+    {
+        return 0;
+    }
+    else
+    {
+        NSDictionary *item = self.itemsArray[indexPath.row];
+        return [item[@"depth"] intValue];
+    }
 }
 
 -(NSInteger)getNumberOfRepliesFromDictionary:(NSDictionary *)itemsDictionary

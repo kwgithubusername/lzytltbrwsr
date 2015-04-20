@@ -110,6 +110,11 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
 }
 
+-(void)startTiltToScroll
+{
+    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:[self appropriateScrollView] inWebView:self.isInWebView];
+}
+
 #pragma mark View methods
 
 -(UIScrollView *)appropriateScrollView
@@ -130,7 +135,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [self.tiltToScroll startTiltToScrollWithSensitivity:1 forScrollView:[self appropriateScrollView] inWebView:self.isInWebView];
+    [self performSelector:@selector(startTiltToScroll) withObject:nil afterDelay:0.5];
     [self addObserverForRectSelector];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(countFinalRowsThatAreVisible) name:RAPFinalRowLoadedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
