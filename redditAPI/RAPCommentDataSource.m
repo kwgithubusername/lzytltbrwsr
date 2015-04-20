@@ -53,11 +53,18 @@
     }
     else
     {
-//        cell.usernameLabel.text = @"";
-//        cell.commentLabel.text = @"";
         self.commentCellBlock(cell, self.itemsArray[indexPath.row]);
     }
+    
+    [cell layoutIfNeeded];
+    
     return cell;
+}
+
+-(NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    NSDictionary *item = self.itemsArray[indexPath.row];
+    return [item[@"depth"] intValue];
 }
 
 -(NSInteger)getNumberOfRepliesFromDictionary:(NSDictionary *)itemsDictionary

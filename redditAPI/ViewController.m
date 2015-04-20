@@ -173,6 +173,9 @@
         [self.tableView reloadData];
         [self.spinner stopAnimating];
         [self notifySuperclassToGetRectSelectorShapes];
+        self.tableView.estimatedRowHeight = 44;
+        self.tableView.rowHeight = UITableViewAutomaticDimension;
+
     };
     
     self.webServices = [[RAPSubredditWebServices alloc] initWithSubredditString:appendString withHandlerBlock:setupHandlerBlock];
