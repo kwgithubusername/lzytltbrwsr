@@ -10,6 +10,8 @@
 
 @implementation RAPThreadCommentTableViewCell
 
+
+
 - (void)awakeFromNib {
     // Initialization code
 }
@@ -22,17 +24,34 @@
 
 - (void)layoutSubviews
 {
-    // Call super
     [super layoutSubviews];
     
-    // Update the separator
-    self.separatorInset = UIEdgeInsetsMake(0, (self.indentationLevel * self.indentationWidth) + 15, 0, 0);
-    
-    // Update the frame of the text label
-    self.usernameLabel.frame = CGRectMake(self.imageView.frame.origin.x + 40, self.textLabel.frame.origin.y, self.frame.size.width - (self.imageView.frame.origin.x + 60), self.textLabel.frame.size.height);
-    
-    // Update the frame of the subtitle label
-    self.commentLabel.frame = CGRectMake(self.imageView.frame.origin.x + 40, self.detailTextLabel.frame.origin.y, self.frame.size.width - (self.imageView.frame.origin.x + 60), self.detailTextLabel.frame.size.height);
+    if (self.customIndentationLevel != 0)
+    {
+        int indention = self.customIndentationLevel*5;
+        NSString *indentationStringUsername = [[NSString alloc] initWithFormat:@"H:|-%d-[usernameLabel]-|", indention];
+        NSString *indentationStringComment = [[NSString alloc] initWithFormat:@"H:|-%d-[commentLabel]-|", indention];
+        
+        NSDictionary *viewsDictionary = @{ @"usernameLabel" : self.usernameLabel, @"commentLabel" : self.commentLabel};
+        
+        [self removeConstraints:self.constraints];
+        
+        [self.contentView addConstraints:[NSLayoutConstraint
+                                   constraintsWithVisualFormat:@"V:|-[usernameLabel]-4-[commentLabel]-4-|"
+                                   options:0
+                                   metrics:nil
+                                   views:viewsDictionary]];
+        [self.contentView addConstraints:[NSLayoutConstraint
+                                   constraintsWithVisualFormat:indentationStringComment
+                                   options:0
+                                   metrics:nil
+                                   views:viewsDictionary]];
+        [self.contentView addConstraints:[NSLayoutConstraint
+                                   constraintsWithVisualFormat:indentationStringUsername
+                                   options:0
+                                   metrics:nil
+                                   views:viewsDictionary]];
+    }
 }
 
 @end

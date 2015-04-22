@@ -53,25 +53,15 @@
     }
     else
     {
+        NSDictionary *item = self.itemsArray[indexPath.row];
+        
+        cell.customIndentationLevel = (int)[item[@"depth"] intValue];
         self.commentCellBlock(cell, self.itemsArray[indexPath.row]);
     }
     
     [cell layoutIfNeeded];
     
     return cell;
-}
-
--(NSInteger)tableView:(UITableView *)tableView indentationLevelForRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (indexPath.row == [self tableView:tableView numberOfRowsInSection:0]-1)
-    {
-        return 0;
-    }
-    else
-    {
-        NSDictionary *item = self.itemsArray[indexPath.row];
-        return [item[@"depth"] intValue];
-    }
 }
 
 -(NSInteger)getNumberOfRepliesFromDictionary:(NSDictionary *)itemsDictionary

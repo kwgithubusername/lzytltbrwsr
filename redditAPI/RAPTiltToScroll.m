@@ -81,7 +81,7 @@
              CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x
                                                                                             YGravity:motion.gravity.y
                                                                                          andZGravity:motion.gravity.z];
-             NSLog(@"forwardorbackward is %f", tiltAngleForwardorBackward);
+             //NSLog(@"forwardorbackward is %f", tiltAngleForwardorBackward);
              
              if (self.isCalibrating)
              {
@@ -102,6 +102,7 @@
                  }
              }
              
+             // Invalid angles
              if (!self.isCalibrating && tiltAngleLeftOrRight != 90.0 && tiltAngleForwardorBackward != 90.0)
              {
                  [self scrollTableViewWithIntensityOfAnglesLeftOrRight:tiltAngleLeftOrRight
