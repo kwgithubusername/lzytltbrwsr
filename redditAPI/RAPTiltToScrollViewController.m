@@ -151,7 +151,7 @@
     // All subclasses will post this notification as soon as the tableView is loaded (e.g., in the completionHandler)
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPGetRectSelectorShapesNotification object:nil];
-
+    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
     
     self.timeViewHasBeenVisibleInt = 0;
@@ -283,13 +283,6 @@
         self.rectangleSelector.currentContentOffset = self.tableView.contentOffset.y;
         NSLog(@"contentoffset for rect is %f", self.tableView.contentOffset.y);
         self.rectangleSelector.tag = 999;
-        
-        //Boilerplate
-        [self.view addSubview:self.rectangleSelector];
-        [self.view bringSubviewToFront:self.rectangleSelector];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
-        self.rectSelectorHasBeenMade = YES;
     }
     
     else if (isInWebView && self.timeViewHasBeenVisibleInt >= 5)
@@ -298,14 +291,14 @@
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:nil atTop:atTop withCellMax:1 inWebView:isInWebView inInitialFrame:self.navigationController.navigationBar.frame withToolbarRect:CGRectZero];
         self.navigationController.navigationBar.alpha = 0.5;
         self.rectangleSelector.tag = 999;
-        
-        //Boilerplate
-        [self.view addSubview:self.rectangleSelector];
-        [self.view bringSubviewToFront:self.rectangleSelector];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
-        self.rectSelectorHasBeenMade = YES;
     }
+    //Boilerplate
+    [self.view addSubview:self.rectangleSelector];
+    [self.view bringSubviewToFront:self.rectangleSelector];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(userSelectedRow) name:RAPSelectRowNotification object:self.tiltToScroll];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeRectSelector) name:RAPRemoveRectSelectorNotification object:self.tiltToScroll];
+    self.rectSelectorHasBeenMade = YES;
+    
 }
 
 - (void)removeRectSelector
