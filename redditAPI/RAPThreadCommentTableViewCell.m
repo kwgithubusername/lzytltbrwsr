@@ -28,7 +28,7 @@
     
     if (self.customIndentationLevel != 0)
     {
-        int indention = self.customIndentationLevel*5;
+        int indention = self.customIndentationLevel*10;
         NSString *indentationStringUsername = [[NSString alloc] initWithFormat:@"H:|-%d-[usernameLabel]-|", indention];
         NSString *indentationStringComment = [[NSString alloc] initWithFormat:@"H:|-%d-[commentLabel]-|", indention];
         
