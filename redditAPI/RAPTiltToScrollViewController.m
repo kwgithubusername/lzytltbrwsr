@@ -108,7 +108,6 @@
     [self fillCellRectSizeArrayWithVisibleCells];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(countFinalRowsThatAreVisible) name:RAPFinalRowLoadedNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
 }
 
 -(void)addObserverForAdjustToNearestRowNotification
@@ -153,7 +152,10 @@
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPGetRectSelectorShapesNotification object:nil];
 
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueBack) name:RAPSegueBackNotification object:nil];
+    
     self.timeViewHasBeenVisibleInt = 0;
+    
     self.timerToPreventSegueingBackTooQuickly = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(timeViewHasBeenVisible) userInfo:nil repeats:YES];
 }
 
