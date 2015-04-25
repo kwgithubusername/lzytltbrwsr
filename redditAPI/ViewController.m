@@ -13,6 +13,7 @@
 #import "RAPThreadViewController.h"
 #import "RAPSubredditDataSource.h"
 #import "RAPSubredditWebServices.h"
+#import "UICKeyChainStore.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -104,6 +105,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+//    NSError *error;
+//    
+//    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
+//    [keychain removeItemForKey:@"access_token" error:&error];
+//    if (error) {
+//        NSLog(@"%@", error.localizedDescription);
+//    }
+    
     self.resultsMutableArray = [[NSMutableArray alloc] init];
     [self loadReddit];
     self.automaticallyAdjustsScrollViewInsets = NO;

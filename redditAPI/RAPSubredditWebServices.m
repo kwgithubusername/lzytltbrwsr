@@ -31,7 +31,9 @@
         self.aHandlerBlock = aHandlerBlock;
         
         UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
-        if ([keychain[@"access_token"] length] < 1)
+        NSString *accessTokenString = keychain[@"access_token"];
+        NSLog(@"accessTokenString is %@",accessTokenString);
+        if ([accessTokenString length] < 1)
         {
             [self obtainAccessToken];
         }
@@ -71,9 +73,9 @@
     //NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
     //NSLog(@"requestReply: %@", requestReplyDictionary);
 
-    //NSLog(@"expiresinclass is %@", [requestReplyDictionary[@"expires_in"] class]);
-    self.accessTokenTimer = [NSTimer scheduledTimerWithTimeInterval:[requestReplyDictionary[@"expires_in"] doubleValue] target:self selector:@selector(obtainAccessToken) userInfo:nil repeats:YES];
-    
+    // NSLog(@"expiresinclass is %@", [requestReplyDictionary[@"expires_in"] class]);
+    // [[NSUserDefaults standardUserDefaults] setValue:(NSNumber *)requestReplyDictionary[@"expires_in"] forKey:@"expires_in"];
+    [self performSelector:@selector(obtainAccessToken) withObject:nil afterDelay:[requestReplyDictionary[@"expires_in"] doubleValue]];
     [self storeOauth2Token:requestReplyDictionary];
 }
 

@@ -53,6 +53,7 @@
     }
     else if ([segue.identifier isEqualToString:@"commentSegue"])
     {
+        // If the first cell in the tableView is visible and the user wants the first comment, the cellIndex will be 2, so decrement by 1.
         int appropriateIndex = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0 ? super.rectangleSelector.cellIndex-1 : super.rectangleSelector.cellIndex;
         
         RAPCommentTreeViewController *commentTreeViewController = segue.destinationViewController;
