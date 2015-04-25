@@ -156,11 +156,6 @@
     NSLog(@"commentdata count is %lu", (unsigned long)[self.mutableArrayOfCommentDataDictionaries count]);
 }
 
-- (void)requestData
-{
-    [[NSUserDefaults standardUserDefaults] objectForKey:@"accessToken"];
-}
-
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
