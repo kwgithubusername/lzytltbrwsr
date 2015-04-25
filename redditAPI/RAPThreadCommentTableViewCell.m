@@ -28,7 +28,7 @@
     
     if (self.customIndentationLevel != 0)
     {
-        int indention = self.customIndentationLevel*10;
+        int indention = self.customIndentationLevel;
         NSString *indentationStringUsername = [[NSString alloc] initWithFormat:@"H:|-%d-[usernameLabel]-|", indention];
         NSString *indentationStringComment = [[NSString alloc] initWithFormat:@"H:|-%d-[commentLabel]-|", indention];
         
@@ -37,7 +37,7 @@
         [self removeConstraints:self.constraints];
         
         [self.contentView addConstraints:[NSLayoutConstraint
-                                   constraintsWithVisualFormat:@"V:|-[usernameLabel]-4-[commentLabel]-4-|"
+                                   constraintsWithVisualFormat:@"V:|-[usernameLabel]-4-[commentLabel]-|"
                                    options:0
                                    metrics:nil
                                    views:viewsDictionary]];
