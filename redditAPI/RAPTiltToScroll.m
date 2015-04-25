@@ -86,7 +86,7 @@ const CGFloat CONTENTOFFSET_LIMIT = -64;
              CGFloat tiltAngleForwardorBackward = [self ForwardOrBackwardAngleInDegreesUsingXGravity:motion.gravity.x
                                                                                             YGravity:motion.gravity.y
                                                                                          andZGravity:motion.gravity.z];
-             NSLog(@"forwardorbackward is %f", tiltAngleForwardorBackward);
+             // NSLog(@"forwardorbackward is %f", tiltAngleForwardorBackward);
              
              if (self.isCalibrating)
              {

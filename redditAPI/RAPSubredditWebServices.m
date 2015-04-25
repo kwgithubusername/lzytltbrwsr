@@ -7,6 +7,7 @@
 //
 
 #import "RAPSubredditWebServices.h"
+#import "UICKeyChainStore.h"
 
 #define CLIENT_ID @"lDpwq6nbxkYXLw"
 #define CLIENT_SECRET @""
@@ -28,7 +29,9 @@
     {
         self.subredditString = subredditString;
         self.aHandlerBlock = aHandlerBlock;
-        if ([[[NSUserDefaults standardUserDefaults] objectForKey:@"accessToken"] length] < 1)
+        
+        UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
+        if ([keychain[@"access_token"] length] < 1)
         {
             [self obtainAccessToken];
         }
@@ -76,8 +79,11 @@
 
 -(void)storeOauth2Token:(NSDictionary *)dictionary
 {
+//    NSString *accessTokenString = dictionary[@"access_token"];
+//    [[NSUserDefaults standardUserDefaults] setObject:accessTokenString forKey:@"accessToken"];
     NSString *accessTokenString = dictionary[@"access_token"];
-    [[NSUserDefaults standardUserDefaults] setObject:accessTokenString forKey:@"accessToken"];
+    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
+    keychain[@"access_token"] = accessTokenString;
 }
 
 -(void)requestDataForSubreddit
@@ -89,7 +95,9 @@
     [request setURL:[NSURL URLWithString:URLString]];
     [request setHTTPMethod:@"GET"];
     
-    NSString *bearerTokenString = [[NSString alloc] initWithFormat:@"bearer %@",[[NSUserDefaults standardUserDefaults] objectForKey:@"accessToken"]];
+    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
+    
+    NSString *bearerTokenString = [[NSString alloc] initWithFormat:@"bearer %@",keychain[@"access_token"]];
     
     [request setValue:bearerTokenString forHTTPHeaderField:@"Authorization"];
     
