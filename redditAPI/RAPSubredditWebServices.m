@@ -17,7 +17,7 @@
 @property (nonatomic) NSString *subredditString;
 @property (nonatomic, copy) DoThingsAfterLoadingSubredditBlock aHandlerBlock;
 @property (nonatomic) UIImageView *imageView;
-@property (nonatomic) NSTimer *accessTokenTimer;
+@property (nonatomic) BOOL accessTokenIsValid;
 
 @end
 
@@ -33,7 +33,8 @@
         UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
         NSString *accessTokenString = keychain[@"access_token"];
         NSLog(@"accessTokenString is %@",accessTokenString);
-        if ([accessTokenString length] < 1)
+        
+        if (!self.accessTokenIsValid)
         {
             [self obtainAccessToken];
         }
@@ -41,9 +42,14 @@
     return self;
 }
 
+-(void)reobtainAccessToken
+{
+    self.accessTokenIsValid = NO;
+    [self obtainAccessToken];
+}
+
 -(void)obtainAccessToken
 {
-    [self.accessTokenTimer invalidate];
     
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:@"https://ssl.reddit.com/api/v1/access_token"]];
@@ -70,22 +76,19 @@
     NSData *requestHandler = [NSURLConnection sendSynchronousRequest:request returningResponse:&requestResponse error:nil];
     
     NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
-    //NSString *requestReply = [[NSString alloc] initWithBytes:[requestHandler bytes] length:[requestHandler length] encoding:NSASCIIStringEncoding];
-    //NSLog(@"requestReply: %@", requestReplyDictionary);
 
-    // NSLog(@"expiresinclass is %@", [requestReplyDictionary[@"expires_in"] class]);
-    // [[NSUserDefaults standardUserDefaults] setValue:(NSNumber *)requestReplyDictionary[@"expires_in"] forKey:@"expires_in"];
-    [self performSelector:@selector(obtainAccessToken) withObject:nil afterDelay:[requestReplyDictionary[@"expires_in"] doubleValue]];
+    [self performSelector:@selector(reobtainAccessToken) withObject:nil afterDelay:[requestReplyDictionary[@"expires_in"] doubleValue]];
+    
     [self storeOauth2Token:requestReplyDictionary];
 }
 
 -(void)storeOauth2Token:(NSDictionary *)dictionary
 {
-//    NSString *accessTokenString = dictionary[@"access_token"];
-//    [[NSUserDefaults standardUserDefaults] setObject:accessTokenString forKey:@"accessToken"];
     NSString *accessTokenString = dictionary[@"access_token"];
     UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
     keychain[@"access_token"] = accessTokenString;
+    
+    self.accessTokenIsValid = YES;
 }
 
 -(void)requestDataForSubreddit
