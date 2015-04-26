@@ -258,19 +258,19 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1He-pb-5UC">
-                                                    <rect key="frame" x="8" y="40" width="584" height="76"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1He-pb-5UC">
+                                                    <rect key="frame" x="8" y="31" width="584" height="74"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="IUT-d0-1Rd" firstAttribute="leading" secondItem="7PG-d8-2hu" secondAttribute="leadingMargin" id="2aI-VB-AgJ"/>
-                                                <constraint firstItem="1He-pb-5UC" firstAttribute="top" secondItem="7PG-d8-2hu" secondAttribute="topMargin" constant="32" id="84m-aE-WhU"/>
+                                                <constraint firstItem="IUT-d0-1Rd" firstAttribute="leading" secondItem="7PG-d8-2hu" secondAttribute="leadingMargin" priority="750" id="2aI-VB-AgJ"/>
+                                                <constraint firstItem="1He-pb-5UC" firstAttribute="top" secondItem="IUT-d0-1Rd" secondAttribute="bottom" constant="2" id="FBq-gG-lvw"/>
                                                 <constraint firstItem="1He-pb-5UC" firstAttribute="trailing" secondItem="7PG-d8-2hu" secondAttribute="trailingMargin" id="O2b-PT-Wvc"/>
-                                                <constraint firstItem="1He-pb-5UC" firstAttribute="leading" secondItem="7PG-d8-2hu" secondAttribute="leadingMargin" id="bvq-pv-fwo"/>
-                                                <constraint firstAttribute="bottomMargin" secondItem="1He-pb-5UC" secondAttribute="bottom" constant="-11" id="nQi-ds-xsL"/>
+                                                <constraint firstItem="1He-pb-5UC" firstAttribute="leading" secondItem="7PG-d8-2hu" secondAttribute="leadingMargin" priority="750" id="bvq-pv-fwo"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="1He-pb-5UC" secondAttribute="bottom" id="nQi-ds-xsL"/>
                                                 <constraint firstItem="IUT-d0-1Rd" firstAttribute="top" secondItem="7PG-d8-2hu" secondAttribute="topMargin" id="tSh-LR-GR2"/>
                                             </constraints>
                                         </tableViewCellContentView>
@@ -305,7 +305,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c04-HV-aFd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1412" y="636"/>
+            <point key="canvasLocation" x="1412" y="635"/>
         </scene>
         <!--Thread View Controller-->
         <scene sceneID="CGb-Pg-muh">

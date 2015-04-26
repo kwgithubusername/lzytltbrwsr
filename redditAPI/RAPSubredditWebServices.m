@@ -111,8 +111,12 @@
         //NSString *requestReply = [[NSString alloc] initWithBytes:[data bytes] length:[data length] encoding:NSASCIIStringEncoding];
         //NSLog(@"CommentDataReply: %@", requestReply);
         id jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
+        if (error) {
+            NSLog(@"error retrieving data:%@", [error localizedDescription]);
+        }
             dispatch_async(dispatch_get_main_queue(), ^
         {
+            // NSLog(@"data is %@", jsonData);
             self.aHandlerBlock(jsonData);
         });
     }];
