@@ -17,7 +17,6 @@
 @property (nonatomic) NSString *subredditString;
 @property (nonatomic, copy) DoThingsAfterLoadingSubredditBlock aHandlerBlock;
 @property (nonatomic) UIImageView *imageView;
-@property (nonatomic) BOOL accessTokenIsValid;
 
 @end
 
@@ -34,7 +33,9 @@
         NSString *accessTokenString = keychain[@"access_token"];
         NSLog(@"accessTokenString is %@",accessTokenString);
         
-        if (!self.accessTokenIsValid)
+        NSDate *dateOfExpiration = [[NSUserDefaults standardUserDefaults] objectForKey:@"expires_in"];
+        
+        if (!dateOfExpiration || [dateOfExpiration timeIntervalSinceNow] < 0.0)
         {
             [self obtainAccessToken];
         }
@@ -42,15 +43,8 @@
     return self;
 }
 
--(void)reobtainAccessToken
-{
-    self.accessTokenIsValid = NO;
-    [self obtainAccessToken];
-}
-
 -(void)obtainAccessToken
 {
-    
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     [request setURL:[NSURL URLWithString:@"https://ssl.reddit.com/api/v1/access_token"]];
     [request setHTTPMethod:@"POST"];
@@ -77,9 +71,22 @@
     
     NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
 
-    [self performSelector:@selector(reobtainAccessToken) withObject:nil afterDelay:[requestReplyDictionary[@"expires_in"] doubleValue]];
+    id timeToExpire = requestReplyDictionary[@"expires_in"];
+    
+    [self setupTimedRetrievalOfNewAccessToken:timeToExpire];
     
     [self storeOauth2Token:requestReplyDictionary];
+}
+
+-(void)setupTimedRetrievalOfNewAccessToken:(id)timeToExpire
+{
+    [self performSelector:@selector(obtainAccessToken) withObject:nil afterDelay:[timeToExpire doubleValue]];
+    
+    NSInteger timeToExpireInteger = [timeToExpire integerValue];
+    
+    NSDate *currentDate = [NSDate date];
+    NSDate *dateOfExpiration = [currentDate dateByAddingTimeInterval:timeToExpireInteger];
+    [[NSUserDefaults standardUserDefaults] setObject:dateOfExpiration forKey:@"expires_in"];
 }
 
 -(void)storeOauth2Token:(NSDictionary *)dictionary
@@ -87,8 +94,6 @@
     NSString *accessTokenString = dictionary[@"access_token"];
     UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
     keychain[@"access_token"] = accessTokenString;
-    
-    self.accessTokenIsValid = YES;
 }
 
 -(void)requestDataForSubreddit
