@@ -34,6 +34,7 @@
         NSLog(@"accessTokenString is %@",accessTokenString);
         
         NSDate *dateOfExpiration = [[NSUserDefaults standardUserDefaults] objectForKey:@"expires_in"];
+        NSLog(@"expiration date is %@, currentdate is %@", dateOfExpiration, [NSDate date]);
         
         if (!dateOfExpiration || [dateOfExpiration timeIntervalSinceNow] < 0.0)
         {
@@ -82,10 +83,10 @@
 {
     [self performSelector:@selector(obtainAccessToken) withObject:nil afterDelay:[timeToExpire doubleValue]];
     
-    NSInteger timeToExpireInteger = [timeToExpire integerValue];
+    NSTimeInterval timeToExpireInterval = [timeToExpire doubleValue];
     
     NSDate *currentDate = [NSDate date];
-    NSDate *dateOfExpiration = [currentDate dateByAddingTimeInterval:timeToExpireInteger];
+    NSDate *dateOfExpiration = [currentDate dateByAddingTimeInterval:timeToExpireInterval];
     [[NSUserDefaults standardUserDefaults] setObject:dateOfExpiration forKey:@"expires_in"];
 }
 

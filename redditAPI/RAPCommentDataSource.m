@@ -56,10 +56,18 @@
         NSDictionary *item = self.itemsArray[indexPath.row];
         
         cell.customIndentationLevel = (int)[item[@"depth"] intValue];
+        
+        if (cell.customIndentationLevel != 0)
+        {
+            
+            int indention = cell.customIndentationLevel*10;
+            
+            cell.layoutMargins = UIEdgeInsetsMake(4, indention, 4, 4);
+            cell.contentView.layoutMargins = cell.layoutMargins;
+        }
+        
         self.commentCellBlock(cell, self.itemsArray[indexPath.row]);
     }
-    
-    [cell layoutIfNeeded];
     
     return cell;
 }

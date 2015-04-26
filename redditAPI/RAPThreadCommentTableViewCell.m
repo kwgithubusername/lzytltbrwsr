@@ -22,18 +22,4 @@
     // Configure the view for the selected state
 }
 
-- (void)layoutSubviews
-{
-    [super layoutSubviews];
-    
-    if (self.customIndentationLevel != 0)
-    {
-        
-        int indention = self.customIndentationLevel*5;
-        
-        self.layoutMargins = UIEdgeInsetsMake(4, indention, 4, 4);
-        self.contentView.layoutMargins = self.layoutMargins;
-    }
-}
-
 @end

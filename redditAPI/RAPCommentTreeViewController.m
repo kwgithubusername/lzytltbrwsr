@@ -166,7 +166,7 @@
     [super viewWillDisappear:animated];
 }
 
-- (void)viewDidAppear:(BOOL)animated
+-(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
 }
