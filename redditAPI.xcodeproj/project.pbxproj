@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		03565E14F540D14B4872CAF2 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F294A872617A8E77AC7E9F1 /* libPods.a */; };
-		9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75D41A801E4A005CEB64 /* RAPapi.m */; };
+		9E4B71491AEDBDB7001A2CBE /* FLFDateFormatterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E4B71481AEDBDB7001A2CBE /* FLFDateFormatterTests.m */; };
+		9E9B1E051AEDAF2A00D7DE7D /* FLFDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9B1E041AEDAF2A00D7DE7D /* FLFDateFormatter.m */; };
 		9E9D75D81A804BA0005CEB64 /* RAPSelectorView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */; };
 		9E9D75DE1A819C55005CEB64 /* RAPTiltToScroll.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */; };
 		9E9D75E51A81C447005CEB64 /* RAPFavoritesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E9D75E41A81C447005CEB64 /* RAPFavoritesViewController.m */; };
@@ -48,8 +49,9 @@
 /* Begin PBXFileReference section */
 		17B766522AC2AFAEE15A18D1 /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		3F294A872617A8E77AC7E9F1 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		9E9D75D31A801E4A005CEB64 /* RAPapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPapi.h; sourceTree = "<group>"; };
-		9E9D75D41A801E4A005CEB64 /* RAPapi.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPapi.m; sourceTree = "<group>"; };
+		9E4B71481AEDBDB7001A2CBE /* FLFDateFormatterTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FLFDateFormatterTests.m; path = redditAPITests/FLFDateFormatterTests.m; sourceTree = SOURCE_ROOT; };
+		9E9B1E031AEDAF2A00D7DE7D /* FLFDateFormatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FLFDateFormatter.h; sourceTree = "<group>"; };
+		9E9B1E041AEDAF2A00D7DE7D /* FLFDateFormatter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FLFDateFormatter.m; sourceTree = "<group>"; };
 		9E9D75D61A804BA0005CEB64 /* RAPSelectorView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPSelectorView.h; sourceTree = "<group>"; };
 		9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RAPSelectorView.m; sourceTree = "<group>"; };
 		9E9D75DC1A819C55005CEB64 /* RAPTiltToScroll.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RAPTiltToScroll.h; sourceTree = "<group>"; };
@@ -194,8 +196,8 @@
 				9E9D75DD1A819C55005CEB64 /* RAPTiltToScroll.m */,
 				9E9D75D61A804BA0005CEB64 /* RAPSelectorView.h */,
 				9E9D75D71A804BA0005CEB64 /* RAPSelectorView.m */,
-				9E9D75D31A801E4A005CEB64 /* RAPapi.h */,
-				9E9D75D41A801E4A005CEB64 /* RAPapi.m */,
+				9E9B1E031AEDAF2A00D7DE7D /* FLFDateFormatter.h */,
+				9E9B1E041AEDAF2A00D7DE7D /* FLFDateFormatter.m */,
 				9ED516FF1A8432F700929C35 /* RAPThreadTopicTableViewCell.h */,
 				9ED517001A8432F700929C35 /* RAPThreadTopicTableViewCell.m */,
 				9ED517021A84330A00929C35 /* RAPThreadCommentTableViewCell.h */,
@@ -221,6 +223,7 @@
 			isa = PBXGroup;
 			children = (
 				9ECF83401A66096E00E7D9C7 /* redditAPITests.m */,
+				9E4B71481AEDBDB7001A2CBE /* FLFDateFormatterTests.m */,
 				9ECF833E1A66096E00E7D9C7 /* Supporting Files */,
 			);
 			path = redditAPITests;
@@ -372,6 +375,7 @@
 				9E9D75E51A81C447005CEB64 /* RAPFavoritesViewController.m in Sources */,
 				9ECF832D1A66096E00E7D9C7 /* ViewController.m in Sources */,
 				9ECF832A1A66096E00E7D9C7 /* AppDelegate.m in Sources */,
+				9E9B1E051AEDAF2A00D7DE7D /* FLFDateFormatter.m in Sources */,
 				9ED517011A8432F700929C35 /* RAPThreadTopicTableViewCell.m in Sources */,
 				9ED517041A84330A00929C35 /* RAPThreadCommentTableViewCell.m in Sources */,
 				9ECF83271A66096E00E7D9C7 /* main.m in Sources */,
@@ -381,7 +385,6 @@
 				9E9D75D81A804BA0005CEB64 /* RAPSelectorView.m in Sources */,
 				9ECE67401AA7FD5C004E67D9 /* RAPCommentDataSource.m in Sources */,
 				9ECF7DAD1AA0D23F009A3DC2 /* RAPThreadDataSource.m in Sources */,
-				9E9D75D51A801E4A005CEB64 /* RAPapi.m in Sources */,
 				9ED7E13C1A8FB3D900020696 /* RAPTiltToScrollViewController.m in Sources */,
 				9ECF834C1A660B8200E7D9C7 /* RAPTableViewCell.m in Sources */,
 				9E9D75E81A828187005CEB64 /* RAPThreadViewController.m in Sources */,
@@ -397,6 +400,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9ECF83411A66096E00E7D9C7 /* redditAPITests.m in Sources */,
+				9E4B71491AEDBDB7001A2CBE /* FLFDateFormatterTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

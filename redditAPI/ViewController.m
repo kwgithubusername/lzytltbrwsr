@@ -8,12 +8,12 @@
 
 #import "ViewController.h"
 #import "RAPTableViewCell.h"
-#import "RAPapi.h"
 #import "RAPRedditLinks.h"
 #import "RAPThreadViewController.h"
 #import "RAPSubredditDataSource.h"
 #import "RAPSubredditWebServices.h"
 #import "UICKeyChainStore.h"
+#import "FLFDateFormatter.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -25,9 +25,16 @@
 @property (nonatomic) UIActivityIndicatorView *spinner;
 @property (nonatomic) RAPSubredditDataSource *dataSource;
 @property (nonatomic) RAPSubredditWebServices *webServices;
+@property (nonatomic) FLFDateFormatter *dateFormatter;
 @end
 
 @implementation RAPSubredditViewController
+
+-(FLFDateFormatter *)dateFormatter
+{
+    if (!_dateFormatter) _dateFormatter = [[FLFDateFormatter alloc] init];
+    return _dateFormatter;
+}
 
 #pragma mark Segue methods
 
@@ -81,8 +88,12 @@
     __weak RAPSubredditViewController *weakSelf = self;
     
     void (^configureCell)(RAPTableViewCell*, id) = ^(RAPTableViewCell *cell, id item) {
-        cell.label.text = [item[@"data"] objectForKey:@"title"];
-        cell.subLabel.text = [item[@"data"] objectForKey:@"subreddit"];
+        cell.label.text = item[@"data"][@"title"];
+        cell.subLabel.text = item[@"data"][@"subreddit"];
+        
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"data"][@"created_utc"] doubleValue]];
+        NSLog(@"dateitem is %@, string %@", date,[weakSelf.dateFormatter formatDate:date]);
+        cell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
         [weakSelf.webServices loadImageIntoCell:cell withURLString:[item[@"data"] objectForKey:@"thumbnail"]];
     };
     
@@ -105,14 +116,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-////     5:40 pm
-//    NSError *error;
-//    
-//    UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
-//    [keychain removeItemForKey:@"access_token" error:&error];
-//    if (error) {
-//        NSLog(@"%@", error.localizedDescription);
-//    }
     
     self.resultsMutableArray = [[NSMutableArray alloc] init];
     [self loadReddit];

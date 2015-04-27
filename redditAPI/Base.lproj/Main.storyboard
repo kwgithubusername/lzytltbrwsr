@@ -137,15 +137,23 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hAE-Wb-If0">
+                                                    <rect key="frame" x="560" y="0.0" width="32" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ciY-Iv-GtJ" firstAttribute="leading" secondItem="UgO-fQ-UAk" secondAttribute="trailing" constant="8" id="9cR-j0-HRP"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="ciY-Iv-GtJ" secondAttribute="bottom" id="CIX-Pm-mT2"/>
+                                                <constraint firstItem="hAE-Wb-If0" firstAttribute="top" secondItem="ZhX-dJ-EKX" secondAttribute="bottom" constant="-21" id="Dh2-LS-iRY"/>
                                                 <constraint firstItem="ZhX-dJ-EKX" firstAttribute="top" secondItem="ABc-JR-cav" secondAttribute="topMargin" constant="-8" id="Ii3-IX-fdA"/>
                                                 <constraint firstItem="ZhX-dJ-EKX" firstAttribute="leading" secondItem="UgO-fQ-UAk" secondAttribute="trailing" constant="8" id="ZOy-gp-EM6"/>
                                                 <constraint firstItem="UgO-fQ-UAk" firstAttribute="leading" secondItem="ABc-JR-cav" secondAttribute="leadingMargin" id="cSR-90-49u"/>
                                                 <constraint firstItem="ciY-Iv-GtJ" firstAttribute="top" secondItem="ZhX-dJ-EKX" secondAttribute="bottom" constant="-1" id="nXk-Vy-i0L"/>
                                                 <constraint firstAttribute="centerY" secondItem="UgO-fQ-UAk" secondAttribute="centerY" id="npq-Gq-wpw"/>
+                                                <constraint firstItem="hAE-Wb-If0" firstAttribute="trailing" secondItem="ABc-JR-cav" secondAttribute="trailingMargin" id="qqB-yS-lp2"/>
                                                 <constraint firstItem="ZhX-dJ-EKX" firstAttribute="trailing" secondItem="ABc-JR-cav" secondAttribute="trailingMargin" id="uin-u5-k8B"/>
                                                 <constraint firstItem="ciY-Iv-GtJ" firstAttribute="trailing" secondItem="ABc-JR-cav" secondAttribute="trailingMargin" id="vMr-cq-tgj"/>
                                             </constraints>
@@ -154,6 +162,7 @@
                                             <outlet property="label" destination="ZhX-dJ-EKX" id="9oH-yo-d26"/>
                                             <outlet property="subLabel" destination="ciY-Iv-GtJ" id="CY8-m7-GTi"/>
                                             <outlet property="thumbnailImageView" destination="UgO-fQ-UAk" id="WnI-tZ-E7U"/>
+                                            <outlet property="timeLabel" destination="hAE-Wb-If0" id="gWB-Rt-HbM"/>
                                             <segue destination="wBo-7h-fIs" kind="show" identifier="threadSegue" id="onA-tN-sLg"/>
                                         </connections>
                                     </tableViewCell>
@@ -449,6 +458,6 @@
     </scenes>
     <inferredMetricsTieBreakers>
         <segue reference="WHS-fU-Osg"/>
-        <segue reference="7YB-UM-pDa"/>
+        <segue reference="8Xf-ET-DAz"/>
     </inferredMetricsTieBreakers>
 </document>
