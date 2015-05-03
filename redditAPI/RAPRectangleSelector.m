@@ -6,6 +6,8 @@
 //  Copyright (c) 2015 Hi Range. All rights reserved.
 //
 
+#define SPEED 0.05
+
 #import "RAPRectangleSelector.h"
 @interface RAPRectangleSelector ()
 @property (nonatomic) UIColor *rectColor;
@@ -95,7 +97,7 @@
     self.rectRedCGFloat = 0;
     self.rectGreenCGFloat = 1.0;
     self.rectBlueCGFloat = 0;
-    self.changeColorTimer = [NSTimer scheduledTimerWithTimeInterval:0.1 target:self selector:@selector(changeColor) userInfo:nil repeats:YES];
+    self.changeColorTimer = [NSTimer scheduledTimerWithTimeInterval:SPEED target:self selector:@selector(changeColor) userInfo:nil repeats:YES];
 }
 
 -(void)changeColor
@@ -180,27 +182,30 @@
 {
     [self incrementOrDecrementCellIndex];
     // NSLog(@"Cellindex is %d", self.cellIndex);
-    CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
-    // track how far down you are in tableview, and reduce statusbarplusheight by that number
-    CGRect newFrame = CGRectMake(newCell.origin.x, newCell.origin.y+self.statusBarPlusNavigationBarHeight-self.currentContentOffset, newCell.size.width, newCell.size.height);
-    
-    if (self.cellIndex == self.cellMax)
+    if (self.cellIndex < self.rectsMutableArray.count)
     {
-        newFrame = self.toolBarRect;
+        CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];
+        // track how far down you are in tableview, and reduce statusbarplusheight by that number
+        CGRect newFrame = CGRectMake(newCell.origin.x, newCell.origin.y+self.statusBarPlusNavigationBarHeight-self.currentContentOffset, newCell.size.width, newCell.size.height);
+        if (self.cellIndex == self.cellMax)
+        {
+            newFrame = self.toolBarRect;
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.1];
+            [UIView setAnimationCurve:UIViewAnimationCurveLinear];
+            self.frame = newFrame;
+            [UIView commitAnimations];
+        });
+        
+        self.currentLocationRect = newFrame;
+        //NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
+        
+        [self beginDecrementingAlpha];
     }
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [UIView beginAnimations:nil context:nil];
-        [UIView setAnimationDuration:0.1];
-        [UIView setAnimationCurve:UIViewAnimationCurveLinear];
-        self.frame = newFrame;
-        [UIView commitAnimations];
-    });
 
-    self.currentLocationRect = newFrame;
-    //NSLog(@"Neworigin is %@", NSStringFromCGPoint(self.currentLocationRect.origin));
-    
-    [self beginDecrementingAlpha];
 }
 
 -(void)setCellIndex:(int)cellIndex

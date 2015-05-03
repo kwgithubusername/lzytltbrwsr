@@ -24,6 +24,7 @@
 @property (nonatomic) CGRect tableViewCellRect;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
 @property (nonatomic) RAPFavoritesDataSource *dataSource;
+@property (nonatomic) BOOL viewHasAppeared;
 @end
 
 @implementation RAPFavoritesViewController
@@ -167,6 +168,7 @@
         [weakSelf.favoritesMutableArray removeObjectAtIndex:indexPath.row];
         [weakSelf updateFavorites];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        [tableView reloadData];
     };
     
     UITableViewCell* (^cellForRowAtIndexPath)(NSIndexPath*, UITableView*) = ^UITableViewCell*(NSIndexPath *indexPath, UITableView *tableView) {
@@ -207,6 +209,8 @@
 
 -(NSArray *)defaultSubredditFavorites
 {
+//  return @[@"adviceanimals",@"announcements",@"askreddit"];
+
     return @[@"adviceanimals",@"announcements",@"askreddit",@"aww",@"blog",@"funny",@"gaming",@"iama",@"pics",@"politics",@"programming",@"science",@"technology",@"todayilearned",@"worldnews"];
 }
 
@@ -223,17 +227,20 @@
     self.favoritesMutableArray = [[NSMutableArray alloc] initWithArray:[[NSUserDefaults standardUserDefaults] valueForKey:@"favorites"]];
     
     [self setupDataSource];
-    
-    // No notification will be used here due to the fact that no data needs to be loaded from the internet
-    
-    [self adjustTableView];
-    // Dou any additional setup after loading the view.
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // No notification will be used here due to the fact that no data needs to be loaded from the internet
+    [self adjustTableView];
 }
 
 - (void)didReceiveMemoryWarning {
