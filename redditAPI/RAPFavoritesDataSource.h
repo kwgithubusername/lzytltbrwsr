@@ -8,15 +8,16 @@
 
 #import <UIKit/UIKit.h>
 
-typedef void (^TableViewCellDeleteBlock)(NSIndexPath *indexPath);
+typedef UITableViewCell* (^CellForRowAtIndexPathBlock)(NSIndexPath *indexPath, UITableView *tableView);
+typedef BOOL (^CanEditRowAtIndexPathBlock)();
+typedef NSInteger (^RowsInSectionBlock)(UITableView *tableView);
+typedef void (^DeleteCellBlock)(NSIndexPath *indexPath, UITableView *tableView);
 
 @interface RAPFavoritesDataSource : NSObject <UITableViewDataSource, UITableViewDelegate>
 
-- (id)initWithItems:(NSArray *)anItems
-     cellIdentifier:(NSString *)aCellIdentifier
-   deleteCellBlock:(TableViewCellDeleteBlock)aDeleteCellBlock;
-
-- (id)itemAtIndexPath:(NSIndexPath *)indexPath;
-
+- (id)initWithRowsInSectionBlock:(RowsInSectionBlock)aRowsInSectionBlock
+CellForRowAtIndexPathBlock:(CellForRowAtIndexPathBlock)aCellForRowAtIndexPathBlock
+CanEditRowAtIndexPathBlock:(CanEditRowAtIndexPathBlock)aCanEditRowAtIndexPathBlock
+   deleteCellBlock:(DeleteCellBlock)aDeleteCellBlock;
 
 @end

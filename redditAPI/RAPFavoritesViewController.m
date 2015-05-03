@@ -58,6 +58,10 @@
     {
         [self performSegueWithIdentifier:@"subredditSegue" sender:nil];
     }
+    else if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
+    {
+        [self addSubreddit];
+    }
 }
 
 #pragma mark Adding subreddits
@@ -141,7 +145,7 @@
                                                              {
                                                                  [self.favoritesMutableArray addObject:appendString];
                                                                  [self.favoritesMutableArray sortUsingSelector:@selector(localizedCompare:)];
-                                                                 NSIndexPath *indexPathForWord = [NSIndexPath indexPathForRow:[self.favoritesMutableArray indexOfObject:appendString] inSection:self.tableView.numberOfSections-1];
+                                                                 NSIndexPath *indexPathForWord = [NSIndexPath indexPathForRow:[self.favoritesMutableArray indexOfObject:appendString] inSection:self.tableView.numberOfSections - 1];
                                                                  [self.tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:indexPathForWord] withRowAnimation:UITableViewRowAnimationFade];
                                                                  [self updateFavorites];
                                                                  [self.tableView reloadData];
@@ -159,12 +163,36 @@
 {
     __weak RAPFavoritesViewController *weakSelf = self;
     
-    void (^deleteCell)(NSIndexPath*) = ^(NSIndexPath *indexPath) {
+    void (^deleteCell)(NSIndexPath*, UITableView*) = ^(NSIndexPath *indexPath, UITableView *tableView) {
         [weakSelf.favoritesMutableArray removeObjectAtIndex:indexPath.row];
         [weakSelf updateFavorites];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
     };
     
-    self.dataSource = [[RAPFavoritesDataSource alloc] initWithItems:self.favoritesMutableArray cellIdentifier:@"favoritesCell" deleteCellBlock:deleteCell];
+    UITableViewCell* (^cellForRowAtIndexPath)(NSIndexPath*, UITableView*) = ^UITableViewCell*(NSIndexPath *indexPath, UITableView *tableView) {
+        UITableViewCell *favoritesCell = [tableView dequeueReusableCellWithIdentifier:@"favoritesCell" forIndexPath:indexPath];
+        
+        if (indexPath.row == [weakSelf.favoritesMutableArray count])
+        {
+            favoritesCell.textLabel.text = @"";
+        }
+        else
+        {
+            favoritesCell.textLabel.text = [weakSelf.favoritesMutableArray objectAtIndex:indexPath.row];
+        }
+        
+        return favoritesCell;
+    };
+
+    NSInteger (^rowsInSection)(UITableView*) = ^NSInteger(UITableView *tableView) {
+        return (int)[weakSelf.favoritesMutableArray count]+1;
+    };
+    
+    BOOL (^canEditRow)() = ^() {
+        return YES;
+    };
+    
+    self.dataSource = [[RAPFavoritesDataSource alloc] initWithRowsInSectionBlock:rowsInSection CellForRowAtIndexPathBlock:cellForRowAtIndexPath CanEditRowAtIndexPathBlock:canEditRow deleteCellBlock:deleteCell];
     
     self.tableView.dataSource = self.dataSource;
     self.tableView.delegate = self.dataSource;

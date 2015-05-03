@@ -11,10 +11,10 @@
 #define RAPFinalRowLoadedNotification @"RAPFinalRowLoadedNotification"
 
 @interface RAPFavoritesDataSource()
-@property (nonatomic, strong) NSMutableArray *items;
-@property (nonatomic, copy) NSString *cellIdentifier;
-@property (nonatomic, copy) TableViewCellDeleteBlock deleteCellBlock;
-
+@property (nonatomic, copy) RowsInSectionBlock rowsInSectionBlock;
+@property (nonatomic, copy) CellForRowAtIndexPathBlock cellForRowAtIndexPathBlock;
+@property (nonatomic, copy) CanEditRowAtIndexPathBlock canEditRowAtIndexPathBlock;
+@property (nonatomic, copy) DeleteCellBlock deleteCellBlock;
 @end
 
 @implementation RAPFavoritesDataSource
@@ -24,48 +24,30 @@
     return nil;
 }
 
-- (id)initWithItems:(NSArray *)anItems
-     cellIdentifier:(NSString *)aCellIdentifier
-   deleteCellBlock:(TableViewCellDeleteBlock)aDeleteCellBlock
+-(id)initWithRowsInSectionBlock:(RowsInSectionBlock)aRowsInSectionBlock
+CellForRowAtIndexPathBlock:(CellForRowAtIndexPathBlock)aCellForRowAtIndexPathBlock
+CanEditRowAtIndexPathBlock:(CanEditRowAtIndexPathBlock)aCanEditRowAtIndexPathBlock
+   deleteCellBlock:(DeleteCellBlock)aDeleteCellBlock
 {
     self = [super init];
     if (self) {
-        self.items = [[NSMutableArray alloc] initWithArray:anItems];
-        self.cellIdentifier = aCellIdentifier;
+        self.deleteCellBlock = [aDeleteCellBlock copy];
+        self.rowsInSectionBlock = [aRowsInSectionBlock copy];
+        self.cellForRowAtIndexPathBlock = [aCellForRowAtIndexPathBlock copy];
+        self.canEditRowAtIndexPathBlock = [aCanEditRowAtIndexPathBlock copy];
         self.deleteCellBlock = [aDeleteCellBlock copy];
     }
     return self;
 }
 
-- (id)itemAtIndexPath:(NSIndexPath *)indexPath
-{
-    return self.items[(NSUInteger) indexPath.row];
-}
-
-- (id)itemAtIndexPathPlusOne:(NSIndexPath *)indexPath
-{
-    return self.items[(NSUInteger) indexPath.row+1];
-}
-
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return [self.items count]+1;
+    return self.rowsInSectionBlock(tableView);
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *favoritesCell = [tableView dequeueReusableCellWithIdentifier:self.cellIdentifier forIndexPath:indexPath];
-    
-    if (indexPath.row == [self.items count])
-    {
-        favoritesCell.textLabel.text = @"";
-    }
-    else
-    {
-        favoritesCell.textLabel.text = [self.items objectAtIndex:indexPath.row];
-    }
-        
-    return favoritesCell;
+    return self.cellForRowAtIndexPathBlock(indexPath, tableView);
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -77,17 +59,14 @@
 {
     if (editingStyle == UITableViewCellEditingStyleDelete)
     {
-        [self.items removeObjectAtIndex:indexPath.row];
-        self.deleteCellBlock(indexPath);
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+        self.deleteCellBlock(indexPath, tableView);
     }
 }
 
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     // If the last row is loaded, notify the tiltToScrollVC to count how many cells are currently visible
-    if (indexPath.row == (int)self.items.count)
+    if (indexPath.row == self.rowsInSectionBlock(tableView)-1)
     {
         [[NSNotificationCenter defaultCenter] postNotificationName:RAPFinalRowLoadedNotification object:nil];
     }
