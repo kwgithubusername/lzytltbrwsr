@@ -18,6 +18,9 @@
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
 
+@interface RAPTiltToScrollViewController()
+-(void)turnOffSelectMode;
+@end
 
 @interface RAPThreadViewController ()
 @property (nonatomic) NSMutableArray *resultsMutableArray;
@@ -31,7 +34,7 @@
 
 #pragma mark Segue Methods
 
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+-(int)getIndexForSelectedRow
 {
     NSIndexPath *indexPath;
     if (![self.tableView indexPathForSelectedRow])
@@ -45,6 +48,13 @@
         [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     }
     
+    // If the first cell in the tableView is visible and the user wants the first comment, the cellIndex will be 2, so decrement by 1.
+    int appropriateIndex = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0 ? super.rectangleSelector.cellIndex-1 : (int)indexPath.row-1;
+    return appropriateIndex;
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
     if ([segue.identifier isEqualToString:@"linkSegue"])
     {
         RAPLinkViewController *linkViewController = segue.destinationViewController;
@@ -53,17 +63,17 @@
     }
     else if ([segue.identifier isEqualToString:@"commentSegue"])
     {
-        // If the first cell in the tableView is visible and the user wants the first comment, the cellIndex will be 2, so decrement by 1.
-        int appropriateIndex = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0 ? super.rectangleSelector.cellIndex-1 : (int)indexPath.row-1;
-        
         RAPCommentTreeViewController *commentTreeViewController = segue.destinationViewController;
         commentTreeViewController.navigationController.title = self.navigationController.title;
+        
+        int appropriateIndex = [self getIndexForSelectedRow];
         commentTreeViewController.commentDataDictionary = [[NSDictionary alloc] initWithDictionary:[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(appropriateIndex)][@"data"]];
     }
 }
 
 -(void)segueWhenSelectedRow
 {
+    int appropriateIndex = [self getIndexForSelectedRow];
     if (super.rectangleSelector.cellIndex == 0 && [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0)
     {
         [self performSegueWithIdentifier:@"linkSegue" sender:nil];
@@ -72,9 +82,13 @@
     {
         [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
     }
-    else if ([[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(super.rectangleSelector.cellIndex)][@"data"][@"replies"] count] > 0)
+    else if ([[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(appropriateIndex)][@"data"][@"replies"] respondsToSelector:@selector(count)])
     {
         [self performSegueWithIdentifier:@"commentSegue" sender:nil];
+    }
+    else
+    {
+        [self turnOffSelectMode];
     }
 }
 
@@ -163,6 +177,17 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // In certain subreddits e.g. /r/swingdancing, cells are not dynamically resized unless the following code is executed
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.tableView reloadData];
+    });
 }
 
 @end

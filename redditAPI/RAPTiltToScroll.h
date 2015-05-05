@@ -18,7 +18,7 @@
 @property (nonatomic) BOOL hasCalibrated;
 @property (nonatomic) BOOL hasStarted;
 -(instancetype)init;
--(void)segueSuccessful;
+-(void)turnOffSelectMode;
 -(void)startTiltToScrollWithSensitivity:(float)sensitivity forScrollView:(UIScrollView *)scrollView inWebView:(BOOL)isInWebView;
 -(void)stopTiltToScroll;
 @end

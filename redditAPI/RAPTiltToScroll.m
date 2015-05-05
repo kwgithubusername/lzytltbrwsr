@@ -236,9 +236,8 @@ const CGFloat CONTENTOFFSET_LIMIT = -64;
     
 }
 
--(void)segueSuccessful
+-(void)turnOffSelectMode
 {
-    // If segue succeeds, turn off selectMode. If it was unsuccessful, leave selectMode on
     self.selectModeIsOn = NO;
 }
 

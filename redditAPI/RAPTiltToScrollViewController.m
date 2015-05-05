@@ -78,12 +78,18 @@
     //NSLog(@"Timeviewhasbeenvisible:%d", self.timeViewHasBeenVisibleInt);
 }
 
+-(void)turnOffSelectMode
+{
+    [self.tiltToScroll turnOffSelectMode];
+    [self removeRectSelector];
+}
+
 -(void)segueBack
 {
     if (self.navigationController.navigationBar.backItem && self.timeViewHasBeenVisibleInt >= 25)
     {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:self.tiltToScroll];
-        [self.tiltToScroll segueSuccessful];
+        [self turnOffSelectMode];
         self.navigationController.navigationBar.alpha = 1;
         [self.navigationController popViewControllerAnimated:YES];
     }
