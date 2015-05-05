@@ -411,17 +411,27 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="lightBubble75PercentMITLicense.png" translatesAutoresizingMaskIntoConstraints="NO" id="00c-JN-c4d">
+                                                    <rect key="frame" x="562" y="8" width="30" height="30"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="QBt-R5-bAY"/>
+                                                        <constraint firstAttribute="width" constant="30" id="jaa-lO-bi8"/>
+                                                    </constraints>
+                                                </imageView>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="00c-JN-c4d" firstAttribute="top" secondItem="JUN-Pr-Lns" secondAttribute="topMargin" id="Ga9-cM-iQd"/>
                                                 <constraint firstItem="rXb-9r-u4e" firstAttribute="top" secondItem="JUN-Pr-Lns" secondAttribute="topMargin" constant="32" id="GuY-ty-PwG"/>
                                                 <constraint firstItem="rXb-9r-u4e" firstAttribute="leading" secondItem="JUN-Pr-Lns" secondAttribute="leadingMargin" constant="4" id="SwU-GU-hVh"/>
                                                 <constraint firstItem="JYo-NJ-z4u" firstAttribute="top" secondItem="JUN-Pr-Lns" secondAttribute="topMargin" constant="4" id="cEm-1M-DhW"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="rXb-9r-u4e" secondAttribute="bottom" constant="4" id="mJS-Z6-L8Q"/>
                                                 <constraint firstItem="JYo-NJ-z4u" firstAttribute="leading" secondItem="JUN-Pr-Lns" secondAttribute="leadingMargin" constant="4" id="msz-Hy-5eZ"/>
                                                 <constraint firstItem="rXb-9r-u4e" firstAttribute="trailing" secondItem="JUN-Pr-Lns" secondAttribute="trailingMargin" constant="4" id="x2b-hM-LJf"/>
+                                                <constraint firstItem="00c-JN-c4d" firstAttribute="trailing" secondItem="JUN-Pr-Lns" secondAttribute="trailingMargin" id="yxB-kK-IFy"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="commentBubbleImageView" destination="00c-JN-c4d" id="6f6-49-smM"/>
                                             <outlet property="commentLabel" destination="rXb-9r-u4e" id="bcp-aU-Tlf"/>
                                             <outlet property="usernameLabel" destination="JYo-NJ-z4u" id="91e-bl-Vs4"/>
                                             <segue destination="nLg-p8-7Pp" kind="show" identifier="commentSegue" id="16P-mm-Evm"/>
@@ -470,8 +480,11 @@
             <point key="canvasLocation" x="684" y="114"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="lightBubble75PercentMITLicense.png" width="128" height="128"/>
+    </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="8Xf-ET-DAz"/>
         <segue reference="WHS-fU-Osg"/>
+        <segue reference="7YB-UM-pDa"/>
     </inferredMetricsTieBreakers>
 </document>

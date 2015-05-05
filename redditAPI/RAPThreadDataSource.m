@@ -94,7 +94,7 @@
 {
     id data = [[self.items objectAtIndex:1][@"data"][@"children"] objectAtIndex:(indexPath.row-1)][@"data"];
     
-    self.commentCellBlock(commentCell, data);
+    self.commentCellBlock(commentCell, data, indexPath);
     
     return commentCell;
 }

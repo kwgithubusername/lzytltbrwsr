@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 typedef void (^TableViewCellTopicBlock)(id cell, id item);
-typedef void (^TableViewCellCommentBlock)(id cell, id item);
+typedef void (^TableViewCellCommentBlock)(id cell, id item, id indexPath);
 
 @interface RAPThreadDataSource : NSObject <UITableViewDataSource, UITableViewDelegate>
 
