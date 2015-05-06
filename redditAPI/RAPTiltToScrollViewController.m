@@ -86,10 +86,10 @@
 
 -(void)segueBack
 {
+    [self turnOffSelectMode];
     if (self.navigationController.navigationBar.backItem && self.timeViewHasBeenVisibleInt >= 25)
     {
         [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:self.tiltToScroll];
-        [self turnOffSelectMode];
         self.navigationController.navigationBar.alpha = 1;
         [self.navigationController popViewControllerAnimated:YES];
     }

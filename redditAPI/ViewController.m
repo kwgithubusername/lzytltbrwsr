@@ -76,11 +76,6 @@
 
 }
 
--(void)segueBack
-{
-    [self.navigationController popViewControllerAnimated:YES];
-}
-
 #pragma mark TableView Methods
 
 -(void)setupDataSource
