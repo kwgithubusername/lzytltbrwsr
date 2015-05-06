@@ -16,7 +16,9 @@
 
 @interface RAPTiltToScrollViewController()
 -(void)adjustTableView;
+-(void)turnOffSelectMode;
 @end
+
 
 @interface RAPFavoritesViewController ()
 @property (nonatomic) NSMutableArray *favoritesMutableArray;
@@ -70,6 +72,7 @@
 - (IBAction)addFavoriteButtonTapped:(UIBarButtonItem *)sender
 {
     [self addSubreddit];
+    [self turnOffSelectMode];
 }
 
 -(void)addSubreddit

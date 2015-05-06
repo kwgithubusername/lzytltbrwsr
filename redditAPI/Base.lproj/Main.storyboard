@@ -109,7 +109,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="vqX-6f-MZx">
-                                <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cell" id="hSy-p7-JVd" customClass="RAPTableViewCell">
@@ -203,11 +203,17 @@
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="vqX-6f-MZx" secondAttribute="bottom" id="CF5-zf-cdh"/>
                             <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="LeF-fn-20Q" secondAttribute="bottom" id="DgI-8N-NN0"/>
                             <constraint firstItem="vqX-6f-MZx" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="E09-ON-RyT"/>
+                            <constraint firstItem="LeF-fn-20Q" firstAttribute="top" secondItem="vqX-6f-MZx" secondAttribute="bottom" id="EDP-40-X11"/>
                             <constraint firstItem="LeF-fn-20Q" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="-16" id="XUc-UJ-x7h"/>
                             <constraint firstItem="vqX-6f-MZx" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="dU5-NW-dVy"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vqX-6f-MZx" secondAttribute="trailing" constant="-16" id="iqJ-OS-L37"/>
                             <constraint firstAttribute="trailingMargin" secondItem="LeF-fn-20Q" secondAttribute="trailing" constant="-16" id="mfU-fB-KdU"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="CF5-zf-cdh"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" title="Title" id="Rsr-a3-Pt6"/>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
@@ -488,7 +494,7 @@
         <image name="lightBubble75PercentMITLicense.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="8Xf-ET-DAz"/>
         <segue reference="WHS-fU-Osg"/>
-        <segue reference="Tkg-OG-Ari"/>
     </inferredMetricsTieBreakers>
 </document>

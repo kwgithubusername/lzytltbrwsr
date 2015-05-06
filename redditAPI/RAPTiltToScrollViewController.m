@@ -283,6 +283,7 @@
         
         CGRect toolbarRect = CGRectMake(self.navigationController.toolbar.frame.origin.x, self.navigationController.toolbar.frame.origin.y-self.navigationController.toolbar.frame.size.height, self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height);
         
+        // cellMax needs to be decremented, otherwise the rect selector will pick a cell that is being hidden by the toolbar
         int cellMax = (int)[[self.tableView visibleCells] count]-1;
         
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:self.cellRectSizeArray atTop:atTop withCellMax:cellMax inWebView:isInWebView inInitialFrame:self.tableViewCellRect withToolbarRect:toolbarRect];
