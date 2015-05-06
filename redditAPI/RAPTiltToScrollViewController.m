@@ -101,6 +101,8 @@
 {
     // This method is needed to scroll the tableview to show entire cells when the user stops scrolling; That way no half, quarter, or other portion of a cell is missing and the rectangle selector will be hovering over only one cell
     
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
+    
     if (!self.tiltToScroll.hasStarted)
     {
         [self performSelector:@selector(startTiltToScroll) withObject:nil afterDelay:0.5];
@@ -206,7 +208,7 @@
     {
         // Need to increment visible cells by 1;
         [self.cellRectSizeArrayWithLastRowVisible addObject:[NSValue valueWithCGRect:[self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableView indexPathForCell:cell].row+1 inSection:0]]]];
-        NSLog(@"adding cell with indexPath %ld", (long)[self.tableView indexPathForCell:cell].row+1);
+        // NSLog(@"adding cell with indexPath %ld", (long)[self.tableView indexPathForCell:cell].row+1);
     }
     
 }
@@ -225,7 +227,7 @@
         for (UITableViewCell *cell in [self.tableView visibleCells])
         {
             [self.cellRectSizeArray addObject:[NSValue valueWithCGRect:[self.tableView rectForRowAtIndexPath:[self.tableView indexPathForCell:cell]]]];
-            NSLog(@"adding cell with indexPath %ld", (long)[self.tableView indexPathForCell:cell].row);
+            // NSLog(@"adding cell with indexPath %ld", (long)[self.tableView indexPathForCell:cell].row);
         }
     }
     else
