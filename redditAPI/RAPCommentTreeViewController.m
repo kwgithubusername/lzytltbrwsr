@@ -10,7 +10,13 @@
 #import "RAPCommentDataSource.h"
 #import "RAPThreadCommentTableViewCell.h"
 
+#define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
+
+
+@interface RAPTiltToScrollViewController()
+-(void)turnOffSelectMode;
+@end
 
 @interface RAPCommentTreeViewController ()
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -20,6 +26,15 @@
 @end
 
 @implementation RAPCommentTreeViewController
+
+-(void)segueWhenSelectedRow
+{
+    [self turnOffSelectMode];
+    if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
+    {
+        [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
+    }
+}
 
 -(void)setupDataSource
 {
@@ -159,6 +174,7 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

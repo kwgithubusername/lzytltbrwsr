@@ -306,7 +306,11 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t2R-eH-JSj">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <items>
-                                    <barButtonItem title="Favorites" id="0fY-vx-yvd"/>
+                                    <barButtonItem title="Favorites" id="0fY-vx-yvd">
+                                        <connections>
+                                            <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="Tkg-OG-Ari"/>
+                                        </connections>
+                                    </barButtonItem>
                                 </items>
                             </toolbar>
                         </subviews>
@@ -485,6 +489,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="WHS-fU-Osg"/>
-        <segue reference="7YB-UM-pDa"/>
+        <segue reference="Tkg-OG-Ari"/>
     </inferredMetricsTieBreakers>
 </document>
