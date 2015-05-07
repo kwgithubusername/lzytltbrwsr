@@ -350,6 +350,19 @@ NSString * const KILabelLinkKey = @"link";
     return rangesForLinks;
 }
 
+-(NSArray *)getArrayOfURLs
+{
+    NSMutableArray *arrayOfURLs = [[NSMutableArray alloc] init];
+    for (NSDictionary *dictionaryOfURLRanges in self.linkRanges)
+    {
+        if ([[dictionaryOfURLRanges objectForKey:KILabelLinkTypeKey] isEqual:@(KILinkTypeURL)])
+        {
+            [arrayOfURLs addObject:[dictionaryOfURLRanges objectForKey:KILabelLinkKey]];
+        }
+    }
+    return arrayOfURLs;
+}
+
 - (NSArray *)getRangesForUserHandles:(NSString *)text
 {
     NSMutableArray *rangesForUserHandles = [[NSMutableArray alloc] init];

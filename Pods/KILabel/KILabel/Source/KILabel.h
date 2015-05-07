@@ -137,4 +137,6 @@ extern NSString * const KILabelLinkKey;
  **/
 - (NSDictionary*)linkAtPoint:(CGPoint)point;
 
+- (NSArray *)getArrayOfURLs;
+
 @end
