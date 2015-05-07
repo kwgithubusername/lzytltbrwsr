@@ -367,7 +367,7 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Selftext" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ufg-uc-RPt">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Selftext" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ufg-uc-RPt" customClass="KILabel">
                                                     <rect key="frame" x="12" y="33" width="542" height="74"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -399,7 +399,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="topicLabel" destination="Ufg-uc-RPt" id="bF2-Ih-MVF"/>
+                                            <outlet property="topicLabel" destination="Ufg-uc-RPt" id="Frj-FT-FLw"/>
                                             <outlet property="usernameLabel" destination="RMe-1E-OZf" id="pbr-QZ-lKy"/>
                                         </connections>
                                     </tableViewCell>
@@ -415,7 +415,7 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rXb-9r-u4e">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rXb-9r-u4e" customClass="KILabel">
                                                     <rect key="frame" x="12" y="40" width="584" height="61"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -442,7 +442,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="commentBubbleImageView" destination="00c-JN-c4d" id="6f6-49-smM"/>
-                                            <outlet property="commentLabel" destination="rXb-9r-u4e" id="bcp-aU-Tlf"/>
+                                            <outlet property="commentLabel" destination="rXb-9r-u4e" id="RzQ-Zf-sww"/>
                                             <outlet property="usernameLabel" destination="JYo-NJ-z4u" id="91e-bl-Vs4"/>
                                             <segue destination="nLg-p8-7Pp" kind="show" identifier="commentSegue" id="16P-mm-Evm"/>
                                         </connections>
@@ -494,7 +494,7 @@
         <image name="lightBubble75PercentMITLicense.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="8Xf-ET-DAz"/>
         <segue reference="WHS-fU-Osg"/>
+        <segue reference="7YB-UM-pDa"/>
     </inferredMetricsTieBreakers>
 </document>

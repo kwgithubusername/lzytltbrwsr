@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>Pods-KILabel.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-UICKeyChainStore.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>23F6A0F5035F564F0648366A</key>
+		<key>09302FF378764C9D0D51B96C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A10445285E1ADD62734131A2</key>
+		<key>592EE2ECFCF9E2CD5F1AE2AC</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>CC20F3E4961D9C5543A7CE82</key>
+		<key>8AFF5ABF7EB3AD48AEA914B4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>99CA42FF0F82245B969A17BC</key>
 		<dict>
 			<key>primary</key>
 			<true/>

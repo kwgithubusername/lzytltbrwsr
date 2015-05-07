@@ -27,12 +27,37 @@
 
 @implementation RAPCommentTreeViewController
 
+-(int)getIndexForSelectedRow
+{
+    NSIndexPath *indexPath;
+    if (![self.tableView indexPathForSelectedRow])
+    {
+        indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] objectAtIndex:super.rectangleSelector.cellIndex]];
+        //NSLog(@"Indexpath.row is %d", indexPath.row);
+    }
+    else // Otherwise, the user has tapped the row, so use the row that was tapped
+    {
+        indexPath = [self.tableView indexPathForSelectedRow];
+        [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
+    }
+    
+    // This indexPath will be used to fetch the comments; since every comment that will be selected will have an index of 1 or greater, decrement by 1 to appropriately fetch all comments from index 0 to n
+    return (int)indexPath.row-1;
+}
+
 -(void)segueWhenSelectedRow
 {
     [self turnOffSelectMode];
+    
+    RAPThreadCommentTableViewCell *currentCell = (RAPThreadCommentTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self getIndexForSelectedRow] inSection:0]];
+    
     if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
     {
         [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
+    }
+    else if (currentCell.commentLabel)
+    {
+        [self performSegueWithIdentifier:@"linkSegue" sender:nil];
     }
 }
 

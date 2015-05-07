@@ -181,7 +181,7 @@
 -(void)moveRect
 {
     [self incrementOrDecrementCellIndex];
-    // NSLog(@"Cellindex is %d", self.cellIndex);
+    NSLog(@"Cellindex is %d", self.cellIndex);
     if (self.cellIndex < self.rectsMutableArray.count)
     {
         CGRect newCell = [[self.rectsMutableArray objectAtIndex:self.cellIndex] CGRectValue];

@@ -48,9 +48,8 @@
         [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     }
     
-    // If the first cell in the tableView is visible and the user wants the first comment, the cellIndex will be 2, so decrement by 1.
-    int appropriateIndex = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0 ? super.rectangleSelector.cellIndex-1 : (int)indexPath.row-1;
-    return appropriateIndex;
+    // This indexPath will be used to fetch the comments; since every comment that will be selected will have an index of 1 or greater, decrement by 1 to appropriately fetch all comments from index 0 to n
+    return (int)indexPath.row-1;
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender

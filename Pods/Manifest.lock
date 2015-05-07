@@ -20,14 +20,17 @@ PODS:
   - AFNetworking/UIKit (2.5.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - KILabel (1.0.0)
   - UICKeyChainStore (2.0.4)
 
 DEPENDENCIES:
   - AFNetworking
+  - KILabel (= 1.0.0)
   - UICKeyChainStore
 
 SPEC CHECKSUMS:
   AFNetworking: 10e85a00bb0f475124e4ff2677bf15693b2c1523
+  KILabel: 84049969642d4ac1061ebe38ad4c0da37fed108b
   UICKeyChainStore: 69eb0c3a6f669bccf16ba88de3b9069b71501361
 
 COCOAPODS: 0.35.0
