@@ -87,11 +87,24 @@
 -(void)segueBack
 {
     [self turnOffSelectMode];
-    if (self.navigationController.navigationBar.backItem && self.timeViewHasBeenVisibleInt >= 25)
+    
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:self.tiltToScroll];
+    
+    if (self.timeViewHasBeenVisibleInt >= 25)
     {
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSegueBackNotification object:self.tiltToScroll];
-        self.navigationController.navigationBar.alpha = 1;
-        [self.navigationController popViewControllerAnimated:YES];
+        if (self.rectangleSelector.cellIndex == self.rectangleSelector.cellMax)
+        {
+            [self calibrateTiltButtonTapped:nil];
+        }
+        else if (self.navigationController.navigationBar.backItem)
+        {
+            self.navigationController.navigationBar.alpha = 1;
+            [self.navigationController popViewControllerAnimated:YES];
+        }
+        else
+        {
+            // do nothing
+        }
     }
 }
 

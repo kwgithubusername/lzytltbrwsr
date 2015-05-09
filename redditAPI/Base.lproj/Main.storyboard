@@ -184,15 +184,15 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LeF-fn-20Q">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <items>
-                                    <barButtonItem title="Favorites" id="WIq-PF-JJj">
-                                        <connections>
-                                            <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="8Xf-ET-DAz"/>
-                                        </connections>
-                                    </barButtonItem>
-                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="74Z-UR-IgD"/>
                                     <barButtonItem title="Calibrate" id="9QZ-sw-QSP">
                                         <connections>
                                             <action selector="calibrateTiltButtonTapped:" destination="BYZ-38-t0r" id="EMa-Vv-V6w"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="74Z-UR-IgD"/>
+                                    <barButtonItem title="Favorites" id="WIq-PF-JJj">
+                                        <connections>
+                                            <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="8Xf-ET-DAz"/>
                                         </connections>
                                     </barButtonItem>
                                 </items>
@@ -312,6 +312,12 @@
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t2R-eH-JSj">
                                 <rect key="frame" x="0.0" y="556" width="600" height="44"/>
                                 <items>
+                                    <barButtonItem title="Calibrate" id="KRz-4s-Ado">
+                                        <connections>
+                                            <action selector="calibrateTiltButtonTapped:" destination="nLg-p8-7Pp" id="7bk-ya-cCs"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="ymX-z7-Ieh"/>
                                     <barButtonItem title="Favorites" id="0fY-vx-yvd">
                                         <connections>
                                             <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="Tkg-OG-Ari"/>
@@ -504,6 +510,12 @@
                                     <constraint firstAttribute="height" constant="44" id="CrK-Dv-CBH"/>
                                 </constraints>
                                 <items>
+                                    <barButtonItem title="Calibrate" id="RRk-aC-Siz">
+                                        <connections>
+                                            <action selector="calibrateTiltButtonTapped:" destination="wBo-7h-fIs" id="ukd-O3-lNV"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="jMR-bs-hT2"/>
                                     <barButtonItem title="Favorites" id="0dD-ZG-13a">
                                         <connections>
                                             <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="7YB-UM-pDa"/>
@@ -543,8 +555,8 @@
         <image name="lightBubble75PercentMITLicense.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="kng-Gp-p3x"/>
+        <segue reference="7YB-UM-pDa"/>
         <segue reference="WHS-fU-Osg"/>
-        <segue reference="f5c-dE-LMS"/>
+        <segue reference="tCJ-oG-Edx"/>
     </inferredMetricsTieBreakers>
 </document>
