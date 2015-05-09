@@ -286,7 +286,7 @@
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1He-pb-5UC">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1He-pb-5UC" customClass="KILabel">
                                                     <rect key="frame" x="8" y="27" width="584" height="78"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -333,11 +333,60 @@
                     </view>
                     <connections>
                         <outlet property="tableView" destination="gES-KK-QX0" id="Yem-nG-Llk"/>
+                        <segue destination="Vii-1O-EXo" kind="show" identifier="linkCellSegue" id="mQu-dx-Ud4"/>
+                        <segue destination="9lQ-5i-Kny" kind="show" identifier="linkSelectorSegue" id="63C-Pq-dgY"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c04-HV-aFd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1412" y="635"/>
+        </scene>
+        <!--Link Selector View Controller-->
+        <scene sceneID="DcZ-Rb-7MY">
+            <objects>
+                <viewController id="9lQ-5i-Kny" customClass="RAPLinkSelectorViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="gm0-2s-2SF"/>
+                        <viewControllerLayoutGuide type="bottom" id="mvW-GY-RDe"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Wgl-UG-2R8">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Lno-HM-FP1">
+                                <rect key="frame" x="0.0" y="64" width="600" height="492"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XBp-Rj-kOm">
+                                <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                                <items>
+                                    <barButtonItem title="Favorites" id="snh-99-QGa">
+                                        <connections>
+                                            <segue destination="6nb-8H-7xn" kind="show" identifier="favoritesSegue" id="kng-Gp-p3x"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="Lno-HM-FP1" secondAttribute="trailing" constant="-16" id="3d2-BJ-QuJ"/>
+                            <constraint firstItem="XBp-Rj-kOm" firstAttribute="leading" secondItem="Wgl-UG-2R8" secondAttribute="leadingMargin" constant="-16" id="EfU-QD-uVR"/>
+                            <constraint firstItem="XBp-Rj-kOm" firstAttribute="top" secondItem="Lno-HM-FP1" secondAttribute="bottom" id="I95-ol-V4m"/>
+                            <constraint firstItem="Lno-HM-FP1" firstAttribute="top" secondItem="gm0-2s-2SF" secondAttribute="bottom" id="YYH-Fu-ZdS"/>
+                            <constraint firstItem="mvW-GY-RDe" firstAttribute="top" secondItem="XBp-Rj-kOm" secondAttribute="bottom" id="cw6-sX-sD2"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="XBp-Rj-kOm" secondAttribute="trailing" constant="-16" id="ja8-D2-vce"/>
+                            <constraint firstItem="Lno-HM-FP1" firstAttribute="leading" secondItem="Wgl-UG-2R8" secondAttribute="leadingMargin" constant="-16" id="ms4-BF-A4c"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="Lno-HM-FP1" id="rI8-6E-KeL"/>
+                        <segue destination="Vii-1O-EXo" kind="show" identifier="selectorToLinkSegue" id="f5c-dE-LMS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="m6x-lv-XeF" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2102" y="650"/>
         </scene>
         <!--Thread View Controller-->
         <scene sceneID="CGb-Pg-muh">
@@ -494,7 +543,8 @@
         <image name="lightBubble75PercentMITLicense.png" width="128" height="128"/>
     </resources>
     <inferredMetricsTieBreakers>
+        <segue reference="kng-Gp-p3x"/>
         <segue reference="WHS-fU-Osg"/>
-        <segue reference="7YB-UM-pDa"/>
+        <segue reference="f5c-dE-LMS"/>
     </inferredMetricsTieBreakers>
 </document>

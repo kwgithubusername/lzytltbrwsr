@@ -353,6 +353,7 @@ NSString * const KILabelLinkKey = @"link";
 -(NSArray *)getArrayOfURLs
 {
     NSMutableArray *arrayOfURLs = [[NSMutableArray alloc] init];
+    NSLog(@"linkranges are %@", self.linkRanges);
     for (NSDictionary *dictionaryOfURLRanges in self.linkRanges)
     {
         if ([[dictionaryOfURLRanges objectForKey:KILabelLinkTypeKey] isEqual:@(KILinkTypeURL)])

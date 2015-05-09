@@ -185,6 +185,7 @@
 
 - (void)viewWillDisappear:(BOOL)animated
 {
+    // Observer for RAPSegueNotification is removed in the superclass
     [super viewWillDisappear:animated];
 }
 

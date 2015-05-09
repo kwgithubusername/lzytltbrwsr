@@ -9,6 +9,8 @@
 #import "RAPCommentTreeViewController.h"
 #import "RAPCommentDataSource.h"
 #import "RAPThreadCommentTableViewCell.h"
+#import "RAPLinkViewController.h"
+#import "RAPLinkSelectorViewController.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -22,7 +24,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) RAPCommentDataSource *dataSource;
 @property (nonatomic) NSMutableArray *mutableArrayOfCommentDataDictionaries;
-
+@property (nonatomic) NSArray *URLsArray;
 @end
 
 @implementation RAPCommentTreeViewController
@@ -40,24 +42,44 @@
         indexPath = [self.tableView indexPathForSelectedRow];
         [self.tableView deselectRowAtIndexPath:indexPath animated:NO];
     }
-    
-    // This indexPath will be used to fetch the comments; since every comment that will be selected will have an index of 1 or greater, decrement by 1 to appropriately fetch all comments from index 0 to n
-    return (int)indexPath.row-1;
+
+    return (int)indexPath.row;
+}
+
+-(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    if ([segue.identifier isEqualToString:@"linkCellSegue"])
+    {
+        RAPLinkViewController *linkViewController = segue.destinationViewController;
+        linkViewController.URLstring = [self.URLsArray firstObject];
+    }
+    else if ([segue.identifier isEqualToString:@"linkSelectorSegue"])
+    {
+        RAPLinkSelectorViewController *linkSelectorViewController = segue.destinationViewController;
+        linkSelectorViewController.URLsArray = [[NSArray alloc] initWithArray:self.URLsArray];
+    }
 }
 
 -(void)segueWhenSelectedRow
 {
-    [self turnOffSelectMode];
-    
     RAPThreadCommentTableViewCell *currentCell = (RAPThreadCommentTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self getIndexForSelectedRow] inSection:0]];
+    self.URLsArray = [[NSArray alloc] initWithArray:[currentCell.commentLabel getArrayOfURLs]];
     
     if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
     {
         [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
     }
-    else if (currentCell.commentLabel)
+    else if (self.URLsArray.count == 1)
     {
-        [self performSegueWithIdentifier:@"linkSegue" sender:nil];
+        [self performSegueWithIdentifier:@"linkCellSegue" sender:nil];
+    }
+    else if (self.URLsArray.count > 1)
+    {
+        [self performSegueWithIdentifier:@"linkSelectorSegue" sender:nil];
+    }
+    else
+    {
+        [self turnOffSelectMode];
     }
 }
 
@@ -205,6 +227,9 @@
 - (void)viewWillDisappear:(BOOL)animated
 {
     [super viewWillDisappear:animated];
+    // Observer for RAPSegueNotification is removed in the superclass
+    [self turnOffSelectMode];
+
 }
 
 -(void)viewDidAppear:(BOOL)animated
