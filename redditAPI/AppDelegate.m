@@ -20,7 +20,7 @@
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"accessToken"];
     NSLog(@"blank access token set");
     
-    NSDictionary *defaultAngle = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:0] forKey:@"calibratedAngle"];
+    NSDictionary *defaultAngle = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:-30] forKey:@"calibratedAngle"];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultAngle];
     
     return YES;

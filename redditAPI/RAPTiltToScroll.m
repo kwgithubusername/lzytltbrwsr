@@ -39,7 +39,7 @@ const CGFloat CONTENTOFFSET_LIMIT = -64;
     if (self)
     {
         self.calibratedAngle = [[[NSUserDefaults standardUserDefaults] objectForKey:@"calibratedAngle"] floatValue];
-        //NSLog(@"calibratedangle is %f", self.calibratedAngle);
+        // NSLog(@"calibratedangle is %f", self.calibratedAngle);
     }
     return self;
 }
@@ -101,7 +101,7 @@ const CGFloat CONTENTOFFSET_LIMIT = -64;
                  {
                      self.calibratedAngle = tiltAngleForwardorBackward;
                      [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:self.calibratedAngle] forKey:@"calibratedAngle"];
-                     //NSLog(@"calibratedangle is %f", self.calibratedAngle);
+                     NSLog(@"calibratedangle is %f", self.calibratedAngle);
                      self.isCalibrating = NO;
                      self.hasCalibrated = NO;
                  }
