@@ -89,6 +89,7 @@
         commentCell.commentLabel.text = item[@"body"];
         commentCell.usernameLabel.text = item[@"author"];
         commentCell.usernameLabel.text = [[NSString alloc] initWithFormat:@"Depth:%@", item[@"depth"]];
+        // The following breakpoint tests links in comments
     };
     
     self.dataSource = [[RAPCommentDataSource alloc] initWithItems:self.mutableArrayOfCommentDataDictionaries cellIdentifier:@"commentCell" commentCellBlock:commentCellBlock];
