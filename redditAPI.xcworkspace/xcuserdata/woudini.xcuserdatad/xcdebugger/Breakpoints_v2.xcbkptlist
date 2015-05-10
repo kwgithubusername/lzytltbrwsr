@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "Yes"
             filePath = "redditAPI/RAPCommentTreeViewController.m"
-            timestampString = "452896562.290835"
+            timestampString = "452969573.314966"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "93"
-            endingLineNumber = "93"
+            startingLineNumber = "105"
+            endingLineNumber = "105"
             landmarkName = "-setupDataSource"
             landmarkType = "5">
             <Actions>

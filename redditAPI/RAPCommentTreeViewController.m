@@ -11,6 +11,7 @@
 #import "RAPThreadCommentTableViewCell.h"
 #import "RAPLinkViewController.h"
 #import "RAPLinkSelectorViewController.h"
+#import "FLFDateFormatter.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -25,9 +26,16 @@
 @property (nonatomic) RAPCommentDataSource *dataSource;
 @property (nonatomic) NSMutableArray *mutableArrayOfCommentDataDictionaries;
 @property (nonatomic) NSArray *URLsArray;
+@property (nonatomic) FLFDateFormatter *dateFormatter;
 @end
 
 @implementation RAPCommentTreeViewController
+
+-(FLFDateFormatter *)dateFormatter
+{
+    if (!_dateFormatter) _dateFormatter = [[FLFDateFormatter alloc] init];
+    return _dateFormatter;
+}
 
 -(int)getIndexForSelectedRow
 {
@@ -85,10 +93,14 @@
 
 -(void)setupDataSource
 {
+    __weak RAPCommentTreeViewController *weakSelf = self;
+    
     void (^commentCellBlock)(RAPThreadCommentTableViewCell *, id) = ^(RAPThreadCommentTableViewCell *commentCell, id item) {
         commentCell.commentLabel.text = item[@"body"];
         commentCell.usernameLabel.text = item[@"author"];
         commentCell.usernameLabel.text = [[NSString alloc] initWithFormat:@"Depth:%@", item[@"depth"]];
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"created_utc"] doubleValue]];
+        commentCell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
         // The following breakpoint tests links in comments
     };
     
