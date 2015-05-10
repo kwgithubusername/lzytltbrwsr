@@ -98,7 +98,7 @@
     void (^commentCellBlock)(RAPThreadCommentTableViewCell *, id) = ^(RAPThreadCommentTableViewCell *commentCell, id item) {
         commentCell.commentLabel.text = item[@"body"];
         commentCell.usernameLabel.text = item[@"author"];
-        commentCell.usernameLabel.text = [[NSString alloc] initWithFormat:@"Depth:%@", item[@"depth"]];
+//        commentCell.usernameLabel.text = [[NSString alloc] initWithFormat:@"Depth:%@", item[@"depth"]];
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"created_utc"] doubleValue]];
         commentCell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
         // The following breakpoint tests links in comments
@@ -149,6 +149,7 @@
             self.tableView.estimatedRowHeight = 44;
             self.tableView.rowHeight = UITableViewAutomaticDimension;
             [self notifySuperclassToGetRectSelectorShapes];
+            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
         });
     });
     
@@ -234,7 +235,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
 }
 
 - (void)viewWillDisappear:(BOOL)animated

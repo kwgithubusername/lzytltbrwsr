@@ -29,11 +29,16 @@
     return self;
 }
 
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
+{
+    return 1;
+}
+
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Add one for the favorites toolbar
     int numberOfRows = (int)(1+[self.itemsArray count]);
-    NSLog(@"number of rows is %d", numberOfRows);
+    // NSLog(@"number of rows is %d", numberOfRows);
     return numberOfRows;
 }
 
@@ -41,12 +46,15 @@
 {
     RAPThreadCommentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell" forIndexPath:indexPath];
     
+    NSLog(@"loading row %lu", (unsigned long)indexPath.row);
+    
     if (indexPath.row == 0)
     {
-        id item = self.itemsArray[0];
+        cell.customIndentationLevel = (int)indexPath.row;
+        id item = self.itemsArray[indexPath.row];
         self.commentCellBlock(cell, item);
     }
-    else if (indexPath.row == [self tableView:tableView numberOfRowsInSection:0]-1)
+    else if (indexPath.row == self.itemsArray.count)
     {
         cell.usernameLabel.text = @"";
         cell.commentLabel.text = @"";
@@ -56,20 +64,16 @@
         NSDictionary *item = self.itemsArray[indexPath.row];
         
         cell.customIndentationLevel = (int)[item[@"depth"] intValue];
-        
-        if (cell.customIndentationLevel != 0)
-        {
+
+        int indention = cell.customIndentationLevel == 0 ? 4 : cell.customIndentationLevel*10;
             
-            int indention = cell.customIndentationLevel*10;
-            
-            cell.layoutMargins = UIEdgeInsetsMake(4, indention, 4, 4);
-            cell.contentView.layoutMargins = cell.layoutMargins;
-        }
+        cell.layoutMargins = UIEdgeInsetsMake(4, indention, 4, 4);
+        cell.contentView.layoutMargins = cell.layoutMargins;
         
-        self.commentCellBlock(cell, self.itemsArray[indexPath.row]);
+        self.commentCellBlock(cell, item);
     }
-    
     return cell;
+
 }
 
 -(NSInteger)getNumberOfRepliesFromDictionary:(NSDictionary *)itemsDictionary

@@ -22,4 +22,14 @@
     // Configure the view for the selected state
 }
 
+- (void)prepareForReuse
+{
+    [super prepareForReuse];
+    self.usernameLabel.text = @"";
+    self.commentLabel.text = @"";
+    self.timeLabel.text = @"";
+    self.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.contentView.layoutMargins = self.layoutMargins;
+}
+
 @end
