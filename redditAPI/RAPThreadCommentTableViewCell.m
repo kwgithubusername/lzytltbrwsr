@@ -35,7 +35,6 @@
     self.commentLabel.text = @"";
     self.timeLabel.text = @"";
     self.layoutMargins = self.defaultEdgeInsets;
-    // self.contentView.layoutMargins = self.layoutMargins;
 }
 
 @end
