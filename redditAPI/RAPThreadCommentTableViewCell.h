@@ -13,4 +13,5 @@
 @property (weak, nonatomic) IBOutlet KILabel *commentLabel;
 @property (nonatomic) int customIndentationLevel;
 @property (weak, nonatomic) IBOutlet UIImageView *commentBubbleImageView;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 @end

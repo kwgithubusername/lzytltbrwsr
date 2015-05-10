@@ -424,6 +424,9 @@
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Selftext" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ufg-uc-RPt" customClass="KILabel">
                                                     <rect key="frame" x="12" y="33" width="542" height="74"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="74" id="jNj-sL-clx"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -440,10 +443,18 @@
                                                         <segue destination="Vii-1O-EXo" kind="show" identifier="linkSegue" id="tCJ-oG-Edx"/>
                                                     </connections>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l3H-SB-wfV">
+                                                    <rect key="frame" x="560" y="83" width="34" height="18"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
+                                                <constraint firstItem="l3H-SB-wfV" firstAttribute="top" secondItem="fAB-cQ-rjy" secondAttribute="bottom" constant="8" id="2Ed-LL-CdM"/>
                                                 <constraint firstItem="fAB-cQ-rjy" firstAttribute="leading" secondItem="RMe-1E-OZf" secondAttribute="trailing" constant="8" id="7qU-Gs-hVV"/>
                                                 <constraint firstItem="fAB-cQ-rjy" firstAttribute="leading" secondItem="Ufg-uc-RPt" secondAttribute="trailing" constant="8" id="97M-LC-ubC"/>
+                                                <constraint firstItem="l3H-SB-wfV" firstAttribute="centerX" secondItem="fAB-cQ-rjy" secondAttribute="centerX" id="9E2-GT-as0"/>
                                                 <constraint firstAttribute="centerY" secondItem="fAB-cQ-rjy" secondAttribute="centerY" constant="-0.5" id="Gyg-q3-yaw"/>
                                                 <constraint firstItem="Ufg-uc-RPt" firstAttribute="top" secondItem="RMe-1E-OZf" secondAttribute="bottom" constant="4" id="HqI-ty-O7m"/>
                                                 <constraint firstItem="RMe-1E-OZf" firstAttribute="leading" secondItem="rpy-5Z-npV" secondAttribute="leadingMargin" constant="4" id="P8O-7j-j9k"/>
@@ -454,6 +465,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="timeLabel" destination="l3H-SB-wfV" id="h9r-2z-Tug"/>
                                             <outlet property="topicLabel" destination="Ufg-uc-RPt" id="Frj-FT-FLw"/>
                                             <outlet property="usernameLabel" destination="RMe-1E-OZf" id="pbr-QZ-lKy"/>
                                         </connections>
@@ -471,7 +483,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Comment" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rXb-9r-u4e" customClass="KILabel">
-                                                    <rect key="frame" x="12" y="40" width="584" height="61"/>
+                                                    <rect key="frame" x="12" y="40" width="540" height="61"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                     <nil key="highlightedColor"/>
@@ -483,21 +495,30 @@
                                                         <constraint firstAttribute="width" constant="30" id="jaa-lO-bi8"/>
                                                     </constraints>
                                                 </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Time" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rmK-N6-XNx">
+                                                    <rect key="frame" x="560" y="40" width="34" height="18"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="scrollViewTexturedBackgroundColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="00c-JN-c4d" firstAttribute="top" secondItem="JUN-Pr-Lns" secondAttribute="topMargin" id="Ga9-cM-iQd"/>
                                                 <constraint firstItem="rXb-9r-u4e" firstAttribute="top" secondItem="JUN-Pr-Lns" secondAttribute="topMargin" constant="32" id="GuY-ty-PwG"/>
                                                 <constraint firstItem="rXb-9r-u4e" firstAttribute="leading" secondItem="JUN-Pr-Lns" secondAttribute="leadingMargin" constant="4" id="SwU-GU-hVh"/>
+                                                <constraint firstItem="00c-JN-c4d" firstAttribute="centerX" secondItem="rmK-N6-XNx" secondAttribute="centerX" id="Wud-As-ZPz"/>
                                                 <constraint firstItem="JYo-NJ-z4u" firstAttribute="top" secondItem="JUN-Pr-Lns" secondAttribute="topMargin" constant="4" id="cEm-1M-DhW"/>
+                                                <constraint firstItem="rmK-N6-XNx" firstAttribute="top" secondItem="00c-JN-c4d" secondAttribute="bottom" constant="2" id="fUg-NF-cal"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="rXb-9r-u4e" secondAttribute="bottom" constant="4" id="mJS-Z6-L8Q"/>
                                                 <constraint firstItem="JYo-NJ-z4u" firstAttribute="leading" secondItem="JUN-Pr-Lns" secondAttribute="leadingMargin" constant="4" id="msz-Hy-5eZ"/>
-                                                <constraint firstItem="rXb-9r-u4e" firstAttribute="trailing" secondItem="JUN-Pr-Lns" secondAttribute="trailingMargin" constant="4" id="x2b-hM-LJf"/>
+                                                <constraint firstItem="rXb-9r-u4e" firstAttribute="trailing" secondItem="JUN-Pr-Lns" secondAttribute="trailingMargin" constant="-40" id="x2b-hM-LJf"/>
                                                 <constraint firstItem="00c-JN-c4d" firstAttribute="trailing" secondItem="JUN-Pr-Lns" secondAttribute="trailingMargin" id="yxB-kK-IFy"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="commentBubbleImageView" destination="00c-JN-c4d" id="6f6-49-smM"/>
                                             <outlet property="commentLabel" destination="rXb-9r-u4e" id="RzQ-Zf-sww"/>
+                                            <outlet property="timeLabel" destination="rmK-N6-XNx" id="Sxd-aj-N9o"/>
                                             <outlet property="usernameLabel" destination="JYo-NJ-z4u" id="91e-bl-Vs4"/>
                                             <segue destination="nLg-p8-7Pp" kind="show" identifier="commentSegue" id="16P-mm-Evm"/>
                                         </connections>

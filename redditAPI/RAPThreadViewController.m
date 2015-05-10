@@ -14,6 +14,7 @@
 #import "RAPThreadDataSource.h"
 #import "RAPSubredditWebServices.h"
 #import "RAPCommentTreeViewController.h"
+#import "FLFDateFormatter.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -23,6 +24,7 @@
 @end
 
 @interface RAPThreadViewController ()
+@property (nonatomic) FLFDateFormatter *dateFormatter;
 @property (nonatomic) NSMutableArray *resultsMutableArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (nonatomic) UIActivityIndicatorView *spinner;
@@ -31,6 +33,12 @@
 @end
 
 @implementation RAPThreadViewController
+
+-(FLFDateFormatter *)dateFormatter
+{
+    if (!_dateFormatter) _dateFormatter = [[FLFDateFormatter alloc] init];
+    return _dateFormatter;
+}
 
 #pragma mark Segue Methods
 
@@ -106,11 +114,17 @@
         weakSelf.navigationItem.title = [[NSString alloc] initWithFormat:@"%@: %@", item[@"subreddit"], item[@"title"]];
         topicCell.topicLabel.text = [[NSString alloc] initWithFormat:@"%@\n\n %@", item[@"title"], item[@"selftext"]];
         topicCell.usernameLabel.text = item[@"author"];
+        
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"created_utc"] doubleValue]];
+        topicCell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
     };
     
     void (^commentCell)(RAPThreadCommentTableViewCell *, id, NSIndexPath *indexPath) = ^(RAPThreadCommentTableViewCell *commentCell, id item, NSIndexPath *indexPath) {
         commentCell.commentLabel.text = item[@"body"];
         commentCell.usernameLabel.text = item[@"author"];
+        
+        NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"created_utc"] doubleValue]];
+        commentCell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
         // If the first cell in the tableView is visible and the user wants the first comment, the cellIndex will be 2, so decrement by 1.
         BOOL hasComments = [weakSelf commentAtIndexHasReplies:(int)indexPath.row-1];
         dispatch_async(dispatch_get_main_queue(), ^{

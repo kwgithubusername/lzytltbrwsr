@@ -11,5 +11,6 @@
 @interface RAPThreadTopicTableViewCell : UITableViewCell
 @property (weak, nonatomic) IBOutlet UILabel *usernameLabel;
 @property (weak, nonatomic) IBOutlet KILabel *topicLabel;
+@property (weak, nonatomic) IBOutlet UILabel *timeLabel;
 
 @end

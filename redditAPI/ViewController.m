@@ -87,7 +87,6 @@
         cell.subLabel.text = item[@"data"][@"subreddit"];
         
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"data"][@"created_utc"] doubleValue]];
-        // NSLog(@"dateitem is %@, string %@", date,[weakSelf.dateFormatter formatDate:date]);
         cell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
         [weakSelf.webServices loadImageIntoCell:cell withURLString:[item[@"data"] objectForKey:@"thumbnail"]];
     };
