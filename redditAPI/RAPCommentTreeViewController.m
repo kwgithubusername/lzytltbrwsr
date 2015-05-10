@@ -149,7 +149,6 @@
             self.tableView.estimatedRowHeight = 44;
             self.tableView.rowHeight = UITableViewAutomaticDimension;
             [self notifySuperclassToGetRectSelectorShapes];
-            [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
         });
     });
     
@@ -248,6 +247,7 @@
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
 }
 
 @end

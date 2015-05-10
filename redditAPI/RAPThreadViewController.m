@@ -15,6 +15,8 @@
 #import "RAPSubredditWebServices.h"
 #import "RAPCommentTreeViewController.h"
 #import "FLFDateFormatter.h"
+#import "RAPLinkViewController.h"
+#import "RAPLinkSelectorViewController.h"
 
 #define RAPSegueNotification @"RAPSegueNotification"
 #define RAPGetRectSelectorShapesNotification @"RAPGetRectSelectorShapesNotification"
@@ -30,6 +32,7 @@
 @property (nonatomic) UIActivityIndicatorView *spinner;
 @property (nonatomic) RAPThreadDataSource *dataSource;
 @property (nonatomic) RAPSubredditWebServices *webServices;
+@property (nonatomic) NSArray *URLsArray;
 @end
 
 @implementation RAPThreadViewController
@@ -76,6 +79,16 @@
         int appropriateIndex = [self getIndexForSelectedRow];
         commentTreeViewController.commentDataDictionary = [[NSDictionary alloc] initWithDictionary:[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(appropriateIndex)][@"data"]];
     }
+    else  if ([segue.identifier isEqualToString:@"linkCellSegue"])
+    {
+        RAPLinkViewController *linkViewController = segue.destinationViewController;
+        linkViewController.URLstring = [self.URLsArray firstObject];
+    }
+    else if ([segue.identifier isEqualToString:@"linkSelectorSegue"])
+    {
+        RAPLinkSelectorViewController *linkSelectorViewController = segue.destinationViewController;
+        linkSelectorViewController.URLsArray = [[NSArray alloc] initWithArray:self.URLsArray];
+    }
 }
 
 -(BOOL)commentAtIndexHasReplies:(int)index
@@ -86,6 +99,10 @@
 -(void)segueWhenSelectedRow
 {
     int appropriateIndex = [self getIndexForSelectedRow];
+    
+    RAPThreadCommentTableViewCell *currentCell = (RAPThreadCommentTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self getIndexForSelectedRow]+1 inSection:0]];
+    self.URLsArray = [[NSArray alloc] initWithArray:[currentCell.commentLabel getArrayOfURLs]];
+    
     if (super.rectangleSelector.cellIndex == 0 && [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0)
     {
         [self performSegueWithIdentifier:@"linkSegue" sender:nil];
@@ -97,6 +114,14 @@
     else if ([self commentAtIndexHasReplies:appropriateIndex])
     {
         [self performSegueWithIdentifier:@"commentSegue" sender:nil];
+    }
+    else if (self.URLsArray.count == 1)
+    {
+        [self performSegueWithIdentifier:@"linkCellSegue" sender:nil];
+    }
+    else if (self.URLsArray.count > 1)
+    {
+        [self performSegueWithIdentifier:@"linkSelectorSegue" sender:nil];
     }
     else
     {
