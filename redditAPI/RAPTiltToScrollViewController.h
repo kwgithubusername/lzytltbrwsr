@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "RAPTiltToScroll.h"
 #import "RAPRectangleSelector.h"
-#import <iAd/iAd.h>
-@interface RAPTiltToScrollViewController : UIViewController <UIScrollViewDelegate, TiltToScrollDelegate, ADBannerViewDelegate>
+
+@interface RAPTiltToScrollViewController : UIViewController <UIScrollViewDelegate, TiltToScrollDelegate>
 @property (weak, nonatomic) UITableView *tableView;
 @property (nonatomic) RAPRectangleSelector *rectangleSelector;
 @property (nonatomic) BOOL rectSelectorHasBeenMade;

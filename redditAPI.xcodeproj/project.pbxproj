@@ -36,7 +36,6 @@
 		9ED7E13C1A8FB3D900020696 /* RAPTiltToScrollViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ED7E13B1A8FB3D900020696 /* RAPTiltToScrollViewController.m */; };
 		9EE5AEE61A86B11700F25DB7 /* RAPRectangleSelector.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EE5AEE51A86B11700F25DB7 /* RAPRectangleSelector.m */; };
 		9EFBDF691AA25A6D00FDDEB3 /* RAPSubredditWebServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EFBDF681AA25A6D00FDDEB3 /* RAPSubredditWebServices.m */; };
-		9EFBDF6B1AA27D3200FDDEB3 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9EFBDF6A1AA27D3200FDDEB3 /* iAd.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,7 +114,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9EFBDF6B1AA27D3200FDDEB3 /* iAd.framework in Frameworks */,
 				03565E14F540D14B4872CAF2 /* libPods.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
