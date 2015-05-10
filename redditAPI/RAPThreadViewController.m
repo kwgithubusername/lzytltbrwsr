@@ -32,7 +32,7 @@
 @property (nonatomic) UIActivityIndicatorView *spinner;
 @property (nonatomic) RAPThreadDataSource *dataSource;
 @property (nonatomic) RAPSubredditWebServices *webServices;
-@property (nonatomic) NSArray *URLsArray;
+@property (nonatomic) NSMutableArray *URLsMutableArray;
 @end
 
 @implementation RAPThreadViewController
@@ -82,12 +82,12 @@
     else if ([segue.identifier isEqualToString:@"linkCellSegue"])
     {
         RAPLinkViewController *linkViewController = segue.destinationViewController;
-        linkViewController.URLstring = [self.URLsArray firstObject];
+        linkViewController.URLstring = [self.URLsMutableArray firstObject];
     }
     else if ([segue.identifier isEqualToString:@"linkSelectorSegue"])
     {
         RAPLinkSelectorViewController *linkSelectorViewController = segue.destinationViewController;
-        linkSelectorViewController.URLsArray = [[NSArray alloc] initWithArray:self.URLsArray];
+        linkSelectorViewController.URLsArray = [[NSArray alloc] initWithArray:self.URLsMutableArray];
     }
 }
 
@@ -100,19 +100,21 @@
 {
     int appropriateIndex = [self getIndexForSelectedRow];
     
-    RAPThreadCommentTableViewCell *currentCell = (RAPThreadCommentTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self getIndexForSelectedRow]+1 inSection:0]];
-    self.URLsArray = [[NSArray alloc] initWithArray:[currentCell.commentLabel getArrayOfURLs]];
-    
     if (super.rectangleSelector.cellIndex == 0 && [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0)
     {
         RAPThreadTopicTableViewCell *topicCell = [[self.tableView visibleCells] firstObject];
-        self.URLsArray = [[NSArray alloc] initWithArray:[topicCell.topicLabel getArrayOfURLs]];
         
-        if (self.URLsArray.count == 1)
+        self.URLsMutableArray = [[NSMutableArray alloc] initWithArray:[topicCell.topicLabel getArrayOfURLs]];
+        
+        id data = [[self.resultsMutableArray firstObject][@"data"][@"children"] firstObject][@"data"];
+        NSString *URLstring = data[@"url"];
+        [self.URLsMutableArray insertObject:URLstring atIndex:0];
+        
+        if (self.URLsMutableArray.count == 2)
         {
             [self performSegueWithIdentifier:@"linkCellSegue" sender:nil];
         }
-        else if (self.URLsArray.count > 1)
+        else if (self.URLsMutableArray.count > 2)
         {
             [self performSegueWithIdentifier:@"linkSelectorSegue" sender:nil];
         }
@@ -121,26 +123,33 @@
             [self performSegueWithIdentifier:@"linkSegue" sender:nil];
         }
     }
-    else if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
-    {
-        [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
-    }
-    else if ([self commentAtIndexHasReplies:appropriateIndex])
-    {
-        [self performSegueWithIdentifier:@"commentSegue" sender:nil];
-    }
-    else if (self.URLsArray.count == 1)
-    {
-        [self performSegueWithIdentifier:@"linkCellSegue" sender:nil];
-    }
-    else if (self.URLsArray.count > 1)
-    {
-        [self performSegueWithIdentifier:@"linkSelectorSegue" sender:nil];
-    }
     else
     {
-        [self turnOffSelectMode];
+        RAPThreadCommentTableViewCell *currentCell = (RAPThreadCommentTableViewCell *)[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:[self getIndexForSelectedRow]+1 inSection:0]];
+        self.URLsMutableArray = [[NSMutableArray alloc] initWithArray:[currentCell.commentLabel getArrayOfURLs]];
+        
+        if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
+        {
+            [self performSegueWithIdentifier:@"favoritesSegue" sender:nil];
+        }
+        else if ([self commentAtIndexHasReplies:appropriateIndex])
+        {
+            [self performSegueWithIdentifier:@"commentSegue" sender:nil];
+        }
+        else if (self.URLsMutableArray.count == 1)
+        {
+            [self performSegueWithIdentifier:@"linkCellSegue" sender:nil];
+        }
+        else if (self.URLsMutableArray.count > 1)
+        {
+            [self performSegueWithIdentifier:@"linkSelectorSegue" sender:nil];
+        }
+        else
+        {
+            [self turnOffSelectMode];
+        }
     }
+
 }
 
 #pragma mark Table View Methods
@@ -153,7 +162,7 @@
         weakSelf.navigationItem.title = [[NSString alloc] initWithFormat:@"%@: %@", item[@"subreddit"], item[@"title"]];
         topicCell.topicLabel.text = [[NSString alloc] initWithFormat:@"%@\n\n %@", item[@"title"], item[@"selftext"]];
         topicCell.usernameLabel.text = item[@"author"];
-        
+        // breakpoint tests multiple links in topic
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"created_utc"] doubleValue]];
         topicCell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
     };
