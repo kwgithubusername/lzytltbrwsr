@@ -28,7 +28,7 @@
     self.usernameLabel.text = @"";
     self.commentLabel.text = @"";
     self.timeLabel.text = @"";
-    self.layoutMargins = UIEdgeInsetsMake(0, 0, 0, 0);
+    self.layoutMargins = UIEdgeInsetsMake(2, 2, 2, 2);
     self.contentView.layoutMargins = self.layoutMargins;
 }
 

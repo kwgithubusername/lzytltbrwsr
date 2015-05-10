@@ -105,7 +105,21 @@
     
     if (super.rectangleSelector.cellIndex == 0 && [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]].row == 0)
     {
-        [self performSegueWithIdentifier:@"linkSegue" sender:nil];
+        RAPThreadTopicTableViewCell *topicCell = [[self.tableView visibleCells] firstObject];
+        self.URLsArray = [[NSArray alloc] initWithArray:[topicCell.topicLabel getArrayOfURLs]];
+        
+        if (self.URLsArray.count == 1)
+        {
+            [self performSegueWithIdentifier:@"linkCellSegue" sender:nil];
+        }
+        else if (self.URLsArray.count > 1)
+        {
+            [self performSegueWithIdentifier:@"linkSelectorSegue" sender:nil];
+        }
+        else
+        {
+            [self performSegueWithIdentifier:@"linkSegue" sender:nil];
+        }
     }
     else if (super.rectangleSelector.cellIndex == super.rectangleSelector.cellMax)
     {

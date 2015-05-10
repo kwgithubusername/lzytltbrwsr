@@ -52,6 +52,8 @@
     {
         cell.customIndentationLevel = (int)indexPath.row;
         id item = self.itemsArray[indexPath.row];
+        cell.layoutMargins = UIEdgeInsetsMake(2, 2, 2, 2);
+        cell.contentView.layoutMargins = cell.layoutMargins;
         self.commentCellBlock(cell, item);
     }
     else if (indexPath.row == self.itemsArray.count)
@@ -66,9 +68,9 @@
         
         cell.customIndentationLevel = (int)[item[@"depth"] intValue];
 
-        int indention = cell.customIndentationLevel == 0 ? 4 : cell.customIndentationLevel*10;
+        int indention = cell.customIndentationLevel == 0 ? 2 : cell.customIndentationLevel*10;
             
-        cell.layoutMargins = UIEdgeInsetsMake(4, indention, 4, 4);
+        cell.layoutMargins = UIEdgeInsetsMake(2, indention, 2, 2);
         cell.contentView.layoutMargins = cell.layoutMargins;
         
         self.commentCellBlock(cell, item);
