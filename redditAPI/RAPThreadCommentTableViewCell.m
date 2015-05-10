@@ -22,14 +22,20 @@
     // Configure the view for the selected state
 }
 
+-(void)layoutSubviews
+{
+    [super layoutSubviews];
+    self.defaultEdgeInsets = self.layoutMargins;
+}
+
 - (void)prepareForReuse
 {
     [super prepareForReuse];
     self.usernameLabel.text = @"";
     self.commentLabel.text = @"";
     self.timeLabel.text = @"";
-    self.layoutMargins = UIEdgeInsetsMake(2, 2, 2, 2);
-    self.contentView.layoutMargins = self.layoutMargins;
+    self.layoutMargins = self.defaultEdgeInsets;
+    // self.contentView.layoutMargins = self.layoutMargins;
 }
 
 @end

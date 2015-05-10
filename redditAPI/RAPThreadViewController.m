@@ -168,11 +168,16 @@
     };
     
     void (^commentCell)(RAPThreadCommentTableViewCell *, id, NSIndexPath *indexPath) = ^(RAPThreadCommentTableViewCell *commentCell, id item, NSIndexPath *indexPath) {
+        
+        commentCell.defaultEdgeInsets = commentCell.layoutMargins;
         commentCell.commentLabel.text = item[@"body"];
         commentCell.usernameLabel.text = item[@"author"];
         
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"created_utc"] doubleValue]];
         commentCell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
+        
+
+        
         // If the first cell in the tableView is visible and the user wants the first comment, the cellIndex will be 2, so decrement by 1.
         BOOL hasComments = [weakSelf commentAtIndexHasReplies:(int)indexPath.row-1];
         dispatch_async(dispatch_get_main_queue(), ^{
