@@ -58,6 +58,7 @@
     {
         cell.usernameLabel.text = @"";
         cell.commentLabel.text = @"";
+        cell.timeLabel.text = @"";
     }
     else
     {

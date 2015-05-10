@@ -79,7 +79,7 @@
         int appropriateIndex = [self getIndexForSelectedRow];
         commentTreeViewController.commentDataDictionary = [[NSDictionary alloc] initWithDictionary:[[self.resultsMutableArray objectAtIndex:1][@"data"][@"children"] objectAtIndex:(appropriateIndex)][@"data"]];
     }
-    else  if ([segue.identifier isEqualToString:@"linkCellSegue"])
+    else if ([segue.identifier isEqualToString:@"linkCellSegue"])
     {
         RAPLinkViewController *linkViewController = segue.destinationViewController;
         linkViewController.URLstring = [self.URLsArray firstObject];

@@ -64,8 +64,21 @@ loadingCellBlock:(TableViewCellLoadingBlock)aLoadingCellBlock
 {
     RAPTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:self.cellIdentifier
                                                             forIndexPath:indexPath];
-    id item = [self itemAtIndexPath:indexPath];
-    self.configureCellBlock(cell, item);
+
+    if (indexPath.row == self.items.count)
+    {
+        cell.label.text = @"";
+        cell.subLabel.text = @"";
+        cell.timeLabel.text = @"";
+    }
+    else
+    {
+        id item = [self itemAtIndexPath:indexPath];
+        
+        self.configureCellBlock(cell, item);
+    }
+    
+    
     return cell;
 }
 

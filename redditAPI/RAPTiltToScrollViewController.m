@@ -31,6 +31,7 @@
 @property (nonatomic) NSMutableArray *cellRectSizeArray;
 @property (nonatomic) NSMutableArray *cellRectSizeArrayWithLastRowVisible;
 @property (nonatomic) BOOL spinnerIsStopped;
+@property (nonatomic) CGFloat scrollPositionAtSegue;
 
 @end
 
@@ -155,9 +156,23 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.scrollPositionAtSegue = 0;
     self.cellRectSizeArray = [[NSMutableArray alloc] init];
     self.cellRectSizeArrayWithLastRowVisible = [[NSMutableArray alloc] init];
     self.automaticallyAdjustsScrollViewInsets = NO;
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    if (self.scrollPositionAtSegue != 0)
+    {
+        CGPoint scrollPosition = CGPointMake(0,self.scrollPositionAtSegue);
+        self.tableView.contentOffset = scrollPosition;
+        [self adjustTableView];
+    }
+
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -258,6 +273,7 @@
     NSLog(@"Superclass: Originselected is %@", NSStringFromCGPoint(self.rectangleSelector.currentLocationRect.origin));
     if (!self.spinner.isAnimating && self.timeViewHasBeenVisibleInt >= 15 && self.rectSelectorHasBeenMade)
     {
+        self.scrollPositionAtSegue = self.tableView.contentOffset.y;
         [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPSelectRowNotification object:self.tiltToScroll];
         [[NSNotificationCenter defaultCenter] postNotificationName:RAPSegueNotification object:nil];
     }

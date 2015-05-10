@@ -71,6 +71,7 @@
         RAPThreadCommentTableViewCell *blankCell = [tableView dequeueReusableCellWithIdentifier:@"threadCommentCell"];
         blankCell.usernameLabel.text = @"";
         blankCell.commentLabel.text = @"";
+        blankCell.timeLabel.text = @"";
         return blankCell;
     }
     else
