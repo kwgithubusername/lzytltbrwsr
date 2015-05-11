@@ -138,7 +138,7 @@
         
         dispatch_group_enter(e_group);
         [self getProperDepthForComments];
-        NSLog(@"done with comments");
+        // NSLog(@"done with comments");
         dispatch_group_leave(e_group);
         
         dispatch_group_wait(e_group, DISPATCH_TIME_FOREVER);
@@ -185,7 +185,7 @@
     // Order from smallest to largest
     NSMutableArray *orderedArrayOfDepthIndexes = [[NSMutableArray alloc] initWithArray:[mutableSetOfDepthIndexes allObjects]];
     [orderedArrayOfDepthIndexes sortUsingSelector:@selector(compare:)];
-    NSLog(@"Ordered array is %@", orderedArrayOfDepthIndexes);
+    // NSLog(@"Ordered array is %@", orderedArrayOfDepthIndexes);
     
     int mutableArrayOfCommentDataDictionariesCount = (int)[self.mutableArrayOfCommentDataDictionaries count];
     
@@ -193,9 +193,9 @@
     {
         int currentDepth = (int)[self.mutableArrayOfCommentDataDictionaries[index] valueForKey:@"depth"];
         int rankInt = (int)[orderedArrayOfDepthIndexes indexOfObject:[NSNumber numberWithInt:currentDepth]];
-        NSLog(@"rankInt is %d", rankInt);
+        // NSLog(@"rankInt is %d", rankInt);
         NSNumber *depthToUse = [NSNumber numberWithInt:rankInt];
-        NSLog(@"depthTouse is %@", depthToUse);
+        // NSLog(@"depthTouse is %@", depthToUse);
         [self.mutableArrayOfCommentDataDictionaries[index] setValue:depthToUse forKey:@"depth"];
     }
 }
@@ -228,7 +228,7 @@
             [self getCommentsFromDictionary:[repliesChildrenArray objectAtIndex:index][@"data"][@"replies"][@"data"] withDepthIndex:depthIndex];
         }
     }
-    NSLog(@"commentdata count is %lu", (unsigned long)[self.mutableArrayOfCommentDataDictionaries count]);
+    // NSLog(@"commentdata count is %lu", (unsigned long)[self.mutableArrayOfCommentDataDictionaries count]);
 }
 
 - (void)viewWillAppear:(BOOL)animated

@@ -46,7 +46,7 @@
 {
     RAPThreadCommentTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"commentCell" forIndexPath:indexPath];
     
-    NSLog(@"loading row %lu", (unsigned long)indexPath.row);
+    // NSLog(@"loading row %lu", (unsigned long)indexPath.row);
     
     if (indexPath.row == 0)
     {

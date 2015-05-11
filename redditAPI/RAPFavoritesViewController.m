@@ -142,7 +142,7 @@
                                                          {
                                                              if ([jsonResults count] == 0)
                                                              {
-                                                                 NSLog(@"subreddit not found");
+                                                                 // NSLog(@"subreddit not found");
                                                                  [self alertUserThatSubredditCannotBeFound];
                                                              }
                                                              else

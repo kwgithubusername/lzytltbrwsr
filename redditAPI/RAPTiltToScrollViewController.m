@@ -125,9 +125,9 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:nil];
     
     NSIndexPath *indexPath = [self.tableView indexPathForCell:[[self.tableView visibleCells] firstObject]];
-    NSLog(@"IndexPath is %ld", (long)indexPath.row);
+    // NSLog(@"IndexPath is %ld", (long)indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
-    NSLog(@"startfill");
+    // NSLog(@"startfill");
     [self fillCellRectSizeArrayWithVisibleCells];
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(countFinalRowsThatAreVisible) name:RAPFinalRowLoadedNotification object:nil];
@@ -135,7 +135,7 @@
 
 -(void)addObserverForAdjustToNearestRowNotification
 {
-    NSLog(@"observerforadjusttonearestrowadded");
+    // NSLog(@"observerforadjusttonearestrowadded");
     // delegate method- must be called when scrolling session has started
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(adjustTableView) name:RAPTableViewShouldAdjustToNearestRowAtIndexPathNotification object:self.tiltToScroll];
 }
@@ -269,8 +269,8 @@
 
 -(void)userSelectedRow
 {
-    NSLog(@"User selected row");
-    NSLog(@"Superclass: Originselected is %@", NSStringFromCGPoint(self.rectangleSelector.currentLocationRect.origin));
+    // NSLog(@"User selected row");
+    // NSLog(@"Superclass: Originselected is %@", NSStringFromCGPoint(self.rectangleSelector.currentLocationRect.origin));
     if (!self.spinner.isAnimating && self.timeViewHasBeenVisibleInt >= 15 && self.rectSelectorHasBeenMade)
     {
         self.scrollPositionAtSegue = self.tableView.contentOffset.y;
@@ -295,7 +295,7 @@
 {
     if (!self.rectSelectorHasBeenMade && [self.cellRectSizeArray count] > 0 && !isInWebView && self.timeViewHasBeenVisibleInt >= 5)
     {
-        NSLog(@"let's make a rect selector");
+        // NSLog(@"let's make a rect selector");
         //NSLog(@"atTop in createRect method is %d", atTop);
         
         if (!atTop)
@@ -309,7 +309,7 @@
             // Top of screen
             CGRect tempRect = [[self.cellRectSizeArray objectAtIndex:0] CGRectValue];
             self.tableViewCellRect = CGRectMake(0, self.navigationController.navigationBar.frame.size.height+[self statusBarHeight], tempRect.size.width, tempRect.size.height);
-            NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
+            // NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         }
         
         CGRect toolbarRect = CGRectMake(self.navigationController.toolbar.frame.origin.x, self.navigationController.toolbar.frame.origin.y-self.navigationController.toolbar.frame.size.height, self.navigationController.toolbar.frame.size.width, self.navigationController.toolbar.frame.size.height);
@@ -325,13 +325,13 @@
         
         self.rectangleSelector.statusBarPlusNavigationBarHeight = self.navigationController.navigationBar.frame.size.height+[self statusBarHeight];
         self.rectangleSelector.currentContentOffset = self.tableView.contentOffset.y;
-        NSLog(@"contentoffset for rect is %f", self.tableView.contentOffset.y);
+        // NSLog(@"contentoffset for rect is %f", self.tableView.contentOffset.y);
         self.rectangleSelector.tag = 999;
     }
     
     else if (isInWebView && self.timeViewHasBeenVisibleInt >= 5)
     {
-        NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
+        // NSLog(@"self.tableviewcellrect is %@", NSStringFromCGRect(self.tableViewCellRect));
         self.rectangleSelector = [[RAPRectangleSelector alloc] initWithFramesMutableArray:nil atTop:atTop withCellMax:1 inWebView:isInWebView inInitialFrame:self.navigationController.navigationBar.frame withToolbarRect:CGRectZero];
         self.navigationController.navigationBar.alpha = 0.5;
         self.rectangleSelector.tag = 999;

@@ -31,10 +31,10 @@
         
         UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
         NSString *accessTokenString = keychain[@"access_token"];
-        NSLog(@"accessTokenString is %@",accessTokenString);
+        // NSLog(@"accessTokenString is %@",accessTokenString);
         
         NSDate *dateOfExpiration = [[NSUserDefaults standardUserDefaults] objectForKey:@"expires_in"];
-        NSLog(@"expiration date is %@, currentdate is %@", dateOfExpiration, [NSDate date]);
+        // NSLog(@"expiration date is %@, currentdate is %@", dateOfExpiration, [NSDate date]);
         
         if (!dateOfExpiration || [dateOfExpiration timeIntervalSinceNow] < 0.0)
         {
@@ -53,7 +53,7 @@
     NSString* uuid = [[NSUUID UUID] UUIDString];
     
     NSString* postString = [[NSString alloc] initWithFormat:@"grant_type=https://oauth.reddit.com/grants/installed_client&device_id=%@",uuid];
-    NSLog(@"grant_type:%@", postString);
+    // NSLog(@"grant_type:%@", postString);
     
     [request setHTTPBody:[postString dataUsingEncoding:NSUTF8StringEncoding]];
     
@@ -68,15 +68,25 @@
     
     NSURLResponse *requestResponse;
     
-    NSData *requestHandler = [NSURLConnection sendSynchronousRequest:request returningResponse:&requestResponse error:nil];
-    
-    NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:nil];
+    NSError *error;
+    NSData *requestHandler = [NSURLConnection sendSynchronousRequest:request returningResponse:&requestResponse error:&error];
+    if (error)
+    {
+        [self alertUserOfError];
+    }
+    NSDictionary *requestReplyDictionary = [NSJSONSerialization JSONObjectWithData:requestHandler options:NSJSONReadingAllowFragments error:&error];
 
     id timeToExpire = requestReplyDictionary[@"expires_in"];
     
     [self setupTimedRetrievalOfNewAccessToken:timeToExpire];
     
     [self storeOauth2Token:requestReplyDictionary];
+}
+
+-(void)alertUserOfError
+{
+    UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error retrieving data" message:nil delegate:nil cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alertView show];
 }
 
 -(void)setupTimedRetrievalOfNewAccessToken:(id)timeToExpire
@@ -102,7 +112,7 @@
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
     
     NSString *URLString = [[NSString alloc] initWithFormat:@"https://oauth.reddit.com/%@", self.subredditString];
-    NSLog(@"URLString: %@", URLString);
+    // NSLog(@"URLString: %@", URLString);
     [request setURL:[NSURL URLWithString:URLString]];
     [request setHTTPMethod:@"GET"];
     
@@ -121,7 +131,11 @@
         //NSLog(@"CommentDataReply: %@", requestReply);
         id jsonData = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
         if (error) {
-            NSLog(@"error retrieving data:%@", [error localizedDescription]);
+            // NSLog(@"error retrieving data here:%@", [error localizedDescription]);
+            dispatch_async(dispatch_get_main_queue(), ^
+                           {
+                               [self alertUserOfError];
+                           });
         }
             dispatch_async(dispatch_get_main_queue(), ^
         {

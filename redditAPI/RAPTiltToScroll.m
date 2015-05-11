@@ -101,7 +101,7 @@ const CGFloat CONTENTOFFSET_LIMIT = -64;
                  {
                      self.calibratedAngle = tiltAngleForwardorBackward;
                      [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithFloat:self.calibratedAngle] forKey:@"calibratedAngle"];
-                     NSLog(@"calibratedangle is %f", self.calibratedAngle);
+                     // NSLog(@"calibratedangle is %f", self.calibratedAngle);
                      self.isCalibrating = NO;
                      self.hasCalibrated = NO;
                  }
@@ -164,7 +164,7 @@ const CGFloat CONTENTOFFSET_LIMIT = -64;
                 {
                     // This should happen only ONCE per scrolling session- note when a scrollingsession began and when it ends
                     [self.delegate addObserverForAdjustToNearestRowNotification];
-                    NSLog(@"delegate method addObserverForAdjustToNearestRowNotification called");
+                    // NSLog(@"delegate method addObserverForAdjustToNearestRowNotification called");
                     self.scrollingSessionHasStarted = YES;
                 }
                 

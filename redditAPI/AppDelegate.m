@@ -18,7 +18,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     [[NSUserDefaults standardUserDefaults] setObject:@"" forKey:@"accessToken"];
-    NSLog(@"blank access token set");
+    // NSLog(@"blank access token set");
     
     NSDictionary *defaultAngle = [NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:-30] forKey:@"calibratedAngle"];
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaultAngle];
