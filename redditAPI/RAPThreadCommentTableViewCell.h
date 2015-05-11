@@ -14,5 +14,4 @@
 @property (nonatomic) int customIndentationLevel;
 @property (weak, nonatomic) IBOutlet UIImageView *commentBubbleImageView;
 @property (weak, nonatomic) IBOutlet UILabel *timeLabel;
-@property (nonatomic) UIEdgeInsets defaultEdgeInsets;
 @end

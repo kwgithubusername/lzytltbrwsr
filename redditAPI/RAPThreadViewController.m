@@ -168,8 +168,7 @@
     };
     
     void (^commentCell)(RAPThreadCommentTableViewCell *, id, NSIndexPath *indexPath) = ^(RAPThreadCommentTableViewCell *commentCell, id item, NSIndexPath *indexPath) {
-        
-        commentCell.defaultEdgeInsets = commentCell.layoutMargins;
+    
         commentCell.commentLabel.text = item[@"body"];
         commentCell.usernameLabel.text = item[@"author"];
         
