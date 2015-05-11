@@ -32,7 +32,6 @@
 @property (nonatomic) NSMutableArray *cellRectSizeArrayWithLastRowVisible;
 @property (nonatomic) BOOL spinnerIsStopped;
 @property (nonatomic) CGFloat scrollPositionAtSegue;
-@property (nonatomic) BOOL finalRowLoaded;
 
 @end
 
@@ -129,15 +128,9 @@
     NSLog(@"IndexPath is %ld", (long)indexPath.row);
     [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
     NSLog(@"startfill");
-    
-    [self countFinalRowsThatAreVisible];
-    
     [self fillCellRectSizeArrayWithVisibleCells];
-}
-
--(void)finalRowHasBeenLoaded
-{
-    self.finalRowLoaded = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(countFinalRowsThatAreVisible) name:RAPFinalRowLoadedNotification object:nil];
 }
 
 -(void)addObserverForAdjustToNearestRowNotification
@@ -163,7 +156,6 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finalRowHasBeenLoaded) name:RAPFinalRowLoadedNotification object:nil];
     self.scrollPositionAtSegue = 0;
     self.cellRectSizeArray = [[NSMutableArray alloc] init];
     self.cellRectSizeArrayWithLastRowVisible = [[NSMutableArray alloc] init];
@@ -236,19 +228,17 @@
 
 -(void)countFinalRowsThatAreVisible
 {
-    if (self.finalRowLoaded)
+    [self.cellRectSizeArrayWithLastRowVisible removeAllObjects];
+    
+    NSArray *visibleCellsArray = [[NSArray alloc] initWithArray:[self.tableView visibleCells]];
+    
+    for (UITableViewCell *cell in visibleCellsArray)
     {
-        [self.cellRectSizeArrayWithLastRowVisible removeAllObjects];
-        
-        NSArray *visibleCellsArray = [[NSArray alloc] initWithArray:[self.tableView visibleCells]];
-        
-        for (UITableViewCell *cell in visibleCellsArray)
-        {
-            // Need to increment visible cells by 1;
-            [self.cellRectSizeArrayWithLastRowVisible addObject:[NSValue valueWithCGRect:[self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableView indexPathForCell:cell].row+1 inSection:0]]]];
-            NSLog(@"adding cell with indexPath %ld", (long)[self.tableView indexPathForCell:cell].row+1);
-        }
+        // Need to increment visible cells by 1;
+        [self.cellRectSizeArrayWithLastRowVisible addObject:[NSValue valueWithCGRect:[self.tableView rectForRowAtIndexPath:[NSIndexPath indexPathForRow:[self.tableView indexPathForCell:cell].row+1 inSection:0]]]];
+        // NSLog(@"adding cell with indexPath %ld", (long)[self.tableView indexPathForCell:cell].row+1);
     }
+    
 }
 
 -(void)fillCellRectSizeArrayWithVisibleCells
