@@ -168,9 +168,9 @@
     };
     
     void (^commentCell)(RAPThreadCommentTableViewCell *, id, NSIndexPath *indexPath) = ^(RAPThreadCommentTableViewCell *commentCell, id item, NSIndexPath *indexPath) {
-    
+        
         commentCell.commentLabel.text = item[@"body"];
-        commentCell.usernameLabel.text = item[@"author"];
+        commentCell.usernameLabel.text = [[NSString alloc] initWithFormat:@"%@ • %@", item[@"author"], item[@"score"]];
         
         NSDate *date = [NSDate dateWithTimeIntervalSince1970:[item[@"created_utc"] doubleValue]];
         commentCell.timeLabel.text = [weakSelf.dateFormatter formatDate:date];
