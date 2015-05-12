@@ -29,8 +29,8 @@
         self.subredditString = subredditString;
         self.aHandlerBlock = aHandlerBlock;
         
-        UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
-        NSString *accessTokenString = keychain[@"access_token"];
+//        UICKeyChainStore *keychain = [UICKeyChainStore keyChainStoreWithService:@"com.reddit.auth"];
+//        NSString *accessTokenString = keychain[@"access_token"];
         // NSLog(@"accessTokenString is %@",accessTokenString);
         
         NSDate *dateOfExpiration = [[NSUserDefaults standardUserDefaults] objectForKey:@"expires_in"];
