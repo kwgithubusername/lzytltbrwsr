@@ -78,7 +78,6 @@ loadingCellBlock:(TableViewCellLoadingBlock)aLoadingCellBlock
         self.configureCellBlock(cell, item);
     }
     
-    
     return cell;
 }
 
