@@ -68,8 +68,7 @@
         cell.customIndentationLevel = (int)[item[@"depth"] intValue];
 
         int indention = cell.customIndentationLevel == 0 ? 2 : cell.customIndentationLevel*10;
-            
-        // cell.layoutMargins =
+        
         cell.contentView.layoutMargins = UIEdgeInsetsMake(2, indention, 2, 2);
         
         self.commentCellBlock(cell, item);

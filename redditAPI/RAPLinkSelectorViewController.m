@@ -76,6 +76,7 @@
         }
         else
         {
+            cell.textLabel.numberOfLines = 0;
             cell.textLabel.text = [weakSelf.URLsArray objectAtIndex:indexPath.row];
         }
         
@@ -104,6 +105,14 @@
 {
     [super viewWillAppear:animated];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(segueWhenSelectedRow) name:RAPSegueNotification object:nil];
+}
+
+-(void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    // No notification will be used here due to the fact that no data needs to be loaded from the internet
+    [self adjustTableView];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
