@@ -19,7 +19,6 @@
 -(void)turnOffSelectMode;
 @end
 
-
 @interface RAPFavoritesViewController ()
 @property (nonatomic) NSMutableArray *favoritesMutableArray;
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -30,6 +29,9 @@
 @end
 
 @implementation RAPFavoritesViewController
+
+@dynamic tableView;
+@dynamic rectangleSelector;
 
 #pragma mark Segue methods
 

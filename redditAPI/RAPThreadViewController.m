@@ -37,6 +37,9 @@
 
 @implementation RAPThreadViewController
 
+@dynamic tableView;
+
+
 -(FLFDateFormatter *)dateFormatter
 {
     if (!_dateFormatter) _dateFormatter = [[FLFDateFormatter alloc] init];
