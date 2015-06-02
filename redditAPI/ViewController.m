@@ -112,10 +112,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+    self.automaticallyAdjustsScrollViewInsets = NO;
     self.resultsMutableArray = [[NSMutableArray alloc] init];
     [self loadReddit];
-    self.automaticallyAdjustsScrollViewInsets = NO;
+    
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -189,11 +189,6 @@
     
     self.webServices = [[RAPSubredditWebServices alloc] initWithSubredditString:appendString withHandlerBlock:setupHandlerBlock];
     [self.webServices requestDataForSubreddit];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 @end
